@@ -1,4 +1,5 @@
 apply from: 'gradle/ext.gradle'
+apply from: 'gradle/versions.gradle'
 
 allprojects {
     tasks.withType(Javadoc) {

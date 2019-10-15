@@ -1,0 +1,16 @@
+apply plugin: 'java-library'
+apply plugin: 'kotlin'
+apply plugin: "groovy"
+apply from: rootProject.file('gradle/publish.gradle')
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    compile gradleApi()
+    implementation localGroovy()
+    compileOnly deps.gradle.tools
+
+    compile deps.kotlin.stdlib
+}
+
+sourceCompatibility = versions.java
+targetCompatibility = versions.java

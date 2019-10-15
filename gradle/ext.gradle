@@ -1,16 +1,4 @@
-def AABRESGUARD_VERSION = "0.1.0"
 ext {
-    versions = [
-            compileSdkVersion   : 28,
-            minSdkVersion       : 15,
-            targetSdkVersion    : 28,
-            java_version        : JavaVersion.VERSION_1_8,
-            gradle_tools        : '3.2.1',
-            // aabResGuard
-            "aabresguard-core"  : AABRESGUARD_VERSION,
-            "aabresguard-plugin": AABRESGUARD_VERSION
-    ]
-
     GROUP_ID = "com.bytedance.android"
 }
 

@@ -1,0 +1,30 @@
+def versions = [:]
+versions.gradletools = "3.2.1"
+versions.kotlin = "1.3.0"
+versions.digital = "3.4.0"
+versions.java = "8"
+versions.aabresguard = "0.1.0"
+
+versions["aabresguard-core"] = versions.aabresguard
+versions["aabresguard-plugin"] = versions.aabresguard
+
+ext.versions = versions
+
+ext.deps = [:]
+// gradle
+def gradle = [:]
+gradle.tools = "com.android.tools.build:gradle:${versions.gradletools}"
+deps.gradle = gradle
+// kotlin
+def kotlin = [:]
+kotlin.stdlib = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.kotlin"
+kotlin.plugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin"
+kotlin.allopen = "org.jetbrains.kotlin:kotlin-allopen:$versions.kotlin"
+kotlin.embeddable = "org.jetbrains.kotlin:kotlin-compiler-embeddable:$versions.kotlin"
+deps.kotlin = kotlin
+// plugin
+def plugin = [:]
+plugin.digital = "digital.wup:android-maven-publish:${versions.digital}"
+deps.plugin = plugin
+
+ext.deps = deps

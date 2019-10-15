@@ -18,8 +18,10 @@ buildscript {
         }
     }
     dependencies {
-        classpath "com.android.tools.build:gradle:${versions.gradle_tools}"
         classpath 'digital.wup:android-maven-publish:3.4.0'
+        classpath deps.gradle.tools
+        classpath deps.kotlin.plugin
+        classpath deps.plugin.digital
     }
 }
 
