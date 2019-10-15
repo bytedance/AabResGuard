@@ -103,6 +103,12 @@ keyPassword=android
 </resproguard>
 ```
 
+## # 输出文件
+在打包完成后会输出混淆后的文件和相应的日志文件。
+- **resources-mapping.txt：** 资源混淆 mapping，可作为下次混淆输入以达到增量混淆的目的。
+- **aab：** 优化后的 aab 文件。
+- **-duplicated.txt：** 被去重的文件日志记录。
+
 # 收益数据
 **AabResGuard** 是抖音Android团队在七月初完成的资源混淆工具，目前已经在 **Tiktok、Musically、Vigo** 等多个产品上线多月，目前无相关资源问题的反馈。
 在字节系产品的优化数据请移步 **[收益数据](DATA.md)**
