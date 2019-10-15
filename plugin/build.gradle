@@ -10,6 +10,7 @@ dependencies {
     compileOnly deps.gradle.tools
 
     compile deps.kotlin.stdlib
+    compile project(":core")
 }
 
 sourceCompatibility = versions.java

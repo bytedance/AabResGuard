@@ -4,7 +4,6 @@ import com.android.tools.build.bundletool.flags.Flag;
 import com.android.tools.build.bundletool.flags.ParsedFlags;
 import com.android.tools.build.bundletool.model.AppBundle;
 import com.android.tools.build.bundletool.model.exceptions.CommandExecutionException;
-import com.google.auto.value.AutoValue;
 import com.bytedance.android.aabresguard.bundle.AppBundleAnalyzer;
 import com.bytedance.android.aabresguard.bundle.AppBundlePackager;
 import com.bytedance.android.aabresguard.bundle.AppBundleSigner;
@@ -15,13 +14,16 @@ import com.bytedance.android.aabresguard.model.xml.AabResGuardConfig;
 import com.bytedance.android.aabresguard.parser.AabResGuardXmlParser;
 import com.bytedance.android.aabresguard.utils.FileOperation;
 import com.bytedance.android.aabresguard.utils.TimeClock;
+import com.google.auto.value.AutoValue;
 
 import org.dom4j.DocumentException;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import static com.android.tools.build.bundletool.model.utils.files.FilePreconditions.checkFileDoesNotExist;
@@ -123,10 +125,18 @@ public abstract class ObfuscateBundleCommand {
         return new AutoValue_ObfuscateBundleCommand.Builder();
     }
 
-    public static ObfuscateBundleCommand fromFlags(ParsedFlags flags) {
+    public static ObfuscateBundleCommand fromFlags(ParsedFlags flags) throws DocumentException {
         Builder builder = builder();
         builder.setBundlePath(BUNDLE_LOCATION_FLAG.getRequiredValue(flags));
-        builder.setConfigPath(CONFIG_FLAG.getRequiredValue(flags));
+        // config
+        Path path = CONFIG_FLAG.getRequiredValue(flags);
+        AabResGuardConfig config = new AabResGuardXmlParser(path).parse();
+        builder.setWhiteList(config.getWhiteList());
+        if (config.getFileFilter() != null) {
+            builder.setFilterFile(config.getFileFilter().isActive());
+            builder.setFileFilterRules(config.getFileFilter().getRules());
+        }
+
         builder.setOutputPath(OUTPUT_FILE_FLAG.getRequiredValue(flags));
 
         MERGE_DUPLICATED_RES_FLAG.getValue(flags).ifPresent(builder::setMergeDuplicatedResources);
@@ -138,15 +148,17 @@ public abstract class ObfuscateBundleCommand {
         return builder.build();
     }
 
-    public Path execute() throws IOException, DocumentException {
+    public Path execute() throws IOException {
         TimeClock timeClock = new TimeClock();
 
         AppBundle appBundle = new AppBundleAnalyzer(getBundlePath()).analyze();
-        // parse config.xml
-        AabResGuardConfig config = new AabResGuardXmlParser(getConfigPath()).parse();
         // filter file
-        if (config.getFileFilter() != null && config.getFileFilter().isActive()) {
-            BundleFileFilter filter = new BundleFileFilter(getBundlePath(), appBundle, config.getFileFilter().getRules());
+        if (getFilterFile().isPresent() && getFilterFile().get()) {
+            Set<String> fileFilterRules = new HashSet<>();
+            if (getFileFilterRules().isPresent()) {
+                fileFilterRules = getFileFilterRules().get();
+            }
+            BundleFileFilter filter = new BundleFileFilter(getBundlePath(), appBundle, fileFilterRules);
             appBundle = filter.filter();
         }
         // merge duplicated resources
@@ -159,7 +171,7 @@ public abstract class ObfuscateBundleCommand {
         if (getMappingPath().isPresent()) {
             mappingPath = getMappingPath().get();
         }
-        ResourcesObfuscator obfuscator = new ResourcesObfuscator(getBundlePath(), appBundle, config.getWhiteList(), getOutputPath().getParent(), mappingPath);
+        ResourcesObfuscator obfuscator = new ResourcesObfuscator(getBundlePath(), appBundle, getWhiteList(), getOutputPath().getParent(), mappingPath);
         appBundle = obfuscator.obfuscate();
         // package bundle
         AppBundlePackager packager = new AppBundlePackager(appBundle, getOutputPath());
@@ -192,8 +204,6 @@ public abstract class ObfuscateBundleCommand {
 
     public abstract Path getOutputPath();
 
-    public abstract Path getConfigPath();
-
     public abstract Optional<Path> getMappingPath();
 
     public abstract Optional<Path> getStoreFile();
@@ -206,13 +216,23 @@ public abstract class ObfuscateBundleCommand {
 
     public abstract Optional<Boolean> getMergeDuplicatedResources();
 
+    public abstract Set<String> getWhiteList();
+
+    public abstract Optional<Set<String>> getFileFilterRules();
+
+    public abstract Optional<Boolean> getFilterFile();
+
     @AutoValue.Builder
     public abstract static class Builder {
         public abstract Builder setBundlePath(Path bundlePath);
 
         public abstract Builder setOutputPath(Path outputPath);
 
-        public abstract Builder setConfigPath(Path configPath);
+        public abstract Builder setWhiteList(Set<String> whiteList);
+
+        public abstract Builder setFilterFile(Boolean filterFile);
+
+        public abstract Builder setFileFilterRules(Set<String> fileFilterRules);
 
         public abstract Builder setMappingPath(Path configPath);
 
@@ -231,7 +251,6 @@ public abstract class ObfuscateBundleCommand {
         public ObfuscateBundleCommand build() {
             ObfuscateBundleCommand command = autoBuild();
             checkFileExistsAndReadable(command.getBundlePath());
-            checkFileExistsAndReadable(command.getConfigPath());
             checkFileDoesNotExist(command.getOutputPath());
 
             if (!command.getBundlePath().toFile().getName().endsWith(".aab")) {
@@ -246,13 +265,6 @@ public abstract class ObfuscateBundleCommand {
                                 OUTPUT_FILE_FLAG)
                         .build();
             }
-            if (!command.getConfigPath().toFile().getName().endsWith(".xml")) {
-                throw CommandExecutionException.builder()
-                        .withMessage("Wrong properties: %s must end with '.xml'.",
-                                CONFIG_FLAG)
-                        .build();
-            }
-
             if (command.getMappingPath().isPresent()) {
                 File file = command.getMappingPath().get().toFile();
                 checkFileExistsAndReadable(file.toPath());
