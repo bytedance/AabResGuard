@@ -1,0 +1,70 @@
+res path mapping:
+    res/anim -> res/a
+    res/drawable-v23 -> res/b
+    res/drawable-ldrtl-xxxhdpi-v17 -> res/c
+    res/drawable-xxhdpi-v4 -> res/d
+    res/drawable-ldrtl-mdpi-v17 -> res/e
+    res/transition -> res/f
+    res/color-v23 -> res/g
+    res/drawable-night-xhdpi-v8 -> res/h
+    res/drawable-nodpi-v4 -> res/i
+    res/layout-v22 -> res/j
+    res/layout-land-v17 -> res/k
+    res/layout-land -> res/l
+    res/interpolator -> res/m
+    res/mipmap-xxxhdpi-v4 -> res/n
+    res/drawable -> res/o
+    res/mipmap-hdpi-v4 -> res/p
+    res/layout-watch-v20 -> res/q
+    res/mipmap-xhdpi-v4 -> res/r
+    res/drawable-ldrtl-xxhdpi-v17 -> res/s
+    res/layout -> res/t
+    res/drawable-xhdpi-v4 -> res/u
+    res/color -> res/v
+    res/layout-sw600dp-v13 -> res/w
+    res/animator-v21 -> res/x
+    res/animator-v19 -> res/y
+    res/anim-land -> res/z
+    res/animator -> res/a0
+    res/drawable-xxxhdpi-v4 -> res/a1
+    res/xml -> res/a2
+    res/drawable-ldrtl-xhdpi-v17 -> res/a3
+    res/color-v21 -> res/a4
+    res/drawable-v21 -> res/a5
+    res/drawable-night-v8 -> res/a6
+    res/drawable-night-xxhdpi-v8 -> res/a7
+    res/drawable-anydpi-v21 -> res/a8
+    res/drawable-mdpi-v4 -> res/a9
+    res/layout-v26 -> res/a_
+    res/layout-v19 -> res/aa
+    res/layout-v21 -> res/ab
+    res/menu -> res/ac
+    res/layout-v17 -> res/ad
+    res/drawable-watch-v20 -> res/ae
+    res/mipmap-xxhdpi-v4 -> res/af
+    res/anim-v21 -> res/ag
+    res/layout-v16 -> res/ah
+    res/drawable-hdpi-v4 -> res/ai
+    res/interpolator-v21 -> res/aj
+    res/raw -> res/ak
+    res/drawable-ldpi-v4 -> res/al
+    res/drawable-ldrtl-hdpi-v17 -> res/am
+
+
+res id mapping:
+    0x7e01000a : com.bytedance.android.ugc.dynamic_feature.R.attr.pressedStateOverlayImage -> com.bytedance.android.ugc.dynamic_feature.R.attr.k
+    0x7e01000e : com.bytedance.android.ugc.dynamic_feature.R.attr.retryImage -> com.bytedance.android.ugc.dynamic_feature.R.attr.o
+    0x7f0c0099 : com.bytedance.android.ugc.R.style.Base.Widget.AppCompat.SearchView.ActionBar -> com.bytedance.android.ugc.R.style.df
+	0x7f070061 : com.bytedance.android.ugc.R.id.right_icon -> com.bytedance.android.ugc.R.id.bx
+	0x7f05000f : com.bytedance.android.ugc.R.dimen.abc_action_button_min_width_overflow_material -> com.bytedance.android.ugc.R.dimen.p
+	0x7f0c00fc : com.bytedance.android.ugc.R.style.Theme.AppCompat.DayNight.NoActionBar -> com.bytedance.android.ugc.R.style.g4
+
+
+res entries path mapping:
+    0x7f010000 : base/res/anim/abc_fade_in.xml -> res/a/a.xml
+    0x7f010001 : base/res/anim/abc_fade_out.xml -> res/a/b.xml
+    0x7f040002 : base/res/color-v21/abc_btn_colored_borderless_text_material.xml -> res/a4/a.xml
+    0x7f060036 : base/res/drawable-xxhdpi-v4/abc_popup_background_mtrl_mult.9.png -> res/d/a2.9.png
+    0x7e020000 : dynamic_feature/res/drawable-xhdpi-v4/df_xh.png -> res/u/a.png
+    0x7e020002 : dynamic_feature/res/drawable-xxxhdpi-v4/df_xxxh.png -> res/a1/a.png
+

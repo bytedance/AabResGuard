@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resproguard>
+    <issue id="whitelist" isactive="true">
+        <path value="com.bytedance.android.ugc.aweme.R.raw.*" />
+    </issue>
+    <filter isactive="false">
+        <rule value="*/arm64-v8a/*" />
+        <rule value="META-INF/*.RSA" />
+    </filter>
+</resproguard>

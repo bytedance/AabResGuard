@@ -1,0 +1,96 @@
+apply plugin: 'digital.wup.android-maven-publish'
+
+publishing {
+    repositories {
+        maven {
+            def releasesRepoUrl = RELEASE_REPOSITORY_URL
+            def snapshotsRepoUrl = SNAPSHOT_REPOSITORY_URL
+            url = versions[ARTIFACT_ID].endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            credentials {
+                username = NEXUS_USERNAME
+                password = NEXUS_PASSWORD
+            }
+        }
+
+        maven {
+            url = "${rootProject.projectDir}/repo"
+        }
+    }
+
+    publications {
+        if (project.plugins.hasPlugin("com.android.library")) {
+            android.libraryVariants.all { variant ->
+                if (variant.name.toLowerCase().contains("release")) {
+
+                    def javadoc = task("${variant.flavorName}Javadoc", type: Javadoc) {
+                        source = variant.javaCompile.source
+                        exclude '**/BuildConfig.java'
+                        exclude '**/R.java'
+                        classpath += files(variant.javaCompile.classpath.files) + files(android.bootClasspath)
+                    }
+
+                    def javadocJar = project.tasks.create("${variant.flavorName}JavadocJar", Jar) {
+                        classifier = 'javadoc'
+                        from javadoc.destinationDir
+                    }
+
+                    def sourceDirs = variant.sourceSets.collect {
+                        it.javaDirectories // Also includes kotlin sources if any.
+                    }
+                    def sourcesJar = project.tasks.create("${variant.flavorName}SourcesJar", Jar) {
+                        classifier = 'sources'
+                        from sourceDirs
+                    }
+
+                    "${variant.flavorName.capitalize()}AAR"(MavenPublication) {
+                        // Gets android component for build variant
+                        from components.getByName("android${variant.name.capitalize()}")
+                        artifact javadocJar
+                        artifact sourcesJar
+                        groupId GROUP_ID
+                        if (variant.flavorName == null || variant.flavorName == "") {
+                            artifactId ARTIFACT_ID
+                        } else {
+                            artifactId "${ARTIFACT_ID}-${variant.flavorName}"
+                        }
+                        version versions[ARTIFACT_ID]
+                        pom.withXml {
+                            def depsNode = asNode()["dependencies"][0]
+                            if (depsNode != null) {
+                                ArrayList list = new ArrayList()
+                                depsNode.each { node ->
+                                    if (node.groupId.toString().contains(rootProject.name)
+                                            && (node.artifactId.toString().contains("bridge")
+                                            || node.artifactId.toString().contains("platforms.platform"))) {
+                                        list.add(node)
+                                    }
+                                }
+                                for (def node : list) {
+                                    depsNode.remove(node)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } else if (project.plugins.hasPlugin("java-library") || project.plugins.hasPlugin("java")) {
+            task sourcesJar(type: Jar) {
+                from sourceSets.main.allJava
+                classifier = 'sources'
+            }
+
+            task javadocJar(type: Jar) {
+                from javadoc
+                classifier = 'javadoc'
+            }
+            "publishJar"(MavenPublication) {
+                from components.java
+                artifact sourcesJar
+                artifact javadocJar
+                groupId GROUP_ID
+                artifactId ARTIFACT_ID
+                version versions[ARTIFACT_ID]
+            }
+        }
+    }
+}

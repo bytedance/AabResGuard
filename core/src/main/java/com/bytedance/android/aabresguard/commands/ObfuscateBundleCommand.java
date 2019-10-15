@@ -1,0 +1,275 @@
+package com.bytedance.android.aabresguard.commands;
+
+import com.android.tools.build.bundletool.flags.Flag;
+import com.android.tools.build.bundletool.flags.ParsedFlags;
+import com.android.tools.build.bundletool.model.AppBundle;
+import com.android.tools.build.bundletool.model.exceptions.CommandExecutionException;
+import com.google.auto.value.AutoValue;
+import com.bytedance.android.aabresguard.bundle.AppBundleAnalyzer;
+import com.bytedance.android.aabresguard.bundle.AppBundlePackager;
+import com.bytedance.android.aabresguard.bundle.AppBundleSigner;
+import com.bytedance.android.aabresguard.executors.BundleFileFilter;
+import com.bytedance.android.aabresguard.executors.DuplicatedResourcesMerger;
+import com.bytedance.android.aabresguard.executors.ResourcesObfuscator;
+import com.bytedance.android.aabresguard.model.xml.AabResGuardConfig;
+import com.bytedance.android.aabresguard.parser.AabResGuardXmlParser;
+import com.bytedance.android.aabresguard.utils.FileOperation;
+import com.bytedance.android.aabresguard.utils.TimeClock;
+
+import org.dom4j.DocumentException;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.Optional;
+import java.util.logging.Logger;
+
+import static com.android.tools.build.bundletool.model.utils.files.FilePreconditions.checkFileDoesNotExist;
+import static com.android.tools.build.bundletool.model.utils.files.FilePreconditions.checkFileExistsAndReadable;
+import static com.bytedance.android.aabresguard.utils.FileOperation.getNetFileSizeDescription;
+import static com.bytedance.android.aabresguard.utils.exception.CommandExceptionPreconditions.checkFlagPresent;
+
+/**
+ * Command responsible for obfuscate an App Bundle's resources from App Bundle file.
+ * <p>
+ * Created by YangJing on 2019/10/09 .
+ * Email: yangjing.yeoh@bytedance.com
+ */
+@AutoValue
+public abstract class ObfuscateBundleCommand {
+    public static final String COMMAND_NAME = "obfuscate-bundle";
+    private static final Logger logger = Logger.getLogger(ObfuscateBundleCommand.class.getName());
+
+    private static final Flag<Path> BUNDLE_LOCATION_FLAG = Flag.path("bundle");
+    private static final Flag<Path> OUTPUT_FILE_FLAG = Flag.path("output");
+    private static final Flag<Path> CONFIG_FLAG = Flag.path("config");
+    private static final Flag<Path> MAPPING_FLAG = Flag.path("mapping");
+
+    private static final Flag<Boolean> MERGE_DUPLICATED_RES_FLAG = Flag.booleanFlag("merge-duplicated-res");
+
+    private static final Flag<Path> STORE_FILE_FLAG = Flag.path("storeFile");
+    private static final Flag<String> STORE_PASSWORD_FLAG = Flag.string("storePassword");
+    private static final Flag<String> KEY_ALIAS_FLAG = Flag.string("keyAlias");
+    private static final Flag<String> KEY_PASSWORD_FLAG = Flag.string("keyPassword");
+
+    public static CommandHelp help() {
+        return CommandHelp.builder()
+                .setCommandName(COMMAND_NAME)
+                .setCommandDescription(
+                        CommandHelp.CommandDescription.builder()
+                                .setShortDescription("Obfuscates an bundle file's resources from an bundle file.")
+                                .build())
+                .addFlag(
+                        CommandHelp.FlagDescription.builder()
+                                .setFlagName(BUNDLE_LOCATION_FLAG.getName())
+                                .setExampleValue("bundle.aab")
+                                .setDescription("Path of the Android App Bundle to obfuscate resources from.")
+                                .build())
+                .addFlag(
+                        CommandHelp.FlagDescription.builder()
+                                .setFlagName(OUTPUT_FILE_FLAG.getName())
+                                .setExampleValue("obfuscated.aab")
+                                .setDescription("Path to where the obfuscate bundle file should be created.")
+                                .build())
+                .addFlag(
+                        CommandHelp.FlagDescription.builder()
+                                .setFlagName(CONFIG_FLAG.getName())
+                                .setExampleValue("config.parser")
+                                .setDescription("Path of the Obfuscate configuration parser file, priority is lower than the command line.")
+                                .build())
+                .addFlag(
+                        CommandHelp.FlagDescription.builder()
+                                .setFlagName(MAPPING_FLAG.getName())
+                                .setExampleValue("resources-mapping.txt")
+                                .setOptional(true)
+                                .setDescription("The mapping file path for resource increment obfuscation.")
+                                .build())
+                .addFlag(
+                        CommandHelp.FlagDescription.builder()
+                                .setFlagName(MERGE_DUPLICATED_RES_FLAG.getName())
+                                .setExampleValue("merge-duplicated-res=true")
+                                .setOptional(true)
+                                .setDescription("If set, the duplicate resource files will be removed.")
+                                .build())
+                .addFlag(
+                        CommandHelp.FlagDescription.builder()
+                                .setFlagName(STORE_FILE_FLAG.getName())
+                                .setExampleValue("store.keystore")
+                                .setOptional(true)
+                                .setDescription("Path of the keystore file.")
+                                .build())
+                .addFlag(
+                        CommandHelp.FlagDescription.builder()
+                                .setFlagName(STORE_PASSWORD_FLAG.getName())
+                                .setOptional(true)
+                                .setDescription("Path of the keystore password.")
+                                .build())
+                .addFlag(
+                        CommandHelp.FlagDescription.builder()
+                                .setFlagName(KEY_ALIAS_FLAG.getName())
+                                .setOptional(true)
+                                .setDescription("Path of the key alias name.")
+                                .build())
+                .addFlag(
+                        CommandHelp.FlagDescription.builder()
+                                .setFlagName(KEY_PASSWORD_FLAG.getName())
+                                .setOptional(true)
+                                .setDescription("Path of the key password.")
+                                .build())
+                .build();
+    }
+
+    public static Builder builder() {
+        return new AutoValue_ObfuscateBundleCommand.Builder();
+    }
+
+    public static ObfuscateBundleCommand fromFlags(ParsedFlags flags) {
+        Builder builder = builder();
+        builder.setBundlePath(BUNDLE_LOCATION_FLAG.getRequiredValue(flags));
+        builder.setConfigPath(CONFIG_FLAG.getRequiredValue(flags));
+        builder.setOutputPath(OUTPUT_FILE_FLAG.getRequiredValue(flags));
+
+        MERGE_DUPLICATED_RES_FLAG.getValue(flags).ifPresent(builder::setMergeDuplicatedResources);
+
+        STORE_FILE_FLAG.getValue(flags).ifPresent(builder::setStoreFile);
+        STORE_PASSWORD_FLAG.getValue(flags).ifPresent(builder::setStorePassword);
+        KEY_ALIAS_FLAG.getValue(flags).ifPresent(builder::setKeyAlias);
+        KEY_PASSWORD_FLAG.getValue(flags).ifPresent(builder::setKeyPassword);
+        return builder.build();
+    }
+
+    public Path execute() throws IOException, DocumentException {
+        TimeClock timeClock = new TimeClock();
+
+        AppBundle appBundle = new AppBundleAnalyzer(getBundlePath()).analyze();
+        // parse config.xml
+        AabResGuardConfig config = new AabResGuardXmlParser(getConfigPath()).parse();
+        // filter file
+        if (config.getFileFilter() != null && config.getFileFilter().isActive()) {
+            BundleFileFilter filter = new BundleFileFilter(getBundlePath(), appBundle, config.getFileFilter().getRules());
+            appBundle = filter.filter();
+        }
+        // merge duplicated resources
+        if (getMergeDuplicatedResources().isPresent() && getMergeDuplicatedResources().get()) {
+            DuplicatedResourcesMerger merger = new DuplicatedResourcesMerger(getBundlePath(), appBundle, getOutputPath().getParent());
+            appBundle = merger.merge();
+        }
+        // obfuscate bundle
+        Path mappingPath = null;
+        if (getMappingPath().isPresent()) {
+            mappingPath = getMappingPath().get();
+        }
+        ResourcesObfuscator obfuscator = new ResourcesObfuscator(getBundlePath(), appBundle, config.getWhiteList(), getOutputPath().getParent(), mappingPath);
+        appBundle = obfuscator.obfuscate();
+        // package bundle
+        AppBundlePackager packager = new AppBundlePackager(appBundle, getOutputPath());
+        packager.execute();
+        // sign bundle
+        AppBundleSigner signer = new AppBundleSigner(getOutputPath());
+        getStoreFile().ifPresent(storeFile -> {
+            signer.setBundleSignature(new AppBundleSigner.BundleSignature(
+                    storeFile, getStorePassword().get(), getKeyAlias().get(), getKeyPassword().get()
+            ));
+        });
+        signer.execute();
+
+        long rawSize = FileOperation.getFileSizes(getBundlePath().toFile());
+        long filteredSize = FileOperation.getFileSizes(getOutputPath().toFile());
+        logger.info(String.format(
+                "obfuscate resources done, coast %s\n" +
+                        "-----------------------------------------\n" +
+                        "Reduce bundle file size: %s, %s -> %s\n" +
+                        "-----------------------------------------",
+                timeClock.getCoast(),
+                getNetFileSizeDescription(rawSize - filteredSize),
+                getNetFileSizeDescription(rawSize),
+                getNetFileSizeDescription(filteredSize)
+        ));
+        return getOutputPath();
+    }
+
+    public abstract Path getBundlePath();
+
+    public abstract Path getOutputPath();
+
+    public abstract Path getConfigPath();
+
+    public abstract Optional<Path> getMappingPath();
+
+    public abstract Optional<Path> getStoreFile();
+
+    public abstract Optional<String> getStorePassword();
+
+    public abstract Optional<String> getKeyAlias();
+
+    public abstract Optional<String> getKeyPassword();
+
+    public abstract Optional<Boolean> getMergeDuplicatedResources();
+
+    @AutoValue.Builder
+    public abstract static class Builder {
+        public abstract Builder setBundlePath(Path bundlePath);
+
+        public abstract Builder setOutputPath(Path outputPath);
+
+        public abstract Builder setConfigPath(Path configPath);
+
+        public abstract Builder setMappingPath(Path configPath);
+
+        public abstract Builder setMergeDuplicatedResources(Boolean mergeDuplicatedResources);
+
+        public abstract Builder setStoreFile(Path storeFile);
+
+        public abstract Builder setStorePassword(String storePassword);
+
+        public abstract Builder setKeyAlias(String keyAlias);
+
+        public abstract Builder setKeyPassword(String keyPassword);
+
+        abstract ObfuscateBundleCommand autoBuild();
+
+        public ObfuscateBundleCommand build() {
+            ObfuscateBundleCommand command = autoBuild();
+            checkFileExistsAndReadable(command.getBundlePath());
+            checkFileExistsAndReadable(command.getConfigPath());
+            checkFileDoesNotExist(command.getOutputPath());
+
+            if (!command.getBundlePath().toFile().getName().endsWith(".aab")) {
+                throw CommandExecutionException.builder()
+                        .withMessage("Wrong properties: %s must end with '.aab'.",
+                                BUNDLE_LOCATION_FLAG)
+                        .build();
+            }
+            if (!command.getOutputPath().toFile().getName().endsWith(".aab")) {
+                throw CommandExecutionException.builder()
+                        .withMessage("Wrong properties: %s must end with '.aab'.",
+                                OUTPUT_FILE_FLAG)
+                        .build();
+            }
+            if (!command.getConfigPath().toFile().getName().endsWith(".xml")) {
+                throw CommandExecutionException.builder()
+                        .withMessage("Wrong properties: %s must end with '.xml'.",
+                                CONFIG_FLAG)
+                        .build();
+            }
+
+            if (command.getMappingPath().isPresent()) {
+                File file = command.getMappingPath().get().toFile();
+                checkFileExistsAndReadable(file.toPath());
+                if (!file.getName().endsWith(".txt")) {
+                    throw CommandExecutionException.builder()
+                            .withMessage("Wrong properties: %s must end with '.txt'.",
+                                    MAPPING_FLAG)
+                            .build();
+                }
+            }
+
+            if (command.getStoreFile().isPresent()) {
+                checkFlagPresent(command.getKeyAlias(), KEY_ALIAS_FLAG);
+                checkFlagPresent(command.getKeyPassword(), KEY_PASSWORD_FLAG);
+                checkFlagPresent(command.getStorePassword(), STORE_PASSWORD_FLAG);
+            }
+            return command;
+        }
+    }
+}

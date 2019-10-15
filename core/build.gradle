@@ -1,8 +1,54 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "com.google.protobuf:protobuf-gradle-plugin:0.8.8"
+    }
+}
+
 apply plugin: 'java-library'
+apply from: rootProject.file('gradle/publish.gradle')
+apply plugin: "com.google.protobuf"
+
+configurations.all {
+    resolutionStrategy.dependencySubstitution {
+        resolutionStrategy {
+            force 'com.android.tools.build:bundletool:0.10.0'
+        }
+    }
+}
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    compileOnly "com.android.tools.build:aapt2-proto:0.4.0"
+    compileOnly gradleApi()
+    api "com.android.tools.build:gradle:${versions.gradle_tools}"
+
+    implementation "com.android.support:support-annotations:24.2.0"
+    implementation 'commons-io:commons-io:2.6'
+    implementation 'commons-codec:commons-codec:1.5'
+
+    annotationProcessor "com.google.auto.value:auto-value:1.5.2"
+    implementation "com.google.auto.value:auto-value:1.5.2"
+    compile group: 'org.dom4j', name: 'dom4j', version: '2.1.0'
+
+    testImplementation "junit:junit:4.12"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:5.2.0"
+    testImplementation "com.google.guava:guava:27.0.1-jre"
+    testImplementation "org.mockito:mockito-core:2.18.3"
+    testImplementation "com.google.truth.extensions:truth-java8-extension:0.45"
+    testImplementation "com.google.truth.extensions:truth-proto-extension:0.45"
+    testImplementation "com.google.auto.value:auto-value:1.5.2"
+    testAnnotationProcessor "com.google.auto.value:auto-value:1.5.2"
 }
 
-sourceCompatibility = "7"
-targetCompatibility = "7"
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.4.0"
+    }
+}

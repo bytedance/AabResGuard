@@ -1,0 +1,35 @@
+apply plugin: 'maven-publish'
+
+sourceCompatibility = versions.java_version
+targetCompatibility = versions.java_version
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.java.srcDirs
+    classifier = 'sources'
+    version = versions[ARTIFACT_ID]
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+    version = versions[ARTIFACT_ID]
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+publishing {
+    publications {
+        ResguardPub(MavenPublication) {
+            from components.java
+            groupId = group
+            artifactId = ARTIFACT_ID
+            version = versions[ARTIFACT_ID]
+        }
+    }
+}
+
+task buildAndPublishLocalMaven(dependsOn: ['build', 'publishResguardPublicationToMavenLocal']) {}
+

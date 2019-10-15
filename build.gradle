@@ -1,16 +1,25 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
+    apply from: rootProject.file("gradle/config.gradle")
     repositories {
         google()
         jcenter()
-        
+        if ("true".equalsIgnoreCase(findProperty('useLocalMaven'))) {
+            println "use local repo"
+            mavenLocal()
+        } else {
+            println "use remove repo"
+            maven { url findProperty("RELEASE_REPOSITORY_URL") }
+            maven { url findProperty("SNAPSHOT_REPOSITORY_URL") }
+        }
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.4.1'
-        
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
+        classpath "com.android.tools.build:gradle:${versions.gradle_tools}"
+        classpath 'digital.wup:android-maven-publish:3.4.0'
     }
 }
 
@@ -18,7 +27,12 @@ allprojects {
     repositories {
         google()
         jcenter()
-        
+        if ("true".equalsIgnoreCase(findProperty('useLocalMaven'))) {
+            mavenLocal()
+        } else {
+            maven { url findProperty("RELEASE_REPOSITORY_URL") }
+            maven { url findProperty("SNAPSHOT_REPOSITORY_URL") }
+        }
     }
 }
 
