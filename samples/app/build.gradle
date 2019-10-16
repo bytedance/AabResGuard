@@ -1,0 +1,42 @@
+apply plugin: 'com.android.application'
+apply from: "$rootDir/gradle/aabresguard.gradle"
+
+android {
+    compileSdkVersion versions.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion versions.minSdkVersion
+        targetSdkVersion versions.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    bundle {
+        language {
+            enableSplit = false
+        }
+        density {
+            enableSplit = true
+        }
+        abi {
+            enableSplit = true
+        }
+    }
+    dynamicFeatures = [":df_module1", ":df_module2"]
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation deps.appcompatV7
+
+    implementation 'com.mikepenz:ionicons-typeface:2.0.1.5-kotlin@aar'
+    implementation 'com.mikepenz:pixeden-7-stroke-typeface:1.2.0.3-kotlin@aar'
+    implementation 'com.mikepenz:material-design-icons-dx-typeface:5.0.1.0-kotlin@aar'
+}

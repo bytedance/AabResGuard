@@ -22,6 +22,7 @@ buildscript {
         classpath deps.gradle.tools
         classpath deps.kotlin.plugin
         classpath deps.plugin.digital
+        classpath "com.bytedance.android:aabresguard-plugin:${versions.aabresguard}"
     }
 }
 

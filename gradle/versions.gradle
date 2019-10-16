@@ -4,6 +4,13 @@ versions.kotlin = "1.3.0"
 versions.digital = "3.4.0"
 versions.java = "8"
 versions.aabresguard = "0.1.0"
+// android
+versions.compileSdkVersion = 28
+versions.minSdkVersion = 15
+versions.targetSdkVersion = 28
+versions.support = "28.0.0"
+
+versions.bundletool = "0.10.0"
 
 versions["aabresguard-core"] = versions.aabresguard
 versions["aabresguard-plugin"] = versions.aabresguard
@@ -26,5 +33,8 @@ deps.kotlin = kotlin
 def plugin = [:]
 plugin.digital = "digital.wup:android-maven-publish:${versions.digital}"
 deps.plugin = plugin
+// library
+deps.appcompatV7 = "com.android.support:appcompat-v7:${versions.support}"
+deps.bundletool = "com.android.tools.build:bundletool:${versions.bundletool}"
 
 ext.deps = deps

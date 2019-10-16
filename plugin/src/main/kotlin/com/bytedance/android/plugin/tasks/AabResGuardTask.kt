@@ -14,17 +14,22 @@ import java.nio.file.Path
  * Created by YangJing on 2019/10/15 .
  * Email: yangjing.yeoh@bytedance.com
  */
-class AabResGuardTask(private val variantScope: VariantScope) : DefaultTask() {
+open class AabResGuardTask : DefaultTask() {
 
+    private lateinit var variantScope: VariantScope
     lateinit var signingConfig: CoreSigningConfig
     var aabResGuard: AabResGuardExtension = project.extensions.getByName("aabResGuard") as AabResGuardExtension
-    private val bundlePath: Path
-    private val obfuscatedBundlePath: Path
+    private lateinit var bundlePath: Path
+    private lateinit var obfuscatedBundlePath: Path
 
     init {
         description = "Assemble resource proguard for bundle file"
         group = "bundle"
         outputs.upToDateWhen { false }
+    }
+
+    fun setVariantScope(variantScope: VariantScope) {
+        this.variantScope = variantScope
         val bundlePackageTask: BundleTask = project.tasks.getByName("package${variantScope.variantData.name.capitalize()}Bundle") as BundleTask
         bundlePath = File(bundlePackageTask.bundleLocation, bundlePackageTask.fileName).toPath()
         obfuscatedBundlePath = File(bundlePackageTask.bundleLocation, aabResGuard.obfuscatedBundleFileName).toPath()
@@ -67,8 +72,8 @@ class AabResGuardTask(private val variantScope: VariantScope) : DefaultTask() {
     }
 
     private fun encrypt(value: String): String {
-        if (value.length > 1) {
-            return "${value.substring(0, value.length)}****"
+        if (value.length > 2) {
+            return "${value.substring(0, value.length / 2)}****"
         }
         return "****"
     }

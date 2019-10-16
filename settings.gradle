@@ -1,1 +1,6 @@
-include ':core', ':plugin'
+include ':core', ':plugin', ':app', ':df_module1', ':df_module2'
+
+settings.project(":app").projectDir = file("$rootDir/samples/app")
+settings.project(":df_module1").projectDir = file("$rootDir/samples/dynamic-features/df_module1")
+settings.project(":df_module2").projectDir = file("$rootDir/samples/dynamic-features/df_module2")
+

@@ -7,12 +7,12 @@ import com.android.tools.build.bundletool.model.BundleModule;
 import com.android.tools.build.bundletool.model.BundleModuleName;
 import com.android.tools.build.bundletool.model.ModuleEntry;
 import com.android.tools.build.bundletool.model.ZipPath;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import com.bytedance.android.aabresguard.bundle.AppBundleUtils;
 import com.bytedance.android.aabresguard.bundle.NativeLibrariesOperation;
 import com.bytedance.android.aabresguard.utils.TimeClock;
 import com.bytedance.android.aabresguard.utils.Utils;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -93,6 +93,7 @@ public class BundleFileFilter {
     }
 
     private BundleModule filterBundleModule(BundleModule bundleModule) throws IOException {
+        BundleModule.Builder builder = bundleModule.toBuilder();
         List<ModuleEntry> filteredModuleEntries = new ArrayList<>();
         List<ModuleEntry> entries = bundleModule.getEntries().stream()
                 .filter(entry -> {
@@ -107,13 +108,14 @@ public class BundleFileFilter {
                     return true;
                 })
                 .collect(Collectors.toList());
+        builder.setRawEntries(entries);
         filterTotalCount += filteredModuleEntries.size();
         // update pb
         Files.NativeLibraries nativeLibraries = updateLibDirectory(bundleModule, filteredModuleEntries);
-        return bundleModule.toBuilder()
-                .setRawEntries(entries)
-                .setNativeConfig(nativeLibraries)
-                .build();
+        if (nativeLibraries != null) {
+            builder.setNativeConfig(nativeLibraries);
+        }
+        return builder.build();
     }
 
     private Files.NativeLibraries updateLibDirectory(BundleModule bundleModule, List<ModuleEntry> entries) throws UnexpectedException {
@@ -121,12 +123,13 @@ public class BundleFileFilter {
                 .filter(entry -> entry.getPath().startsWith(BundleModule.LIB_DIRECTORY))
                 .collect(Collectors.toList());
         Files.NativeLibraries nativeLibraries = bundleModule.getNativeConfig().orElse(null);
-        if (nativeLibraries == null) {
-            throw new UnexpectedException("can not find nativeLibraries file `native.pb`");
-        }
         if (libEntries.isEmpty()) {
             return nativeLibraries;
         }
+        if (nativeLibraries == null) {
+            throw new UnexpectedException(String.format("can not find nativeLibraries file `native.pb` in %s module", bundleModule.getName().getName()));
+        }
+
         Files.NativeLibraries filteredNativeLibraries = nativeLibraries;
         for (Files.TargetedNativeDirectory directory : nativeLibraries.getDirectoryList()) {
             int directoryNativeSize = libEntries.stream()

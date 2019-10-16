@@ -1,0 +1,21 @@
+res dir mapping:
+	res/drawable-v23 -> res/l
+	res/layout-v26 -> res/y
+	res/drawable-v21 -> res/i
+	res/drawable-ldrtl-xhdpi-v17 -> res/p
+	res/drawable-xhdpi-v4 -> res/g
+	res/color-v21 -> res/c
+	res/color-v23 -> res/d
+	res/anim -> res/a
+
+res id mapping:
+	0x7f0c00ba : com.bytedance.android.app.R.style.RtlUnderlay.Widget.AppCompat.ActionButton.Overflow -> com.bytedance.android.app.R.style.eb
+	0x7f040002 : com.bytedance.android.app.R.color.abc_btn_colored_borderless_text_material -> com.bytedance.android.app.R.color.c
+	0x7f0c00d5 : com.bytedance.android.app.R.style.TextAppearance.AppCompat.Title -> com.bytedance.android.app.R.style.f2
+	0x7f0c0022 : com.bytedance.android.app.R.style.Base.TextAppearance.AppCompat.Small.Inverse -> com.bytedance.android.app.R.style.a8
+
+res entries path mapping:
+	0x7f060030 : base/res/drawable-xxhdpi-v4/abc_list_selector_disabled_holo_dark.9.png -> res/h/z.9.png
+	0x7f060022 : base/res/drawable-xxxhdpi-v4/abc_ic_star_half_black_16dp.png -> res/k/o.png
+	0x7f0a001a : base/res/layout/abc_select_dialog_material.xml -> res/t/a0.xml
+	0x7f01000a : base/res/anim/abc_tooltip_enter.xml -> res/a/k.xml

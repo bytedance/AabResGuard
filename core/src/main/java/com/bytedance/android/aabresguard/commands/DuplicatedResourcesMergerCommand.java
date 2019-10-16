@@ -4,13 +4,13 @@ import com.android.tools.build.bundletool.flags.Flag;
 import com.android.tools.build.bundletool.flags.ParsedFlags;
 import com.android.tools.build.bundletool.model.AppBundle;
 import com.android.tools.build.bundletool.model.exceptions.CommandExecutionException;
-import com.google.auto.value.AutoValue;
 import com.bytedance.android.aabresguard.bundle.AppBundleAnalyzer;
 import com.bytedance.android.aabresguard.bundle.AppBundlePackager;
 import com.bytedance.android.aabresguard.bundle.AppBundleSigner;
 import com.bytedance.android.aabresguard.executors.DuplicatedResourcesMerger;
 import com.bytedance.android.aabresguard.utils.FileOperation;
 import com.bytedance.android.aabresguard.utils.TimeClock;
+import com.google.auto.value.AutoValue;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -128,7 +128,7 @@ public abstract class DuplicatedResourcesMergerCommand {
 
         long rawSize = FileOperation.getFileSizes(getBundlePath().toFile());
         long filteredSize = FileOperation.getFileSizes(getOutput().toFile());
-        logger.info(String.format(
+        System.out.println(String.format(
                 "duplicate resources done, coast %s\n" +
                         "-----------------------------------------\n" +
                         "Reduce bundle file size: %s, %s -> %s\n" +

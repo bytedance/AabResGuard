@@ -187,7 +187,7 @@ public abstract class ObfuscateBundleCommand {
 
         long rawSize = FileOperation.getFileSizes(getBundlePath().toFile());
         long filteredSize = FileOperation.getFileSizes(getOutputPath().toFile());
-        logger.info(String.format(
+        System.out.println(String.format(
                 "obfuscate resources done, coast %s\n" +
                         "-----------------------------------------\n" +
                         "Reduce bundle file size: %s, %s -> %s\n" +

@@ -1,10 +1,11 @@
 # AadResGuard
 <h1 align="center">
   <img src="" height="200" width="200"/>
-  <p align="center" style="font-size: 0.5em">针对 aab 文件的资源混淆工具</p>
+  <p align="center" style="font-size: 0.5em">针对 `aab` 文件的资源混淆工具</p>
 </h1>
 
 [![License](https://img.shields.io/badge/license-Apache2.0-brightgreen)](../../LICENSE)
+[![Bundletool](https://img.shields.io/badge/Bundletool-0.10.0-blue)](https://github.com/google/bundletool)
 
 [English](../../README.md) | **[简体中文](README.md)**
 
@@ -20,7 +21,7 @@
 - **？？？：** 展望未来，会有更多的特性支持，欢迎提交 PR & issue。
 
 # 数据收益
-**AabResGuard** 是抖音Android团队在七月初完成的资源混淆工具，目前已经在 **Tiktok、Musically、Vigo** 等多个产品上线多月，目前无相关资源问题的反馈。
+**AabResGuard** 是抖音Android团队完成的资源混淆工具，目前已经在 **Tiktok、Musically、Vigo** 等多个产品上线多月，目前无相关资源问题的反馈。
 
 详细的数据收益信息请移步 **[数据收益](DATA.md)**
 
@@ -30,26 +31,28 @@
 ```gradle
 classpath "com.bytedance.android:aabresguard-plugin:0.1.0"
 ```
+
 在 `build.gradle(application)` 中配置
 ```gradle
 apply plugin: "com.bytedance.android.aabResGuard"
 aabResGuard {
-    mappingFile = file("mapping.txt").toPath()
-    whiteList = [
+    mappingFile = file("mapping.txt").toPath() // 用于增量混淆的 mapping 文件
+    whiteList = [ // 白名单规则
         "*.R.raw.*",
         "*.R.drawable.icon"
     ]
-    obfuscatedBundleFileName = "duplicated-app.aab"
-    mergeDuplicatedRes = true
-    enableFilterFiles = true
-    filterList = [
+    obfuscatedBundleFileName = "duplicated-app.aab" // 混淆后的文件名称，必须以 `.aab` 结尾
+    mergeDuplicatedRes = true // 是否允许去除重复资源
+    enableFilterFiles = true // 是否允许过滤文件
+    filterList = [ // 文件过滤规则
         "*/arm64-v8a/*",
         "META-INF/*"
     ]
 }
 ```
+
 `aabResGuard plugin` 侵入了 `bundle` 打包流程，可以直接执行原始打包命令进行混淆。
-```
+```cmd
 ./gradlew clean :app:bundleDebug --stacktrace
 ```
 
@@ -116,12 +119,14 @@ aabresguard obfuscate-bundle --bundle=app.aab --output=obfuscated.aab --config=c
 - **aab：** 优化后的 aab 文件。
 - **-duplicated.txt：** 被去重的文件日志记录。
 
-关于输出日志格式和更多的输出文件信息请移步 **[输出文件](OUTPUT.md)**
+关于输出日志格式和更多的输出文件信息请移步 **[输出文件](OUTPUT.md)** 。
+
+# [版本日志](CHANGELOG.md)
 
 # 代码贡献
-阅读以下内容，了解如何参与改进 AabResGuard。
+阅读以下内容，了解如何参与改进 **AabResGuard**。
 ## #贡献指南
-查看我们的[贡献指南](CONTRIBUTOR.md)来了解我们的开发流程。
+查看我们的 **[贡献指南](CONTRIBUTOR.md)** 来了解我们的开发流程。
 ## #贡献者
 * [JingYeoh](https://github.com/JingYeoh)
 * [Jun Li]()

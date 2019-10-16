@@ -17,7 +17,7 @@ apply plugin: "com.google.protobuf"
 configurations.all {
     resolutionStrategy.dependencySubstitution {
         resolutionStrategy {
-            force 'com.android.tools.build:bundletool:0.10.0'
+            force deps.bundletool
         }
     }
 }
@@ -36,6 +36,7 @@ dependencies {
     annotationProcessor "com.google.auto.value:auto-value:1.5.2"
     implementation "com.google.auto.value:auto-value:1.5.2"
     compile group: 'org.dom4j', name: 'dom4j', version: '2.1.0'
+    compile deps.bundletool
 
     testImplementation "junit:junit:4.12"
     testImplementation "org.junit.jupiter:junit-jupiter-api:5.2.0"

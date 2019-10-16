@@ -31,6 +31,10 @@ class AabResGuardPlugin : Plugin<Project> {
 
     private fun createAabResGuardTask(project: Project, scope: VariantScope) {
         val variantName = scope.variantData.name.capitalize()
+        val bundleTaskName = "bundle$variantName"
+        if (project.tasks.findByName(bundleTaskName) == null) {
+            return
+        }
         val aabResGuardTaskName = "aabresguard$variantName"
         val aabResGuardTask: AabResGuardTask
         aabResGuardTask = if (project.tasks.findByName(aabResGuardTaskName) == null) {
@@ -38,8 +42,10 @@ class AabResGuardPlugin : Plugin<Project> {
         } else {
             project.tasks.getByName(aabResGuardTaskName) as AabResGuardTask
         }
+        aabResGuardTask.setVariantScope(scope)
+
+        val bundleTask: Task = project.tasks.getByName(bundleTaskName)
         val bundlePackageTask: Task = project.tasks.getByName("package${variantName}Bundle")
-        val bundleTask: Task = project.tasks.getByName("bundle$variantName")
         bundleTask.dependsOn(aabResGuardTask)
         aabResGuardTask.mustRunAfter(bundlePackageTask)
     }

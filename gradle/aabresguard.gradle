@@ -1,0 +1,14 @@
+apply plugin: "com.bytedance.android.aabResGuard"
+aabResGuard {
+    mappingFile = file("../mapping.txt").toPath()
+    whiteList = [
+            "*.R.raw.*",
+            "*.R.drawable.icon"
+    ]
+    obfuscatedBundleFileName = "duplicated-app.aab"
+    mergeDuplicatedRes = true
+    enableFilterFiles = true
+    filterList = [
+            "*/arm64-v8a/*"
+    ]
+}
