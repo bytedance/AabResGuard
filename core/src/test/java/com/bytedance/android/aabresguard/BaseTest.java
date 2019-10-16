@@ -6,6 +6,7 @@ import com.bytedance.android.aabresguard.testing.ProcessThread;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -77,5 +78,10 @@ public class BaseTest {
 
     protected String getTempDirFilePath() {
         return tmpDir.toFile().toString();
+    }
+
+    @Test
+    public void emptyTest() {
+        assert true;
     }
 }

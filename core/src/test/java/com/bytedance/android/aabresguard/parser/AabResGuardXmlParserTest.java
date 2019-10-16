@@ -14,7 +14,7 @@ public class AabResGuardXmlParserTest extends BaseTest {
 
     @Test
     public void test() throws DocumentException {
-        AabResGuardXmlParser parser = new AabResGuardXmlParser(loadResourceFile("demo/config.parser").toPath());
+        AabResGuardXmlParser parser = new AabResGuardXmlParser(loadResourceFile("demo/config.xml").toPath());
         AabResGuardConfig config = parser.parse();
         assert config != null;
         assert config.isUseWhiteList();

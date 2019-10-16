@@ -9,7 +9,6 @@ import com.android.tools.build.bundletool.model.ModuleEntry;
 import com.android.tools.build.bundletool.model.ResourceTableEntry;
 import com.android.tools.build.bundletool.model.ZipPath;
 import com.android.tools.build.bundletool.model.utils.ResourcesUtils;
-import com.google.common.collect.ImmutableMap;
 import com.bytedance.android.aabresguard.bundle.AppBundleUtils;
 import com.bytedance.android.aabresguard.bundle.ResourcesTableBuilder;
 import com.bytedance.android.aabresguard.bundle.ResourcesTableOperation;
@@ -19,6 +18,7 @@ import com.bytedance.android.aabresguard.parser.ResourcesMappingParser;
 import com.bytedance.android.aabresguard.utils.FileOperation;
 import com.bytedance.android.aabresguard.utils.TimeClock;
 import com.bytedance.android.aabresguard.utils.Utils;
+import com.google.common.collect.ImmutableMap;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,8 +46,10 @@ import static com.bytedance.android.aabresguard.bundle.ResourcesTableOperation.u
  * Email: yangjing.yeoh@bytedance.com
  */
 public class ResourcesObfuscator {
+    public static final String RESOURCE_ANDROID_PREFIX = "android:";
     public static final String FILE_MAPPING_NAME = "resources-mapping.txt";
     private static final Logger logger = Logger.getLogger(ResourcesObfuscator.class.getName());
+
     private final AppBundle rawAppBundle;
     private final Set<String> whiteListRules;
     private final Path outputMappingPath;
@@ -180,7 +182,7 @@ public class ResourcesObfuscator {
             }
             guardStringBuilder.reset(null);
             if (resourcesMapping.getResourceMapping().containsKey(resourceName)) {
-                if (isMatchedWhiteList(resourceName)) {
+                if (!shouldBeObfuscated(resourceName)) {
                     System.out.println(String.format(
                             "[whiteList] find whiteList resource, remove from mapping, resource: %s, id: %s",
                             resourceName,
@@ -192,7 +194,7 @@ public class ResourcesObfuscator {
                     obfuscationList.add(ResourcesMapping.getResourceSimpleName(obfuscateResourceName));
                 }
             } else {
-                if (isMatchedWhiteList(resourceName)) {
+                if (!shouldBeObfuscated(resourceName)) {
                     System.out.println(String.format(
                             "[whiteList] find whiteList resource, resource: %s, id: %s",
                             resourceName,
@@ -305,13 +307,17 @@ public class ResourcesObfuscator {
                 });
     }
 
-    private boolean isMatchedWhiteList(String resourceName) {
+    private boolean shouldBeObfuscated(String resourceName) {
+        // android system resources should not be obfuscated
+        if (resourceName.startsWith(RESOURCE_ANDROID_PREFIX)) {
+            return false;
+        }
         for (String rule : whiteListRules) {
             Pattern filterPattern = Pattern.compile(Utils.convertToPatternString(rule));
             if (filterPattern.matcher(resourceName).matches()) {
-                return true;
+                return false;
             }
         }
-        return false;
+        return true;
     }
 }

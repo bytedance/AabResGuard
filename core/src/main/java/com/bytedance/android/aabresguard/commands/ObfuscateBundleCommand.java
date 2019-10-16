@@ -76,7 +76,7 @@ public abstract class ObfuscateBundleCommand {
                 .addFlag(
                         CommandHelp.FlagDescription.builder()
                                 .setFlagName(CONFIG_FLAG.getName())
-                                .setExampleValue("config.parser")
+                                .setExampleValue("config.xml")
                                 .setDescription("Path of the Obfuscate configuration parser file, priority is lower than the command line.")
                                 .build())
                 .addFlag(

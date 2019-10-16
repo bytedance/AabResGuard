@@ -14,7 +14,7 @@ public class FileFilterXmlParserTest extends BaseTest {
 
     @Test
     public void test() throws DocumentException {
-        FileFilterXmlParser parser = new FileFilterXmlParser(loadResourceFile("demo/config-filter.parser").toPath());
+        FileFilterXmlParser parser = new FileFilterXmlParser(loadResourceFile("demo/config-filter.xml").toPath());
         FileFilterConfig fileFilter = parser.parse();
         assert fileFilter != null;
         assert fileFilter.isActive();

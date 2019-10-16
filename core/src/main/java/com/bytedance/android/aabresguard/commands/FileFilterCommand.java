@@ -65,7 +65,7 @@ public abstract class FileFilterCommand {
                 .addFlag(
                         CommandHelp.FlagDescription.builder()
                                 .setFlagName(CONFIG_LOCATION_FLAG.getName())
-                                .setExampleValue("config.parser")
+                                .setExampleValue("config.xml")
                                 .setDescription("Path of the config file.")
                                 .build())
                 .addFlag(
