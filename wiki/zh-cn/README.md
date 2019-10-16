@@ -64,6 +64,12 @@ aabResGuard {
 ./gradlew clean :app:bundleDebug --stacktrace
 ```
 
+通过 `gradle` 获取混淆后的 `bundle` 文件路径
+```groovy
+def aabResGuardPlugin = project.tasks.getByName("aabresguard${VARIANT_NAME}");
+Path bundlePath = aabResGuardPlugin.getObfuscatedBundlePath();
+```
+
 ## [#命令行支持](COMMAND.md)
 **AabResGuard** 提供了 `jar` 包，可以使用命令行直接执行，具体的使用请移步 **[命令行支持](COMMAND.md)** 。
 
