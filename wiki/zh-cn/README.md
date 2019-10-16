@@ -20,10 +20,8 @@
 - **白名单：** 白名单中的资源，名称不予混淆。
 - **？？？：** 展望未来，会有更多的特性支持，欢迎提交 PR & issue。
 
-# 数据收益
+# [数据收益](DATA.md)
 **AabResGuard** 是抖音Android团队完成的资源混淆工具，目前已经在 **Tiktok、Musically、Vigo** 等多个产品上线多月，目前无相关资源问题的反馈。
-
-详细的数据收益信息请移步 **[数据收益](DATA.md)**
 
 # 快速开始
 ## #Gradle plugin
@@ -113,20 +111,17 @@ aabresguard obfuscate-bundle --bundle=app.aab --output=obfuscated.aab --config=c
 </resproguard>
 ```
 
-## # 输出文件
+## [# 输出文件](OUTPUT.md)
 在打包完成后会输出混淆后的文件和相应的日志文件。
 - **resources-mapping.txt：** 资源混淆 mapping，可作为下次混淆输入以达到增量混淆的目的。
 - **aab：** 优化后的 aab 文件。
 - **-duplicated.txt：** 被去重的文件日志记录。
 
-关于输出日志格式和更多的输出文件信息请移步 **[输出文件](OUTPUT.md)** 。
-
 # [版本日志](CHANGELOG.md)
 
-# 代码贡献
-阅读以下内容，了解如何参与改进 **AabResGuard**。
-## #贡献指南
-查看我们的 **[贡献指南](CONTRIBUTOR.md)** 来了解我们的开发流程。
+# [代码贡献](CONTRIBUTOR.md)
+阅读详细内容，了解如何参与改进 **AabResGuard**。
+
 ## #贡献者
 * [JingYeoh](https://github.com/JingYeoh)
 * [Jun Li]()
