@@ -74,6 +74,7 @@ aabResGuard {
 - **-duplicated.txt：** 被去重的文件日志记录。
 
 # [版本日志](CHANGELOG.md)
+版本变化日志记录，详细信息请移步 **[版本日志](CHANGELOG.md)** 。
 
 # [代码贡献](CONTRIBUTOR.md)
 阅读详细内容，了解如何参与改进 **AabResGuard**。
