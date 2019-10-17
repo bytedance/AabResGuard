@@ -1,11 +1,11 @@
 **[English](COMMAND.md)** | [简体中文](../zh-cn/COMMAND.md)
 
-# 命令行支持
+# Command line
 
-> **AabResGuard** 提供了 jar 包，可以直接通过命令行来运行资源混淆。
+> **AabResGuard** provides a jar file that can run resource obfuscation by command line.
 
-## #资源去重
-根据文件 `md5` 值对重复的文件进行合并，只保留一份，然后重定向原本的资源路径索引表中的值，以达到缩减包体积的目的。
+## #Merge duplicated resources
+The duplicate files will be merged according to the file `md5` value, only one file will be retained, and then the values in the original resource path index table will be redirected to reduce the volume of the package.
 ```cmd
 aabresguard merge-duplicated-res --bundle=app.aab --output=merged.aab 
 --storeFile=debug.store
@@ -13,10 +13,10 @@ aabresguard merge-duplicated-res --bundle=app.aab --output=merged.aab
 --keyAlias=android
 --keyPassword=android
 ```
-签名信息为可选参数，如果不指定签名信息，则会使用机器中 `Android` 默认的签名文件进行签名。
+The signature information is optional. If you do not specify the signature information, it will be signed using the `Android` default signature file on the PC.
 
-## #文件过滤
-支持指定特定的文件进行过滤，目前只支持 `META-INF/` 和 `lib/` 文件夹下的过滤。
+## #File filtering
+Support for specifying specific files for filtering. Currently only filtering under the `META-INF/` and `lib/` folders is supported.
 ```cmd
 aabresguard filter-file --bundle=app.aab --output=filtered.aab --config=config.xml
 --storeFile=debug.store
@@ -24,7 +24,8 @@ aabresguard filter-file --bundle=app.aab --output=filtered.aab --config=config.x
 --keyAlias=android
 --keyPassword=android
 ```
-配置文件 `config.xml`，过滤规则支持`正则表达式`
+
+Configuration file `config.xml`, filtering rules support `regular expressions`
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <resproguard>
@@ -34,10 +35,10 @@ aabresguard filter-file --bundle=app.aab --output=filtered.aab --config=config.x
     </filter>
 </resproguard>
 ```
-**适用场景：** 由于业务的需要，部分渠道需要打全量包，但是全量包会包括所有的 `so`，使用该根据可以过滤某一个纬度的 `abi`，并且不会影响 `bundletool` 的解析过程。
+**Applicable scenarios: ** Due to the needs of the business, some channels need to make a full package, but the full package will include all `so` files, `files filter` can be used to filter the `abi` of a certain latitude and will not affect `bundletool` process.
 
-## #资源混淆
-对输入的 `aab` 文件进行资源混淆，并输出混淆后的 `aab` 文件，支持 `资源去重` 和 `文件过滤`。
+## #Resources obfuscation
+Resource aliasing of the input `aab` file, and outputting the obfuscated `aab` file, supporting `Merge duplicated resources` and `file filtering`.
 ```cmd
 aabresguard obfuscate-bundle --bundle=app.aab --output=obfuscated.aab --config=config.xml --mapping=mapping.txt
 --merge-duplicated-res=true
@@ -46,7 +47,8 @@ aabresguard obfuscate-bundle --bundle=app.aab --output=obfuscated.aab --config=c
 --keyAlias=android
 --keyPassword=android
 ```
-配置文件 `config.xml`，白名单支持`正则表达式`
+
+Configuration file `config.xml`, whitelist support `regular expressions`
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <resproguard>
@@ -60,8 +62,8 @@ aabresguard obfuscate-bundle --bundle=app.aab --output=obfuscated.aab --config=c
 </resproguard>
 ```
 
-## #参数说明
-参数的说明请执行以下命令来进行查看：
+## #Parameter Description
+For the description of the parameters, please execute the following command:
 
 ```cmd
 aabresguard help

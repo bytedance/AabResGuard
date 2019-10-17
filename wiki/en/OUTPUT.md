@@ -1,14 +1,14 @@
 **[English](OUTPUT.md)** | [简体中文](../zh-cn/OUTPUT.md)
-# 输出文件
+# Output file
 
->混淆后的文件输出目录和 bundle 打包后输出的文件目录一致，均在 `build/outputs/bundle/{flavor}/` 目录下。
+>The obfuscated file output directory is identical to the file directory output by the bundle package, both under the `build/outputs/bundle/{flavor}/` directory.
 
-混淆后的输出文件如下图所示：
+The obfuscated output file is shown below:
 
 ![output](../images/output.png)
 
 ## resources-mapping
-用于记录资源混淆规则的日志文件，示例如下：
+A log file for recording resource obfuscation rules, the example is shown below:
 
 ```txt
 res dir mapping:
@@ -27,12 +27,12 @@ res entries path mapping:
 	0x7f060022 : base/res/drawable-xxxhdpi-v4/abc_ic_star_half_black_16dp.png -> res/k/o.png
 ```
 
-- **res dir mapping：** 存储资源文件目录的混淆规则。格式：dir -> dir（`res/` 根目录不可以被混淆）
-- **res id mapping：** 存储资源名称的混淆规则。格式：resourceId : resourceName -> resourceName（增量混淆时，resourceId 不会被读入）
-- **res entries path mapping：** 存储资源文件路径的混淆规则。格式：resourceId : path -> path（增量混淆时，resourceId 不会被读入）
+- **res dir mapping：** The obfuscated rules for storing resource file directories. Format: dir -> dir (`res/` root directory can not be obfuscated)
+- **res id mapping：** The obfuscated rules for storing resource names. Format: resourceId : resourceName -> resourceName (resourceId will not be read in increment obfuscating)
+- **res entries path mapping：** The obfuscated rules for storing resource file paths. Format: resourceId : path -> path (resourceId will not be read in obfuscating)
 
 ## -duplicated.txt
-用于记录被去重的资源文件，示例如下：
+Used to record the deduplicated resource files, the example is shown below:
 
 ```txt
 res filter path mapping:

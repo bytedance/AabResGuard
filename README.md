@@ -73,10 +73,10 @@ Path bundlePath = aabResGuardPlugin.getObfuscatedBundlePath()
 ```
 
 ## [#Command line](wiki/en/COMMAND.md)
-**AabResGuard** provides a `jar` file that can be executed directly from the command line. More details, please go to **[Command Line](COMMAND.md)**.
+**AabResGuard** provides a `jar` file that can be executed directly from the command line. More details, please go to **[Command Line](wiki/en/COMMAND.md)**.
 
 ## [# Output](wiki/en/OUTPUT.md)
-After the packaging is completed, the obfuscated file and the log files will be output. More details, please go to **[Output File](OUTPUT.md)**.
+After the packaging is completed, the obfuscated file and the log files will be output. More details, please go to **[Output File](wiki/en/OUTPUT.md)**.
 - **resources-mapping.txt:** Resource obfuscation mapping, which can be used as the next obfuscation input to achieve incremental obfuscate.
 - **aab:** Optimized aab file.
 - **-duplicated.txt:** duplicated file logging.
