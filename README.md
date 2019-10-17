@@ -19,7 +19,7 @@
 - **???:** Looking ahead, there will be more feature support, welcome to submit PR & issue.
 
 # [Data of size savings](wiki/en/DATA.md)
-**AabResGuard** is a resource obfuscation tool powered by the douyin Android team. It has been online for many months, such as **Tiktok, Musically, Vigo**, etc. 
+**AabResGuard** is a resource obfuscation tool powered by the douyin Android team. It has been launched at the end of July 2018 in several overseas products, such as **Tiktok, Musically, Vigo**, etc. 
 There is no feedback on related resource issues. 
 For more data details, please go to **[Data of size savings](wiki/en/DATA.md)**.
 
