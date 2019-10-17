@@ -5,7 +5,7 @@
 </h1>
 
 [![License](https://img.shields.io/badge/license-Apache2.0-brightgreen)](../../LICENSE)
-[![Bundletool](https://img.shields.io/badge/Bundletool-0.10.0-blue)](https://github.com/google/bundletool)
+[![Bundletool](https://img.shields.io/badge/Dependency-Bundletool/0.10.0-blue)](https://github.com/google/bundletool)
 
 [English](../../README.md) | **[简体中文](README.md)**
 
