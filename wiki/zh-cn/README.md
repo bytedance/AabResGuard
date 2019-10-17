@@ -13,8 +13,9 @@
 
 # 特性
 - **资源去重：** 对重复资源文件进行合并，缩减包体积。
-- **增量混淆：** 输入 `mapping` 文件，支持增量混淆。
+- **文件过滤：** 支持对 `bundle` 包中的文件进行过滤，目前只支持 `MATE-INFO/`、`lib/` 路径下的过滤。
 - **白名单：** 白名单中的资源，名称不予混淆。
+- **增量混淆：** 输入 `mapping` 文件，支持增量混淆。
 - **？？？：** 展望未来，会有更多的特性支持，欢迎提交 PR & issue。
 
 # [数据收益](DATA.md)
@@ -66,8 +67,8 @@ aabResGuard {
 
 通过 `gradle` 获取混淆后的 `bundle` 文件路径
 ```groovy
-def aabResGuardPlugin = project.tasks.getByName("aabresguard${VARIANT_NAME}");
-Path bundlePath = aabResGuardPlugin.getObfuscatedBundlePath();
+def aabResGuardPlugin = project.tasks.getByName("aabresguard${VARIANT_NAME}")
+Path bundlePath = aabResGuardPlugin.getObfuscatedBundlePath()
 ```
 
 ## [#命令行支持](COMMAND.md)
