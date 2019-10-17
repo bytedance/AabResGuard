@@ -1,4 +1,4 @@
-# AadResGuard
+# AabResGuard
 <h1 align="center">
   <img src="" height="200" width="200"/>
   <p align="center" style="font-size: 0.5em">针对 aab 文件的资源混淆工具</p>
