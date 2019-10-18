@@ -1,3 +1,7 @@
+if (!"true".equalsIgnoreCase(findProperty("enableAabResGuardPlugin"))) {
+    return
+}
+
 apply plugin: "com.bytedance.android.aabResGuard"
 aabResGuard {
     mappingFile = file("../mapping.txt").toPath()

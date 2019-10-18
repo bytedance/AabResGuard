@@ -22,7 +22,11 @@ buildscript {
         classpath deps.gradle.tools
         classpath deps.kotlin.plugin
         classpath deps.plugin.digital
-        classpath "com.bytedance.android:aabresguard-plugin:${versions.aabresguard}"
+        classpath "com.github.jengelman.gradle.plugins:shadow:4.0.4"
+
+        if ("true".equalsIgnoreCase(findProperty("enableAabResGuardPlugin"))) {
+            classpath "com.bytedance.android:aabresguard-plugin:${versions.aabresguard}"
+        }
     }
 }
 

@@ -5,12 +5,12 @@ apply from: rootProject.file('gradle/publish.gradle')
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    compile gradleApi()
+    implementation gradleApi()
     implementation localGroovy()
     compileOnly deps.gradle.tools
 
-    compile deps.kotlin.stdlib
-    compile project(":core")
+    implementation deps.kotlin.stdlib
+    api project(":core")
 }
 
 sourceCompatibility = versions.java

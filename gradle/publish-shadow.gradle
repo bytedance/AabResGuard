@@ -12,7 +12,19 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
     version = versions[ARTIFACT_ID]
 }
 
+apply plugin: 'maven-publish'
 publishing {
+    publications {
+        shadow(MavenPublication) { publication ->
+            project.shadow.component(publication)
+            groupId GROUP_ID
+            artifactId ARTIFACT_ID
+            version versions[ARTIFACT_ID]
+
+            artifact sourcesJar
+            artifact javadocJar
+        }
+    }
     repositories {
         maven {
             def releasesRepoUrl = RELEASE_REPOSITORY_URL
@@ -23,25 +35,5 @@ publishing {
                 password = NEXUS_PASSWORD
             }
         }
-
-        maven {
-            url = "${rootProject.projectDir}/repo"
-        }
-    }
-
-    if (project.plugins.hasPlugin("java-library") || project.plugins.hasPlugin("java")) {
-        publications {
-            shadow(MavenPublication) {
-                from components.java
-                artifact sourcesJar
-                artifact javadocJar
-
-                groupId GROUP_ID
-                artifactId ARTIFACT_ID
-                version versions[ARTIFACT_ID]
-            }
-        }
-    } else {
-        throw new GradleScriptException("java-library plugin required")
     }
 }

@@ -1,5 +1,3 @@
-import proguard.gradle.ProGuardTask
-
 buildscript {
     repositories {
         jcenter()
@@ -13,9 +11,11 @@ buildscript {
 }
 
 apply plugin: 'java-library'
-apply from: rootProject.file('gradle/publish.gradle')
-apply from: rootProject.file('gradle/java-artifacts.gradle')
 apply plugin: "com.google.protobuf"
+apply plugin: "com.github.johnrengelman.shadow"
+apply from: rootProject.file('gradle/publish-shadow.gradle')
+
+[compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
 
 configurations.all {
     resolutionStrategy.dependencySubstitution {
@@ -34,14 +34,16 @@ dependencies {
 
     implementation "com.android.support:support-annotations:24.2.0"
     implementation 'commons-io:commons-io:2.6'
-    compile 'commons-codec:commons-codec:1.5'
+    shadow 'commons-codec:commons-codec:1.5'
+    shadow "com.google.guava:guava:27.0.1-jre"
 
     annotationProcessor "com.google.auto.value:auto-value:1.5.2"
     implementation "com.google.auto.value:auto-value:1.5.2"
-    compile group: 'org.dom4j', name: 'dom4j', version: '2.1.0'
-    compile deps.bundletool
+    shadow group: 'org.dom4j', name: 'dom4j', version: '2.1.0'
+    shadow deps.bundletool
 
     testImplementation deps.gradle.tools
+    testImplementation group: 'org.dom4j', name: 'dom4j', version: '2.1.0'
     testImplementation "junit:junit:4.12"
     testImplementation "org.junit.jupiter:junit-jupiter-api:5.2.0"
     testImplementation "com.google.guava:guava:27.0.1-jre"
@@ -58,47 +60,23 @@ protobuf {
     }
 }
 
-[compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
+shadowJar {
+    baseName = "AabResGuard"
+    version = versions[ARTIFACT_ID]
+    classifier = ''
 
-jar {
+    minimize()
+
+    from sourceSets.main.output
+    configurations = [
+            project.configurations.shadow
+    ]
     manifest {
         attributes 'Main-Class': 'com.bytedance.android.aabresguard.AabResGuardMain'
-        attributes 'Manifest-Version': versions[ARTIFACT_ID]
-        attributes "Jar-Version": versions[ARTIFACT_ID]
-        attributes "Build-Time": releaseTime()
     }
-    from {
-        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
-    }
-    exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
+    exclude 'META-INF/*.SF'
+    exclude 'META-INF/*.DSA'
+    exclude 'META-INF/*.RSA'
+
+    relocate 'com.android', 'shadow.bytedance.com.android'
 }
-
-// copy the jar to work directory
-task buildJar(type: Copy, dependsOn: [build, jar]) {
-    version = versions[ARTIFACT_ID]
-    from('build/libs') {
-        include '*' + version + '*.jar'
-    }
-    into("../repo/AabResGuard-jar/${version}/")
-}
-
-
-task proguardJar(type: ProGuardTask, dependsOn: [build, jar]) {
-    version = versions[ARTIFACT_ID]
-    injars "build/libs/core-${version}.jar"
-    outjars 'build/libs/proguard.jar'
-    configuration 'proguard-rules.pro'
-    verbose()
-    copy {
-        from('build/libs') {
-            include '*' + version + '*.jar'
-        }
-        into("../repo/AabResGuard-jar/${version}/")
-    }
-}
-
-def static releaseTime() {
-    return new Date().format("yyyy-MM-dd HH:mm ZZZ", TimeZone.getDefault())
-}
-
-defaultTasks 'buildJar'
