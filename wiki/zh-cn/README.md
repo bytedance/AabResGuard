@@ -74,7 +74,7 @@ Path bundlePath = aabResGuardPlugin.getObfuscatedBundlePath()
 ## [#命令行支持](COMMAND.md)
 **AabResGuard** 提供了 `jar` 包，可以使用命令行直接执行，具体的使用请移步 **[命令行支持](COMMAND.md)** 。
 
-## [# 输出文件](OUTPUT.md)
+## [#输出文件](OUTPUT.md)
 在打包完成后会输出混淆后的文件和相应的日志文件，详细信息请移步 **[输出文件](OUTPUT.md)** 。
 - **resources-mapping.txt：** 资源混淆 mapping，可作为下次混淆输入以达到增量混淆的目的。
 - **aab：** 优化后的 aab 文件。
