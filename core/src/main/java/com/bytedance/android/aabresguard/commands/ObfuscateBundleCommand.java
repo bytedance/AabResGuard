@@ -4,6 +4,7 @@ import com.android.tools.build.bundletool.flags.Flag;
 import com.android.tools.build.bundletool.flags.ParsedFlags;
 import com.android.tools.build.bundletool.model.AppBundle;
 import com.android.tools.build.bundletool.model.exceptions.CommandExecutionException;
+import com.bytedance.android.aabresguard.android.JarSigner;
 import com.bytedance.android.aabresguard.bundle.AppBundleAnalyzer;
 import com.bytedance.android.aabresguard.bundle.AppBundlePackager;
 import com.bytedance.android.aabresguard.bundle.AppBundleSigner;
@@ -148,7 +149,7 @@ public abstract class ObfuscateBundleCommand {
         return builder.build();
     }
 
-    public Path execute() throws IOException {
+    public Path execute() throws IOException, InterruptedException {
         TimeClock timeClock = new TimeClock();
 
         AppBundle appBundle = new AppBundleAnalyzer(getBundlePath()).analyze();
@@ -179,7 +180,7 @@ public abstract class ObfuscateBundleCommand {
         // sign bundle
         AppBundleSigner signer = new AppBundleSigner(getOutputPath());
         getStoreFile().ifPresent(storeFile -> {
-            signer.setBundleSignature(new AppBundleSigner.BundleSignature(
+            signer.setBundleSignature(new JarSigner.Signature(
                     storeFile, getStorePassword().get(), getKeyAlias().get(), getKeyPassword().get()
             ));
         });

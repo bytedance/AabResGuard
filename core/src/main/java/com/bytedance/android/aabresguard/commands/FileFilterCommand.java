@@ -4,6 +4,7 @@ import com.android.tools.build.bundletool.flags.Flag;
 import com.android.tools.build.bundletool.flags.ParsedFlags;
 import com.android.tools.build.bundletool.model.AppBundle;
 import com.android.tools.build.bundletool.model.exceptions.CommandExecutionException;
+import com.bytedance.android.aabresguard.android.JarSigner;
 import com.google.auto.value.AutoValue;
 import com.bytedance.android.aabresguard.bundle.AppBundleAnalyzer;
 import com.bytedance.android.aabresguard.bundle.AppBundlePackager;
@@ -113,7 +114,7 @@ public abstract class FileFilterCommand {
         return builder.build();
     }
 
-    public Path execute() throws IOException, DocumentException {
+    public Path execute() throws IOException, DocumentException, InterruptedException {
         TimeClock timeClock = new TimeClock();
 
         AppBundle appBundle = new AppBundleAnalyzer(getBundlePath()).analyze();
@@ -135,7 +136,7 @@ public abstract class FileFilterCommand {
         // sign bundle
         AppBundleSigner signer = new AppBundleSigner(getOutputPath());
         getStoreFile().ifPresent(storeFile -> {
-            signer.setBundleSignature(new AppBundleSigner.BundleSignature(
+            signer.setBundleSignature(new JarSigner.Signature(
                     storeFile, getStorePassword().get(), getKeyAlias().get(), getKeyPassword().get()
             ));
         });

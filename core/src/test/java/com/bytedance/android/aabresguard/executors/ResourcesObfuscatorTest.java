@@ -2,9 +2,9 @@ package com.bytedance.android.aabresguard.executors;
 
 import com.android.tools.build.bundletool.model.AppBundle;
 import com.android.tools.build.bundletool.model.BundleModule;
-import com.android.tools.r8.com.google.common.collect.ImmutableSet;
 import com.bytedance.android.aabresguard.BaseTest;
 import com.bytedance.android.aabresguard.bundle.AppBundleAnalyzer;
+import com.google.common.collect.ImmutableSet;
 
 import org.junit.Test;
 

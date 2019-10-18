@@ -73,7 +73,7 @@ public class FileFilterCommandTest extends BaseTest {
     }
 
     @Test
-    public void testPass() throws IOException, DocumentException {
+    public void testPass() throws IOException, DocumentException, InterruptedException {
         File rawAabFile = loadResourceFile("demo/demo.aab");
         File outputFile = new File(getTempDirPath().toFile(), "filtered.aab");
         FileFilterCommand.fromFlags(

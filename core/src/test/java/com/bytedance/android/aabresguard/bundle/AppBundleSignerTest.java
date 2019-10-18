@@ -15,7 +15,7 @@ import java.io.IOException;
 public class AppBundleSignerTest extends BaseTest {
 
     @Test
-    public void testAppBundleSigner() throws IOException {
+    public void testAppBundleSigner() throws IOException, InterruptedException {
         File output = new File(getTempDirPath().toFile(), "signed.aab");
         FileOperation.copyFileUsingStream(loadResourceFile("demo/demo.aab"), output);
         AppBundleSigner signer = new AppBundleSigner(output.toPath());

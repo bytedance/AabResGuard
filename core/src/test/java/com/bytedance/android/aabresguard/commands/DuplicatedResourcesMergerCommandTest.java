@@ -88,7 +88,7 @@ public class DuplicatedResourcesMergerCommandTest extends BaseTest {
     }
 
     @Test
-    public void testMergeDuplicatedRes() throws IOException {
+    public void testMergeDuplicatedRes() throws IOException, InterruptedException {
         File rawAabFile = loadResourceFile("demo/demo.aab");
         File outputFile = new File(getTempDirPath().toFile(), "duplicated.aab");
         DuplicatedResourcesMergerCommand.fromFlags(

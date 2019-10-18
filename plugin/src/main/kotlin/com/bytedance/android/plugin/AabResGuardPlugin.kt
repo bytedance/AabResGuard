@@ -47,7 +47,7 @@ class AabResGuardPlugin : Plugin<Project> {
         val bundleTask: Task = project.tasks.getByName(bundleTaskName)
         val bundlePackageTask: Task = project.tasks.getByName("package${variantName}Bundle")
         bundleTask.dependsOn(aabResGuardTask)
-        aabResGuardTask.mustRunAfter(bundlePackageTask)
+        aabResGuardTask.dependsOn(bundlePackageTask)
     }
 
     private fun checkApplicationPlugin(project: Project) {
