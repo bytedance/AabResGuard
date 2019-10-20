@@ -90,4 +90,5 @@ Path bundlePath = aabResGuardPlugin.getObfuscatedBundlePath()
 * [JingYeoh](https://github.com/JingYeoh)
 * [Jun Li]()
 * [Zilai Jiang](https://github.com/Zzzia)
-
+* [Zhiqian Yang](https://github.com/yangzhiqian)
+* [Zixuan Ma](https://github.com/EvilsoulM)
