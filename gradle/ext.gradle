@@ -15,6 +15,7 @@ if (localFile.exists()) {
         }
         def arr = line.split("=")
         ext.set(arr[0], arr[1])
+        System.setProperty(arr[0], arr[1])
     }
     ext.properties.keySet().forEach {
         println "\t${it} : ${ext.get(it)}"

@@ -12,15 +12,24 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
     version = versions[ARTIFACT_ID]
 }
 
+def releasesRepoUrl = System.getProperty("RELEASE_REPOSITORY_URL")
+def snapshotsRepoUrl = System.getProperty("SNAPSHOT_REPOSITORY_URL")
+def publishUrl = versions[ARTIFACT_ID].endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+def publishUserName = System.getProperty("NEXUS_USERNAME")
+def publishPassword = System.getProperty("NEXUS_PASSWORD")
+
+println "-------publish info---------"
+println "url: $publishUrl"
+println "username: $publishUserName"
+println "password: $publishPassword"
+
 publishing {
     repositories {
         maven {
-            def releasesRepoUrl = RELEASE_REPOSITORY_URL
-            def snapshotsRepoUrl = SNAPSHOT_REPOSITORY_URL
-            url = versions[ARTIFACT_ID].endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            url = publishUrl
             credentials {
-                username = NEXUS_USERNAME
-                password = NEXUS_PASSWORD
+                username = publishUserName
+                password = publishPassword
             }
         }
 
