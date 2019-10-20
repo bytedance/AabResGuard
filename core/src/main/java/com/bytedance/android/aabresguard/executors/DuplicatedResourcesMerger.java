@@ -30,8 +30,8 @@ import java.util.zip.ZipFile;
 
 import static com.android.tools.build.bundletool.model.utils.files.FilePreconditions.checkFileDoesNotExist;
 import static com.android.tools.build.bundletool.model.utils.files.FilePreconditions.checkFileExistsAndReadable;
-import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.bytedance.android.aabresguard.utils.FileOperation.getNetFileSizeDescription;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 
 /**
  * Created by YangJing on 2019/10/10 .
@@ -178,8 +178,8 @@ public class DuplicatedResourcesMerger {
         );
         writer.close();
         System.out.println(String.format(
-                "[merge duplicated] duplicated count %d, total size: %s",
-                duplicatedFileList.size(),
+                "[merge duplicated] duplicated count %s, total size: %s",
+                String.valueOf(duplicatedFileList.size()),
                 getNetFileSizeDescription(duplicatedSize)
         ));
         mergeDuplicatedTotalSize += duplicatedSize;
