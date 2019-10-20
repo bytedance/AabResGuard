@@ -9,6 +9,7 @@ import java.util.Set;
  */
 public class AabResGuardConfig {
     private FileFilterConfig fileFilter;
+    private StringFilterConfig stringFilterConfig;
     private boolean useWhiteList;
     private Set<String> whiteList = new HashSet<>();
 
@@ -35,5 +36,13 @@ public class AabResGuardConfig {
 
     public void addWhiteList(String whiteRule) {
         this.whiteList.add(whiteRule);
+    }
+
+    public StringFilterConfig getStringFilterConfig() {
+        return stringFilterConfig;
+    }
+
+    public void setStringFilterConfig(StringFilterConfig stringFilterConfig) {
+        this.stringFilterConfig = stringFilterConfig;
     }
 }

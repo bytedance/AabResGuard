@@ -7,6 +7,7 @@ import com.bytedance.android.aabresguard.commands.CommandHelp;
 import com.bytedance.android.aabresguard.commands.DuplicatedResourcesMergerCommand;
 import com.bytedance.android.aabresguard.commands.FileFilterCommand;
 import com.bytedance.android.aabresguard.commands.ObfuscateBundleCommand;
+import com.bytedance.android.aabresguard.commands.StringFilterCommand;
 import com.bytedance.android.aabresguard.model.version.AabResGuardVersion;
 import com.google.common.collect.ImmutableList;
 
@@ -86,7 +87,8 @@ public class AabResGuardMain {
                 ImmutableList.of(
                         ObfuscateBundleCommand.help(),
                         DuplicatedResourcesMergerCommand.help(),
-                        FileFilterCommand.help()
+                        FileFilterCommand.help(),
+                        StringFilterCommand.help()
                 );
         System.out.println("Synopsis: aabResGuard <command> ...");
         System.out.println();

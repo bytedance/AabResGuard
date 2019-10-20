@@ -44,6 +44,8 @@ open class AabResGuardTask : DefaultTask() {
         println(aabResGuard.toString())
         signingConfig = variantScope.variantData.variantConfiguration.signingConfig
         printSignConfiguration()
+        prepareUnusedFile()
+
         val command = ObfuscateBundleCommand.builder()
                 .setBundlePath(bundlePath)
                 .setOutputPath(obfuscatedBundlePath)
@@ -52,6 +54,8 @@ open class AabResGuardTask : DefaultTask() {
                 .setWhiteList(aabResGuard.whiteList)
                 .setFilterFile(aabResGuard.enableFilterFiles)
                 .setFileFilterRules(aabResGuard.filterList)
+                .setRemoveStr(aabResGuard.enableFilterStrings)
+                .setUnusedStrPath(aabResGuard.unusedStringPath)
 
         if (signingConfig.storeFile.exists()) {
             command.setStoreFile(signingConfig.storeFile.toPath())
@@ -60,6 +64,25 @@ open class AabResGuardTask : DefaultTask() {
                     .setStorePassword(signingConfig.storePassword)
         }
         command.build().execute()
+    }
+
+    private fun prepareUnusedFile() {
+        val simpleName = variantScope.variantData.name.replace("Release", "") //musicallyI18n
+        val name = simpleName[0].toLowerCase() + simpleName.substring(1)
+        val resourcePath = "${project.buildDir}/outputs/mapping/$name/release/unused.txt"
+        val usedFile = File(resourcePath)
+        if (usedFile.exists()) {
+            println("find unused.txt : ${usedFile.absolutePath}")
+            if (aabResGuard.enableFilterStrings) {
+                if (aabResGuard.unusedStringPath == null || aabResGuard.unusedStringPath!!.isBlank()) {
+                    aabResGuard.unusedStringPath = usedFile.absolutePath
+                    println("replace unused.txt!")
+                }
+            }
+        } else {
+            println("not exists unused.txt : ${usedFile.absolutePath}\n" +
+                    "use default path : ${aabResGuard.unusedStringPath}")
+        }
     }
 
     private fun printSignConfiguration() {

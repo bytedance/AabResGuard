@@ -15,4 +15,6 @@ aabResGuard {
     filterList = [
             "*/arm64-v8a/*"
     ]
+    enableFilterStrings = false
+    unusedStringPath = "build/output/xxx.txt"
 }

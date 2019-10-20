@@ -13,6 +13,8 @@ open class AabResGuardExtension {
     var mergeDuplicatedRes: Boolean = false
     var enableFilterFiles: Boolean = false
     var filterList: Set<String>? = HashSet()
+    var enableFilterStrings: Boolean = false
+    var unusedStringPath: String? = null
 
     override fun toString(): String {
         return "AabResGuardExtension\n" +
@@ -21,6 +23,8 @@ open class AabResGuardExtension {
                 "\tobfuscatedBundleFileName=$obfuscatedBundleFileName\n" +
                 "\tmergeDuplicatedRes=$mergeDuplicatedRes\n" +
                 "\tenableFilterFiles=$enableFilterFiles\n" +
-                "\tfilterList=${if (filterList == null) null else filterList}"
+                "\tfilterList=${if (filterList == null) null else filterList}" +
+                "\tenableFilterStrings=$enableFilterStrings\n" +
+                "\tunusedStringPath=$unusedStringPath"
     }
 }

@@ -1,0 +1,4 @@
+abc_action_bar_home_description
+abc_action_bar_up_description
+abc_action_menu_overflow_description
+abc_action_mode_done

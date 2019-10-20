@@ -3,6 +3,9 @@
     <issue id="whitelist" isactive="true">
         <path value="com.bytedance.android.ugc.aweme.R.raw.*" />
     </issue>
+    <issue id="removeStr" isactive="true">
+        <path value="path" />
+    </issue>
     <filter isactive="false">
         <rule value="*/arm64-v8a/*" />
         <rule value="META-INF/*.RSA" />

@@ -50,6 +50,10 @@ public class AabResGuardXmlParser {
 
         // file filter
         aabResGuardConfig.setFileFilter(new FileFilterXmlParser(configPath).parse());
+
+        // string filter
+        aabResGuardConfig.setStringFilterConfig(new StringFilterXmlParser(configPath).parse());
+
         return aabResGuardConfig;
     }
 }
