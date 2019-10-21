@@ -43,6 +43,7 @@ dependencies {
     shadow deps.bundletool
 
     testImplementation deps.gradle.tools
+    testImplementation "com.android.tools.build:aapt2-proto:0.4.0"
     testImplementation group: 'org.dom4j', name: 'dom4j', version: '2.1.0'
     testImplementation "junit:junit:4.12"
     testImplementation "org.junit.jupiter:junit-jupiter-api:5.2.0"
