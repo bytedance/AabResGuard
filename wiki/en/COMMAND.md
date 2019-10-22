@@ -62,6 +62,26 @@ Configuration file `config.xml`, whitelist support `regular expressions`
 </resproguard>
 ```
 
+## #String filtering
+Specify a line-by-line split string list file to filter out value and translations if name is matched in the string resource type
+```cmd
+aabresguard filter-file --bundle=app.aab --output=filtered.aab --config=config.xml
+--storeFile=debug.store
+--storePassword=android
+--keyAlias=android
+--keyPassword=android
+```
+Configuration file `config.xml`
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<resproguard>
+    <filter-str isactive="false">
+        <path value="unused.txt" />
+    </filter-str>
+</resproguard>
+```
+
+
 ## #Parameter Description
 For the description of the parameters, please execute the following command:
 

@@ -28,24 +28,17 @@ public class StringFilterXmlParser {
         SAXReader reader = new SAXReader();
         Document doc = reader.read(configPath.toFile());
         Element root = doc.getRootElement();
-        for (Iterator i = root.elementIterator("issue"); i.hasNext(); ) {
+
+        for (Iterator i = root.elementIterator("filter-str"); i.hasNext(); ) {
             Element element = (Element) i.next();
-            String id = element.attributeValue("id");
-            if (id == null) {
-                continue;
+            String isActive = element.attributeValue("isactive");
+            if (isActive != null && isActive.toLowerCase().equals("true")) {
+                config.setActive(true);
             }
-            switch (id) {
-                case "removeStr":
-                    String isActive = element.attributeValue("isactive");
-                    if (isActive != null && isActive.toLowerCase().equals("true")) {
-                        config.setActive(true);
-                    }
-                    for (Iterator rules = element.elementIterator("path"); rules.hasNext(); ) {
-                        Element ruleElement = (Element) rules.next();
-                        String path = ruleElement.attributeValue("value");
-                        config.setPath(path);
-                    }
-                    break;
+            for (Iterator rules = element.elementIterator("path"); rules.hasNext(); ) {
+                Element ruleElement = (Element) rules.next();
+                String path = ruleElement.attributeValue("value");
+                config.setPath(path);
             }
         }
         return config;

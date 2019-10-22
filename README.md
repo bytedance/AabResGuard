@@ -16,6 +16,7 @@
 - **Filter bundle files:** Support for filtering files in the `bundle` package. Currently only supports filtering in the `MATE-INFO/` and `lib/` paths.
 - **White list:** The resources in the whitelist are not to be obfuscated.
 - **Incremental obfuscation:** Input the `mapping` file to support incremental obfuscation.
+- **Remove string:** Input the unused file splits by lines to support remove strings.
 - **???:** Looking ahead, there will be more feature support, welcome to submit PR & issue.
 
 # [Data of size savings](wiki/en/DATA.md)
