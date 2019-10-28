@@ -20,6 +20,7 @@ import org.dom4j.DocumentException;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Optional;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import static com.android.tools.build.bundletool.model.utils.files.FilePreconditions.checkFileDoesNotExist;
@@ -110,11 +111,31 @@ public abstract class FileFilterCommand {
         return new AutoValue_FileFilterCommand.Builder();
     }
 
-    public static FileFilterCommand fromFlags(ParsedFlags flags) {
+    public static FileFilterCommand fromFlags(ParsedFlags flags) throws DocumentException {
         Builder builder = builder();
         builder.setBundlePath(BUNDLE_LOCATION_FLAG.getRequiredValue(flags));
-        builder.setConfigPath(CONFIG_LOCATION_FLAG.getRequiredValue(flags));
         builder.setOutputPath(OUTPUT_FLAG.getRequiredValue(flags));
+
+        // parse config
+        Optional<Path> configOptional = CONFIG_LOCATION_FLAG.getValue(flags);
+        if (configOptional.isPresent()) {
+            Path configPath = configOptional.get();
+            if (!configPath.toFile().getName().endsWith(".xml")) {
+                throw CommandExecutionException.builder()
+                        .withMessage("Wrong properties: %s must end with '.xml'.",
+                                CONFIG_LOCATION_FLAG)
+                        .build();
+            }
+            FileFilterXmlParser parser = new FileFilterXmlParser(configPath);
+            FileFilterConfig fileFilter = parser.parse();
+            if (!fileFilter.isActive()) {
+                throw CommandExecutionException.builder()
+                        .withMessage("parser attribute filter#isactive can not be 'false' in %s command",
+                                COMMAND_NAME)
+                        .build();
+            }
+            builder.setFileFilterRules(fileFilter.getRules());
+        }
 
         DISABLE_SIGN_FLAG.getValue(flags).ifPresent(builder::setDisableSign);
         STORE_FILE_FLAG.getValue(flags).ifPresent(builder::setStoreFile);
@@ -128,17 +149,8 @@ public abstract class FileFilterCommand {
         TimeClock timeClock = new TimeClock();
 
         AppBundle appBundle = new AppBundleAnalyzer(getBundlePath()).analyze();
-        // parse config.xml
-        FileFilterXmlParser parser = new FileFilterXmlParser(getConfigPath());
-        FileFilterConfig fileFilter = parser.parse();
-        if (!fileFilter.isActive()) {
-            throw CommandExecutionException.builder()
-                    .withMessage("parser attribute filter#isactive can not be 'false' in %s command",
-                            COMMAND_NAME)
-                    .build();
-        }
         // filter bundle files
-        BundleFileFilter filter = new BundleFileFilter(getBundlePath(), appBundle, fileFilter.getRules());
+        BundleFileFilter filter = new BundleFileFilter(getBundlePath(), appBundle, getFileFilterRules());
         AppBundle filteredAppBundle = filter.filter();
         // package bundle
         AppBundlePackager packager = new AppBundlePackager(filteredAppBundle, getOutputPath());
@@ -173,7 +185,7 @@ public abstract class FileFilterCommand {
 
     public abstract Path getOutputPath();
 
-    public abstract Path getConfigPath();
+    public abstract Set<String> getFileFilterRules();
 
     public abstract Optional<Boolean> getDisableSign();
 
@@ -191,7 +203,7 @@ public abstract class FileFilterCommand {
 
         public abstract Builder setOutputPath(Path outputPath);
 
-        public abstract Builder setConfigPath(Path configPath);
+        public abstract Builder setFileFilterRules(Set<String> fileFilterRules);
 
         public abstract Builder setDisableSign(Boolean disableSign);
 
@@ -208,7 +220,6 @@ public abstract class FileFilterCommand {
         public FileFilterCommand build() {
             FileFilterCommand command = autoBuild();
             checkFileExistsAndReadable(command.getBundlePath());
-            checkFileExistsAndReadable(command.getConfigPath());
             checkFileDoesNotExist(command.getOutputPath());
             if (!command.getBundlePath().toFile().getName().endsWith(".aab")) {
                 throw CommandExecutionException.builder()
@@ -222,12 +233,7 @@ public abstract class FileFilterCommand {
                                 OUTPUT_FLAG)
                         .build();
             }
-            if (!command.getConfigPath().toFile().getName().endsWith(".xml")) {
-                throw CommandExecutionException.builder()
-                        .withMessage("Wrong properties: %s must end with '.xml'.",
-                                CONFIG_LOCATION_FLAG)
-                        .build();
-            }
+
             if (command.getStoreFile().isPresent()) {
                 checkFlagPresent(command.getKeyAlias(), KEY_ALIAS_FLAG);
                 checkFlagPresent(command.getKeyPassword(), KEY_PASSWORD_FLAG);
@@ -236,5 +242,4 @@ public abstract class FileFilterCommand {
             return command;
         }
     }
-
 }
