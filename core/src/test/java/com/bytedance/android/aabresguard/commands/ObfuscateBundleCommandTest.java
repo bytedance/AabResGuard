@@ -75,6 +75,23 @@ public class ObfuscateBundleCommandTest extends BaseTest {
     }
 
     @Test
+    public void test_DisableSign() throws DocumentException, IOException, InterruptedException {
+        File rawAabFile = loadResourceFile("demo/demo.aab");
+        File outputFile = new File(getTempDirPath().toFile(), "obfuscated.aab");
+        ObfuscateBundleCommand.fromFlags(
+                new FlagParser().parse(
+                        "--bundle=" + rawAabFile.getAbsolutePath(),
+                        "--output=" + outputFile.getAbsolutePath(),
+                        "--config=" + loadResourcePath("demo/config.xml"),
+                        "--merge-duplicated-res=true",
+                        "--mapping=" + loadResourcePath("demo/mapping.txt"),
+                        "--disable-sign=true"
+                )
+        ).execute();
+        assert outputFile.exists();
+    }
+
+    @Test
     public void testPass() throws IOException, DocumentException, InterruptedException {
         File rawAabFile = loadResourceFile("demo/demo.aab");
         File outputFile = new File(getTempDirPath().toFile(), "obfuscated.aab");

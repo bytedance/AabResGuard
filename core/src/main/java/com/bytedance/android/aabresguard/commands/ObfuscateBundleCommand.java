@@ -50,6 +50,7 @@ public abstract class ObfuscateBundleCommand {
 
     private static final Flag<Boolean> MERGE_DUPLICATED_RES_FLAG = Flag.booleanFlag("merge-duplicated-res");
 
+    private static final Flag<Boolean> DISABLE_SIGN_FLAG = Flag.booleanFlag("disable-sign");
     private static final Flag<Path> STORE_FILE_FLAG = Flag.path("storeFile");
     private static final Flag<String> STORE_PASSWORD_FLAG = Flag.string("storePassword");
     private static final Flag<String> KEY_ALIAS_FLAG = Flag.string("keyAlias");
@@ -93,6 +94,13 @@ public abstract class ObfuscateBundleCommand {
                                 .setExampleValue("merge-duplicated-res=true")
                                 .setOptional(true)
                                 .setDescription("If set, the duplicate resource files will be removed.")
+                                .build())
+                .addFlag(
+                        CommandHelp.FlagDescription.builder()
+                                .setFlagName(DISABLE_SIGN_FLAG.getName())
+                                .setExampleValue("disable-sign=true")
+                                .setOptional(true)
+                                .setDescription("If set true, the bundle file will not be signed after obfuscate.")
                                 .build())
                 .addFlag(
                         CommandHelp.FlagDescription.builder()
@@ -141,6 +149,7 @@ public abstract class ObfuscateBundleCommand {
         builder.setOutputPath(OUTPUT_FILE_FLAG.getRequiredValue(flags));
 
         MERGE_DUPLICATED_RES_FLAG.getValue(flags).ifPresent(builder::setMergeDuplicatedResources);
+        DISABLE_SIGN_FLAG.getValue(flags).ifPresent(builder::setDisableSign);
 
         STORE_FILE_FLAG.getValue(flags).ifPresent(builder::setStoreFile);
         STORE_PASSWORD_FLAG.getValue(flags).ifPresent(builder::setStorePassword);
@@ -178,13 +187,15 @@ public abstract class ObfuscateBundleCommand {
         AppBundlePackager packager = new AppBundlePackager(appBundle, getOutputPath());
         packager.execute();
         // sign bundle
-        AppBundleSigner signer = new AppBundleSigner(getOutputPath());
-        getStoreFile().ifPresent(storeFile -> {
-            signer.setBundleSignature(new JarSigner.Signature(
-                    storeFile, getStorePassword().get(), getKeyAlias().get(), getKeyPassword().get()
-            ));
-        });
-        signer.execute();
+        if (!getDisableSign().isPresent() || !getDisableSign().get()) {
+            AppBundleSigner signer = new AppBundleSigner(getOutputPath());
+            getStoreFile().ifPresent(storeFile -> {
+                signer.setBundleSignature(new JarSigner.Signature(
+                        storeFile, getStorePassword().get(), getKeyAlias().get(), getKeyPassword().get()
+                ));
+            });
+            signer.execute();
+        }
 
         long rawSize = FileOperation.getFileSizes(getBundlePath().toFile());
         long filteredSize = FileOperation.getFileSizes(getOutputPath().toFile());
@@ -217,6 +228,8 @@ public abstract class ObfuscateBundleCommand {
 
     public abstract Optional<Boolean> getMergeDuplicatedResources();
 
+    public abstract Optional<Boolean> getDisableSign();
+
     public abstract Set<String> getWhiteList();
 
     public abstract Optional<Set<String>> getFileFilterRules();
@@ -238,6 +251,8 @@ public abstract class ObfuscateBundleCommand {
         public abstract Builder setMappingPath(Path configPath);
 
         public abstract Builder setMergeDuplicatedResources(Boolean mergeDuplicatedResources);
+
+        public abstract Builder setDisableSign(Boolean disableSign);
 
         public abstract Builder setStoreFile(Path storeFile);
 
