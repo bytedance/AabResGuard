@@ -100,7 +100,7 @@ public abstract class ObfuscateBundleCommand {
                                 .setFlagName(DISABLE_SIGN_FLAG.getName())
                                 .setExampleValue("disable-sign=true")
                                 .setOptional(true)
-                                .setDescription("If set true, the bundle file will not be signed after obfuscate.")
+                                .setDescription("If set true, the bundle file will not be signed after package.")
                                 .build())
                 .addFlag(
                         CommandHelp.FlagDescription.builder()
@@ -149,8 +149,8 @@ public abstract class ObfuscateBundleCommand {
         builder.setOutputPath(OUTPUT_FILE_FLAG.getRequiredValue(flags));
 
         MERGE_DUPLICATED_RES_FLAG.getValue(flags).ifPresent(builder::setMergeDuplicatedResources);
-        DISABLE_SIGN_FLAG.getValue(flags).ifPresent(builder::setDisableSign);
 
+        DISABLE_SIGN_FLAG.getValue(flags).ifPresent(builder::setDisableSign);
         STORE_FILE_FLAG.getValue(flags).ifPresent(builder::setStoreFile);
         STORE_PASSWORD_FLAG.getValue(flags).ifPresent(builder::setStorePassword);
         KEY_ALIAS_FLAG.getValue(flags).ifPresent(builder::setKeyAlias);

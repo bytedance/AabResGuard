@@ -5,7 +5,6 @@ import com.android.tools.build.bundletool.flags.ParsedFlags;
 import com.android.tools.build.bundletool.model.AppBundle;
 import com.android.tools.build.bundletool.model.exceptions.CommandExecutionException;
 import com.bytedance.android.aabresguard.android.JarSigner;
-import com.google.auto.value.AutoValue;
 import com.bytedance.android.aabresguard.bundle.AppBundleAnalyzer;
 import com.bytedance.android.aabresguard.bundle.AppBundlePackager;
 import com.bytedance.android.aabresguard.bundle.AppBundleSigner;
@@ -14,6 +13,7 @@ import com.bytedance.android.aabresguard.model.xml.FileFilterConfig;
 import com.bytedance.android.aabresguard.parser.FileFilterXmlParser;
 import com.bytedance.android.aabresguard.utils.FileOperation;
 import com.bytedance.android.aabresguard.utils.TimeClock;
+import com.google.auto.value.AutoValue;
 
 import org.dom4j.DocumentException;
 
@@ -39,6 +39,8 @@ public abstract class FileFilterCommand {
     private static final Flag<Path> BUNDLE_LOCATION_FLAG = Flag.path("bundle");
     private static final Flag<Path> OUTPUT_FLAG = Flag.path("output");
     private static final Flag<Path> CONFIG_LOCATION_FLAG = Flag.path("config");
+
+    private static final Flag<Boolean> DISABLE_SIGN_FLAG = Flag.booleanFlag("disable-sign");
     private static final Flag<Path> STORE_FILE_FLAG = Flag.path("storeFile");
     private static final Flag<String> STORE_PASSWORD_FLAG = Flag.string("storePassword");
     private static final Flag<String> KEY_ALIAS_FLAG = Flag.string("keyAlias");
@@ -68,6 +70,13 @@ public abstract class FileFilterCommand {
                                 .setFlagName(CONFIG_LOCATION_FLAG.getName())
                                 .setExampleValue("config.xml")
                                 .setDescription("Path of the config file.")
+                                .build())
+                .addFlag(
+                        CommandHelp.FlagDescription.builder()
+                                .setFlagName(DISABLE_SIGN_FLAG.getName())
+                                .setExampleValue("disable-sign=true")
+                                .setOptional(true)
+                                .setDescription("If set true, the bundle file will not be signed after package.")
                                 .build())
                 .addFlag(
                         CommandHelp.FlagDescription.builder()
@@ -107,6 +116,7 @@ public abstract class FileFilterCommand {
         builder.setConfigPath(CONFIG_LOCATION_FLAG.getRequiredValue(flags));
         builder.setOutputPath(OUTPUT_FLAG.getRequiredValue(flags));
 
+        DISABLE_SIGN_FLAG.getValue(flags).ifPresent(builder::setDisableSign);
         STORE_FILE_FLAG.getValue(flags).ifPresent(builder::setStoreFile);
         STORE_PASSWORD_FLAG.getValue(flags).ifPresent(builder::setStorePassword);
         KEY_ALIAS_FLAG.getValue(flags).ifPresent(builder::setKeyAlias);
@@ -134,13 +144,15 @@ public abstract class FileFilterCommand {
         AppBundlePackager packager = new AppBundlePackager(filteredAppBundle, getOutputPath());
         packager.execute();
         // sign bundle
-        AppBundleSigner signer = new AppBundleSigner(getOutputPath());
-        getStoreFile().ifPresent(storeFile -> {
-            signer.setBundleSignature(new JarSigner.Signature(
-                    storeFile, getStorePassword().get(), getKeyAlias().get(), getKeyPassword().get()
-            ));
-        });
-        signer.execute();
+        if (!getDisableSign().isPresent() || !getDisableSign().get()) {
+            AppBundleSigner signer = new AppBundleSigner(getOutputPath());
+            getStoreFile().ifPresent(storeFile -> {
+                signer.setBundleSignature(new JarSigner.Signature(
+                        storeFile, getStorePassword().get(), getKeyAlias().get(), getKeyPassword().get()
+                ));
+            });
+            signer.execute();
+        }
 
         long rawSize = FileOperation.getFileSizes(getBundlePath().toFile());
         long filteredSize = FileOperation.getFileSizes(getOutputPath().toFile());
@@ -163,6 +175,8 @@ public abstract class FileFilterCommand {
 
     public abstract Path getConfigPath();
 
+    public abstract Optional<Boolean> getDisableSign();
+
     public abstract Optional<Path> getStoreFile();
 
     public abstract Optional<String> getStorePassword();
@@ -178,6 +192,8 @@ public abstract class FileFilterCommand {
         public abstract Builder setOutputPath(Path outputPath);
 
         public abstract Builder setConfigPath(Path configPath);
+
+        public abstract Builder setDisableSign(Boolean disableSign);
 
         public abstract Builder setStoreFile(Path storeFile);
 

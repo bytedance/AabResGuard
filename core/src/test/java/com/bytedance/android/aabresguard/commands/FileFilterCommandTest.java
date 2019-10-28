@@ -73,6 +73,21 @@ public class FileFilterCommandTest extends BaseTest {
     }
 
     @Test
+    public void test_disableSign() throws IOException, DocumentException, InterruptedException {
+        File rawAabFile = loadResourceFile("demo/demo.aab");
+        File outputFile = new File(getTempDirPath().toFile(), "filtered.aab");
+        FileFilterCommand.fromFlags(
+                new FlagParser().parse(
+                        "--bundle=" + rawAabFile.getAbsolutePath(),
+                        "--output=" + outputFile.getAbsolutePath(),
+                        "--config="+loadResourcePath("demo/config-filter.xml"),
+                        "--disable-sign=true"
+                )
+        ).execute();
+        assert outputFile.exists();
+    }
+
+    @Test
     public void testPass() throws IOException, DocumentException, InterruptedException {
         File rawAabFile = loadResourceFile("demo/demo.aab");
         File outputFile = new File(getTempDirPath().toFile(), "filtered.aab");

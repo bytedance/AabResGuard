@@ -88,6 +88,20 @@ public class DuplicatedResourcesMergerCommandTest extends BaseTest {
     }
 
     @Test
+    public void test_disableSign() throws IOException, InterruptedException {
+        File rawAabFile = loadResourceFile("demo/demo.aab");
+        File outputFile = new File(getTempDirPath().toFile(), "duplicated.aab");
+        DuplicatedResourcesMergerCommand.fromFlags(
+                new FlagParser().parse(
+                        "--bundle=" + rawAabFile.getAbsolutePath(),
+                        "--output=" + outputFile.getAbsolutePath(),
+                        "--disable-sign=true"
+                )
+        ).execute();
+        assert outputFile.exists();
+    }
+
+    @Test
     public void testMergeDuplicatedRes() throws IOException, InterruptedException {
         File rawAabFile = loadResourceFile("demo/demo.aab");
         File outputFile = new File(getTempDirPath().toFile(), "duplicated.aab");

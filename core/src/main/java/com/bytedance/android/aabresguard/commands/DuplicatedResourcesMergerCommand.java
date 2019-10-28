@@ -35,6 +35,8 @@ public abstract class DuplicatedResourcesMergerCommand {
 
     private static final Flag<Path> BUNDLE_LOCATION_FLAG = Flag.path("bundle");
     private static final Flag<Path> OUTPUT_FILE_FLAG = Flag.path("output");
+
+    private static final Flag<Boolean> DISABLE_SIGN_FLAG = Flag.booleanFlag("disable-sign");
     private static final Flag<Path> STORE_FILE_FLAG = Flag.path("storeFile");
     private static final Flag<String> STORE_PASSWORD_FLAG = Flag.string("storePassword");
     private static final Flag<String> KEY_ALIAS_FLAG = Flag.string("keyAlias");
@@ -58,6 +60,13 @@ public abstract class DuplicatedResourcesMergerCommand {
                                 .setFlagName(OUTPUT_FILE_FLAG.getName())
                                 .setExampleValue("shrink.aab")
                                 .setDescription("Path to where the file should be created after remove duplicated resources.")
+                                .build())
+                .addFlag(
+                        CommandHelp.FlagDescription.builder()
+                                .setFlagName(DISABLE_SIGN_FLAG.getName())
+                                .setExampleValue("disable-sign=true")
+                                .setOptional(true)
+                                .setDescription("If set true, the bundle file will not be signed after package.")
                                 .build())
                 .addFlag(
                         CommandHelp.FlagDescription.builder()
@@ -97,8 +106,9 @@ public abstract class DuplicatedResourcesMergerCommand {
 
         Builder builder = build();
         builder.setBundlePath(bundleLocationPath);
-        builder.setOutput(outputFilePath);
+        builder.setOutputPath(outputFilePath);
 
+        DISABLE_SIGN_FLAG.getValue(flags).ifPresent(builder::setDisableSign);
         STORE_FILE_FLAG.getValue(flags).ifPresent(builder::setStoreFile);
         STORE_PASSWORD_FLAG.getValue(flags).ifPresent(builder::setStorePassword);
         KEY_ALIAS_FLAG.getValue(flags).ifPresent(builder::setKeyAlias);
@@ -112,23 +122,24 @@ public abstract class DuplicatedResourcesMergerCommand {
 
         AppBundle appBundle = new AppBundleAnalyzer(getBundlePath()).analyze();
         // merge duplicated resources file
-        DuplicatedResourcesMerger merger = new DuplicatedResourcesMerger(getBundlePath(), appBundle, getOutput().getParent());
+        DuplicatedResourcesMerger merger = new DuplicatedResourcesMerger(getBundlePath(), appBundle, getOutputPath().getParent());
         appBundle = merger.merge();
         // package bundle
-        AppBundlePackager packager = new AppBundlePackager(appBundle, getOutput());
+        AppBundlePackager packager = new AppBundlePackager(appBundle, getOutputPath());
         packager.execute();
         // sign bundle
-        AppBundleSigner signer = new AppBundleSigner(getOutput());
-
-        getStoreFile().ifPresent(storeFile -> {
-            signer.setBundleSignature(new JarSigner.Signature(
-                    storeFile, getStorePassword().get(), getKeyAlias().get(), getKeyPassword().get()
-            ));
-        });
-        signer.execute();
+        if (!getDisableSign().isPresent() || !getDisableSign().get()) {
+            AppBundleSigner signer = new AppBundleSigner(getOutputPath());
+            getStoreFile().ifPresent(storeFile -> {
+                signer.setBundleSignature(new JarSigner.Signature(
+                        storeFile, getStorePassword().get(), getKeyAlias().get(), getKeyPassword().get()
+                ));
+            });
+            signer.execute();
+        }
 
         long rawSize = FileOperation.getFileSizes(getBundlePath().toFile());
-        long filteredSize = FileOperation.getFileSizes(getOutput().toFile());
+        long filteredSize = FileOperation.getFileSizes(getOutputPath().toFile());
         System.out.println(String.format(
                 "duplicate resources done, coast %s\n" +
                         "-----------------------------------------\n" +
@@ -139,12 +150,12 @@ public abstract class DuplicatedResourcesMergerCommand {
                 getNetFileSizeDescription(rawSize),
                 getNetFileSizeDescription(filteredSize)
         ));
-        return getOutput();
+        return getOutputPath();
     }
 
     public abstract Path getBundlePath();
 
-    public abstract Path getOutput();
+    public abstract Path getOutputPath();
 
     public abstract Optional<Path> getStoreFile();
 
@@ -154,11 +165,15 @@ public abstract class DuplicatedResourcesMergerCommand {
 
     public abstract Optional<String> getKeyPassword();
 
+    public abstract Optional<Boolean> getDisableSign();
+
     @AutoValue.Builder
     public abstract static class Builder {
         public abstract Builder setBundlePath(Path bundlePath);
 
-        public abstract Builder setOutput(Path outputPath);
+        public abstract Builder setOutputPath(Path outputPath);
+
+        public abstract Builder setDisableSign(Boolean disableSign);
 
         public abstract Builder setStoreFile(Path storeFile);
 
@@ -173,7 +188,7 @@ public abstract class DuplicatedResourcesMergerCommand {
         public DuplicatedResourcesMergerCommand build() {
             DuplicatedResourcesMergerCommand command = autoBuilder();
             checkFileExistsAndReadable(command.getBundlePath());
-            checkFileDoesNotExist(command.getOutput());
+            checkFileDoesNotExist(command.getOutputPath());
 
             if (!command.getBundlePath().toFile().getName().endsWith(".aab")) {
                 throw CommandExecutionException.builder()
@@ -182,7 +197,7 @@ public abstract class DuplicatedResourcesMergerCommand {
                         .build();
             }
 
-            if (!command.getOutput().toFile().getName().endsWith(".aab")) {
+            if (!command.getOutputPath().toFile().getName().endsWith(".aab")) {
                 throw CommandExecutionException.builder()
                         .withMessage("Wrong properties: %s must end with '.aab'.",
                                 OUTPUT_FILE_FLAG)
