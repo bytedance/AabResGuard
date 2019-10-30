@@ -8,19 +8,19 @@ import java.nio.file.Path
  */
 open class AabResGuardExtension {
     lateinit var mappingFile: Path
-    lateinit var whiteList: Set<String>
+    var whiteList: Set<String>? = HashSet()
     lateinit var obfuscatedBundleFileName: String
     var mergeDuplicatedRes: Boolean = false
     var enableFilterFiles: Boolean = false
-    lateinit var filterList: Set<String>
+    var filterList: Set<String>? = HashSet()
 
     override fun toString(): String {
         return "AabResGuardExtension\n" +
-                "\tmappingFile=$mappingFile\n" +
-                "\twhiteList=$whiteList\n" +
+                "\tmappingFile=$mappingFile" +
+                "\twhiteList=${if (whiteList == null) null else whiteList}\n" +
                 "\tobfuscatedBundleFileName=$obfuscatedBundleFileName\n" +
                 "\tmergeDuplicatedRes=$mergeDuplicatedRes\n" +
                 "\tenableFilterFiles=$enableFilterFiles\n" +
-                "\tfilterList=$filterList"
+                "\tfilterList=${if (filterList == null) null else filterList}"
     }
 }
