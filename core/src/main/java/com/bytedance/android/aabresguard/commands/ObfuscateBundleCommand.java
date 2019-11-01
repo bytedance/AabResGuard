@@ -187,7 +187,7 @@ public abstract class ObfuscateBundleCommand {
             if (getUnusedStrPath().isPresent()) {
                 File file = new File(getUnusedStrPath().get());
                 if (file.exists()) {
-                    unusedFile = new File(getUnusedStrPath().get());
+                    unusedFile = file;
                 } else {
                     logger.info("unusedFile is not exists!");
                 }
