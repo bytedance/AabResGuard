@@ -9,6 +9,7 @@ import com.bytedance.android.aabresguard.bundle.AppBundleAnalyzer;
 import com.bytedance.android.aabresguard.bundle.AppBundlePackager;
 import com.bytedance.android.aabresguard.bundle.AppBundleSigner;
 import com.bytedance.android.aabresguard.executors.BundleFileFilter;
+import com.bytedance.android.aabresguard.executors.BundleStringFilter;
 import com.bytedance.android.aabresguard.executors.DuplicatedResourcesMerger;
 import com.bytedance.android.aabresguard.executors.ResourcesObfuscator;
 import com.bytedance.android.aabresguard.model.xml.AabResGuardConfig;
@@ -79,7 +80,9 @@ public abstract class ObfuscateBundleCommand {
                         CommandHelp.FlagDescription.builder()
                                 .setFlagName(CONFIG_FLAG.getName())
                                 .setExampleValue("config.xml")
-                                .setDescription("Path of the Obfuscate configuration parser file, priority is lower than the command line.")
+                                .setDescription(
+                                        "Path of the Obfuscate configuration parser file, priority is lower than the command " +
+                                                "line.")
                                 .build())
                 .addFlag(
                         CommandHelp.FlagDescription.builder()
@@ -147,6 +150,12 @@ public abstract class ObfuscateBundleCommand {
         }
         MAPPING_FLAG.getValue(flags).ifPresent(builder::setMappingPath);
 
+        if (config.getStringFilterConfig() != null) {
+            builder.setRemoveStr(config.getStringFilterConfig().isActive());
+            builder.setUnusedStrPath(config.getStringFilterConfig().getPath());
+            builder.setLanguageFilter(config.getStringFilterConfig().getLanguageFilter());
+        }
+
         builder.setOutputPath(OUTPUT_FILE_FLAG.getRequiredValue(flags));
 
         MERGE_DUPLICATED_RES_FLAG.getValue(flags).ifPresent(builder::setMergeDuplicatedResources);
@@ -172,6 +181,27 @@ public abstract class ObfuscateBundleCommand {
             BundleFileFilter filter = new BundleFileFilter(getBundlePath(), appBundle, fileFilterRules);
             appBundle = filter.filter();
         }
+
+        // remove unused strings, need execute before obfuscate
+        if (getRemoveStr().isPresent() && getRemoveStr().get()) {
+            File unusedFile = new File("");
+            if (getUnusedStrPath().isPresent()) {
+                File file = new File(getUnusedStrPath().get());
+                if (file.exists()) {
+                    unusedFile = new File(getUnusedStrPath().get());
+                } else {
+                    logger.info("unusedFile is not exists!");
+                }
+            }
+            Set<String> languageFilter = new HashSet<>();
+            if (getLanguageFilter().isPresent()) {
+                languageFilter = getLanguageFilter().get();
+            }
+            BundleStringFilter filter =
+                    new BundleStringFilter(getBundlePath(), appBundle, unusedFile.getPath(), languageFilter);
+            appBundle = filter.filter();
+        }
+
         // merge duplicated resources
         if (getMergeDuplicatedResources().isPresent() && getMergeDuplicatedResources().get()) {
             DuplicatedResourcesMerger merger = new DuplicatedResourcesMerger(getBundlePath(), appBundle, getOutputPath().getParent());
@@ -237,6 +267,13 @@ public abstract class ObfuscateBundleCommand {
 
     public abstract Optional<Boolean> getFilterFile();
 
+    public abstract Optional<Boolean> getRemoveStr();
+
+    public abstract Optional<String> getUnusedStrPath();
+
+    public abstract Optional<Set<String>> getLanguageFilter();
+
+
     @AutoValue.Builder
     public abstract static class Builder {
         public abstract Builder setBundlePath(Path bundlePath);
@@ -244,6 +281,12 @@ public abstract class ObfuscateBundleCommand {
         public abstract Builder setOutputPath(Path outputPath);
 
         public abstract Builder setWhiteList(Set<String> whiteList);
+
+        public abstract Builder setRemoveStr(Boolean removeStr);
+
+        public abstract Builder setUnusedStrPath(String unusedStrPath);
+
+        public abstract Builder setLanguageFilter(Set<String> countryFilterSet);
 
         public abstract Builder setFilterFile(Boolean filterFile);
 

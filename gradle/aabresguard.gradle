@@ -15,4 +15,7 @@ aabResGuard {
     filterList = [
             "*/arm64-v8a/*"
     ]
+    enableFilterStrings = true
+    unusedStringPath = "../unused.txt"
+    languageFilter = ["ba", "ca"]
 }

@@ -60,6 +60,30 @@ aabresguard obfuscate-bundle --bundle=app.aab --output=obfuscated.aab --config=c
 </resproguard>
 ```
 
+## #文案过滤
+指定一个按行分割的字符串列表文件，过滤掉string资源类型中name匹配的文案及翻译
+```cmd
+aabresguard filter-file --bundle=app.aab --output=filtered.aab --config=config.xml
+--storeFile=debug.store
+--storePassword=android
+--keyAlias=android
+--keyPassword=android
+```
+配置文件 `config.xml`
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<resproguard>
+    <filter-str isactive="false">
+        <!--remove strings in file-->
+        <path value="unused.txt" />
+        <!--remove strings by language-->
+        <language value="ns-ZA" />
+        <language value="cb" />
+    </filter-str>
+</resproguard>
+```
+
+
 ## #参数说明
 参数的说明请执行以下命令来进行查看：
 
