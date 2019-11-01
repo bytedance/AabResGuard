@@ -1,0 +1,49 @@
+res dir mapping:
+	res/layout -> res/v
+	res/drawable-xxhdpi-v4 -> res/i
+	res/layout-v17 -> res/w
+	res/drawable-ldpi-v4 -> res/t
+	res/mipmap-mdpi-v4 -> res/a3
+	res/layout-v16 -> res/a1
+	res/drawable -> res/k
+	res/drawable-ldrtl-mdpi-v17 -> res/o
+	res/mipmap-anydpi-v26 -> res/a2
+	res/mipmap-hdpi-v4 -> res/a4
+	res/mipmap-xxxhdpi-v4 -> res/a7
+	res/drawable-ldrtl-xxxhdpi-v17 -> res/s
+	res/drawable-watch-v20 -> res/n
+	res/mipmap-xhdpi-v4 -> res/a5
+	res/drawable-xxxhdpi-v4 -> res/l
+	res/drawable-ldrtl-hdpi-v17 -> res/p
+	res/drawable-ldrtl-xxhdpi-v17 -> res/r
+	res/drawable-anydpi-v21 -> res/u
+	res/drawable-hdpi-v4 -> res/g
+	res/drawable-v24 -> res/e
+	res/color -> res/b
+	res/layout-watch-v20 -> res/x
+	res/layout-v22 -> res/y
+	res/layout-v21 -> res/z
+	res/drawable-mdpi-v4 -> res/f
+	res/drawable-v23 -> res/m
+	res/layout-v26 -> res/a0
+	res/drawable-v21 -> res/j
+	res/drawable-ldrtl-xhdpi-v17 -> res/q
+	res/drawable-xhdpi-v4 -> res/h
+	res/color-v21 -> res/c
+	res/color-v23 -> res/d
+	res/anim -> res/a
+	res/mipmap-xxhdpi-v4 -> res/a6
+
+
+res id mapping:
+	0x7e01000a : com.ss.android.ugc.dynamic_feature.R.attr.pressedStateOverlayImage -> com.ss.android.ugc.dynamic_feature.R.attr.k
+	0x7f02011c : com.ss.android.ugc.R.attr.textAppearanceSearchResultTitle -> com.ss.android.ugc.R.attr.gz
+	0x7f0c00d6 : com.ss.android.ugc.R.style.TextAppearance.AppCompat.Title -> com.ss.android.ugc.R.style.f3
+	0x7f060062 : com.ss.android.ugc.R.drawable.notification_bg_normal -> com.ss.android.ugc.R.drawable.by
+
+
+res entries path mapping:
+	0x7f060031 : base/res/drawable-xxhdpi-v4/abc_list_selector_disabled_holo_dark.9.png -> res/i/z.9.png
+	0x7f060023 : base/res/drawable-xxxhdpi-v4/abc_ic_star_half_black_16dp.png -> res/l/o.png
+	0x7f09001a : base/res/layout/abc_select_dialog_material.xml -> res/v/a0.xml
+	0x7f01000a : base/res/anim/abc_tooltip_enter.xml -> res/a/k.xml

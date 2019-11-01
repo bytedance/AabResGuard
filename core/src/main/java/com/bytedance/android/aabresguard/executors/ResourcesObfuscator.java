@@ -73,45 +73,6 @@ public class ResourcesObfuscator {
 
     }
 
-    /**
-     * Obfuscate module entries and return the mapping rules.
-     */
-    private Map<String, String> obfuscateModuleEntries(BundleModule bundleModule, Map<String, Set<String>> typeMappingMap) {
-        ResGuardStringBuilder guardStringBuilder = new ResGuardStringBuilder();
-        guardStringBuilder.reset(null);
-        Map<String, String> obfuscateEntries = new HashMap<>();
-
-        bundleModule.getEntries().stream()
-                .filter(entry -> entry.getPath().startsWith(BundleModule.RESOURCES_DIRECTORY))
-                .forEach(entry -> {
-                    guardStringBuilder.reset(null);
-                    String entryDir = entry.getPath().getParent().toString();
-                    String obfuscateDir = resourcesMapping.getDirMapping().get(entryDir);
-                    if (obfuscateDir == null) {
-                        throw new RuntimeException(String.format("can not find resource directory: %s", entryDir));
-                    }
-                    Set<String> mapping = typeMappingMap.get(obfuscateDir);
-                    if (mapping == null) {
-                        mapping = new HashSet<>();
-                    }
-                    String fileSuffix = FileOperation.getFileSuffix(entry.getPath());
-                    String obfuscatedName = guardStringBuilder.getReplaceString(mapping);
-                    mapping.add(obfuscatedName);
-
-                    String bundleRawPath = bundleModule.getName().getName() + "/" + entry.getPath().toString();
-                    String bundleObfuscatedPath = resourcesMapping.getResourceMapping().get(bundleRawPath);
-                    if (bundleObfuscatedPath == null) {
-                        bundleObfuscatedPath = obfuscateDir + "/" + obfuscatedName + fileSuffix;
-                    } else {
-                        resourcesMapping.putEntryPathMapping(bundleRawPath, bundleObfuscatedPath);
-                    }
-
-                    obfuscateEntries.put(bundleRawPath, bundleObfuscatedPath);
-                    typeMappingMap.put(obfuscateDir, mapping);
-                });
-        return obfuscateEntries;
-    }
-
     public Path getOutputMappingPath() {
         return outputMappingPath;
     }
@@ -191,7 +152,7 @@ public class ResourcesObfuscator {
                     resourcesMapping.getResourceMapping().remove(resourceName);
                 } else {
                     String obfuscateResourceName = resourcesMapping.getResourceMapping().get(resourceName);
-                    obfuscationList.add(ResourcesMapping.getResourceSimpleName(obfuscateResourceName));
+                    obfuscationList.add(AppBundleUtils.getTypeNameByResourceName(obfuscateResourceName));
                 }
             } else {
                 if (!shouldBeObfuscated(resourceName)) {
@@ -200,14 +161,54 @@ public class ResourcesObfuscator {
                             resourceName,
                             resourceId
                     ));
+                } else {
+                    String name = guardStringBuilder.getReplaceString(obfuscationList);
+                    obfuscationList.add(name);
+                    String obfuscatedResourceName = AppBundleUtils.getResourceFullName(entry.getPackage().getPackageName(), entry.getType().getName(), name);
+                    resourcesMapping.putResourceMapping(resourceName, obfuscatedResourceName);
                 }
-                String name = guardStringBuilder.getReplaceString(obfuscationMapping.get(entry.getType().getName()));
-                obfuscationList.add(name);
-                String obfuscatedResourceName = AppBundleUtils.getResourceFullName(entry.getPackage().getPackageName(), entry.getType().getName(), name);
-                resourcesMapping.putResourceMapping(resourceName, obfuscatedResourceName);
             }
             obfuscationMapping.put(entry.getType().getName(), obfuscationList);
         });
+    }
+
+    /**
+     * Obfuscate module entries and return the mapping rules.
+     */
+    private Map<String, String> obfuscateModuleEntries(BundleModule bundleModule, Map<String, Set<String>> typeMappingMap) {
+        ResGuardStringBuilder guardStringBuilder = new ResGuardStringBuilder();
+        guardStringBuilder.reset(null);
+        Map<String, String> obfuscateEntries = new HashMap<>();
+
+        bundleModule.getEntries().stream()
+                .filter(entry -> entry.getPath().startsWith(BundleModule.RESOURCES_DIRECTORY))
+                .forEach(entry -> {
+                    guardStringBuilder.reset(null);
+                    String entryDir = entry.getPath().getParent().toString();
+                    String obfuscateDir = resourcesMapping.getDirMapping().get(entryDir);
+                    if (obfuscateDir == null) {
+                        throw new RuntimeException(String.format("can not find resource directory: %s", entryDir));
+                    }
+                    Set<String> mapping = typeMappingMap.get(obfuscateDir);
+                    if (mapping == null) {
+                        mapping = new HashSet<>();
+                    }
+                    String fileSuffix = FileOperation.getFileSuffix(entry.getPath());
+                    String obfuscatedName = guardStringBuilder.getReplaceString(mapping);
+                    mapping.add(obfuscatedName);
+
+                    String bundleRawPath = bundleModule.getName().getName() + "/" + entry.getPath().toString();
+                    String bundleObfuscatedPath = resourcesMapping.getEntryFilesMapping().get(bundleRawPath);
+                    if (bundleObfuscatedPath == null) {
+                        bundleObfuscatedPath = obfuscateDir + "/" + obfuscatedName + fileSuffix;
+                    } else {
+                        resourcesMapping.putEntryPathMapping(bundleRawPath, bundleObfuscatedPath);
+                    }
+
+                    obfuscateEntries.put(bundleRawPath, bundleObfuscatedPath);
+                    typeMappingMap.put(obfuscateDir, mapping);
+                });
+        return obfuscateEntries;
     }
 
     /**
@@ -260,11 +261,11 @@ public class ResourcesObfuscator {
             if (obfuscatedResName != null) {
                 // update entry name
                 String entryName = getTypeNameByResourceName(obfuscatedResName);
-                obfuscatedEntry = ResourcesTableOperation.updateEntryName(entry.getEntry(), entryName);
+                obfuscatedEntry = ResourcesTableOperation.updateEntryName(obfuscatedEntry, entryName);
             }
 
             // update config values
-            List<Resources.ConfigValue> configValues = Stream.of(entry.getEntry())
+            List<Resources.ConfigValue> configValues = Stream.of(obfuscatedEntry)
                     .map(Resources.Entry::getConfigValueList)
                     .flatMap(Collection::stream)
                     .map(configValue -> {

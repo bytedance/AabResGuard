@@ -145,6 +145,7 @@ public abstract class ObfuscateBundleCommand {
             builder.setFilterFile(config.getFileFilter().isActive());
             builder.setFileFilterRules(config.getFileFilter().getRules());
         }
+        MAPPING_FLAG.getValue(flags).ifPresent(builder::setMappingPath);
 
         builder.setOutputPath(OUTPUT_FILE_FLAG.getRequiredValue(flags));
 

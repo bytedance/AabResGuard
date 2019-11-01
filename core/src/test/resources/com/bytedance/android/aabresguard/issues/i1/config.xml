@@ -2,8 +2,6 @@
 <resproguard>
     <issue id="whitelist" isactive="true">
         <path value="com.bytedance.android.ugc.aweme.R.raw.*" />
-        <path value="*.R.drawable.icon" />
-        <path value="*.R.mipmap.ic_launcher" />
     </issue>
     <filter isactive="false">
         <rule value="*/arm64-v8a/*" />
