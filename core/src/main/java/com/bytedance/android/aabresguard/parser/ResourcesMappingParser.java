@@ -52,7 +52,7 @@ public class ResourcesMappingParser {
                     String rawName = mat.group(2).trim();
                     String obfuscateName = mat.group(3).trim();
                     if (line.contains("/")) {
-                        mapping.putEntryPathMapping(rawName, obfuscateName);
+                        mapping.putEntryFileMapping(rawName, obfuscateName);
                     } else {
                         int packagePos = rawName.indexOf(".R.");
                         if (packagePos == -1) {

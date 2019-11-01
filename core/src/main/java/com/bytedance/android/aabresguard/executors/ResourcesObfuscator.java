@@ -193,16 +193,15 @@ public class ResourcesObfuscator {
                     if (mapping == null) {
                         mapping = new HashSet<>();
                     }
-                    String fileSuffix = FileOperation.getFileSuffix(entry.getPath());
-                    String obfuscatedName = guardStringBuilder.getReplaceString(mapping);
-                    mapping.add(obfuscatedName);
 
                     String bundleRawPath = bundleModule.getName().getName() + "/" + entry.getPath().toString();
                     String bundleObfuscatedPath = resourcesMapping.getEntryFilesMapping().get(bundleRawPath);
                     if (bundleObfuscatedPath == null) {
+                        String fileSuffix = FileOperation.getFileSuffix(entry.getPath());
+                        String obfuscatedName = guardStringBuilder.getReplaceString(mapping);
+                        mapping.add(obfuscatedName);
                         bundleObfuscatedPath = obfuscateDir + "/" + obfuscatedName + fileSuffix;
-                    } else {
-                        resourcesMapping.putEntryPathMapping(bundleRawPath, bundleObfuscatedPath);
+                        resourcesMapping.putEntryFileMapping(bundleRawPath, bundleObfuscatedPath);
                     }
 
                     obfuscateEntries.put(bundleRawPath, bundleObfuscatedPath);
@@ -277,7 +276,7 @@ public class ResourcesObfuscator {
                         String obfuscatedPath = obfuscatedEntryMap.get(bundleRawPath);
                         if (obfuscatedPath != null) {
                             resourcesMapping.addResourcePathAndId(bundleRawPath, resourceId);
-                            resourcesMapping.putEntryPathMapping(bundleRawPath, obfuscatedPath);
+                            resourcesMapping.putEntryFileMapping(bundleRawPath, obfuscatedPath);
                             return ResourcesTableOperation.replaceEntryPath(configValue, obfuscatedPath);
                         }
                         return configValue;

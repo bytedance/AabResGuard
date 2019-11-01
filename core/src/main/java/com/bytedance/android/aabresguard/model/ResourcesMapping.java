@@ -51,7 +51,7 @@ public class ResourcesMapping {
         resourceMapping.put(rawResource, obfuscateResource);
     }
 
-    public void putEntryPathMapping(String rawPath, String obfuscatedPath) {
+    public void putEntryFileMapping(String rawPath, String obfuscatedPath) {
         entryFilesMapping.put(rawPath, obfuscatedPath);
     }
 
