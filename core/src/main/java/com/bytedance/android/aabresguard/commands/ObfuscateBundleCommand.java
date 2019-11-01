@@ -152,6 +152,7 @@ public abstract class ObfuscateBundleCommand {
         if (config.getStringFilterConfig() != null) {
             builder.setRemoveStr(config.getStringFilterConfig().isActive());
             builder.setUnusedStrPath(config.getStringFilterConfig().getPath());
+            builder.setLanguageFilter(config.getStringFilterConfig().getLanguageFilter());
         }
 
         builder.setOutputPath(OUTPUT_FILE_FLAG.getRequiredValue(flags));
@@ -182,15 +183,22 @@ public abstract class ObfuscateBundleCommand {
 
         // remove unused strings, need execute before obfuscate
         if (getRemoveStr().isPresent() && getRemoveStr().get()) {
+            File unusedFile = new File("");
             if (getUnusedStrPath().isPresent()) {
-                File unusedFile = new File(getUnusedStrPath().get());
-                if (unusedFile.exists()) {
-                    BundleStringFilter filter = new BundleStringFilter(getBundlePath(), appBundle, getUnusedStrPath().get());
-                    appBundle = filter.filter();
+                File file = new File(getUnusedStrPath().get());
+                if (file.exists()) {
+                    unusedFile = new File(getUnusedStrPath().get());
                 } else {
                     logger.info("unusedFile is not exists!");
                 }
             }
+            Set<String> languageFilter = new HashSet<>();
+            if (getLanguageFilter().isPresent()) {
+                languageFilter = getLanguageFilter().get();
+            }
+            BundleStringFilter filter =
+                    new BundleStringFilter(getBundlePath(), appBundle, unusedFile.getPath(), languageFilter);
+            appBundle = filter.filter();
         }
 
         // merge duplicated resources
@@ -262,6 +270,8 @@ public abstract class ObfuscateBundleCommand {
 
     public abstract Optional<String> getUnusedStrPath();
 
+    public abstract Optional<Set<String>> getLanguageFilter();
+
 
     @AutoValue.Builder
     public abstract static class Builder {
@@ -274,6 +284,8 @@ public abstract class ObfuscateBundleCommand {
         public abstract Builder setRemoveStr(Boolean removeStr);
 
         public abstract Builder setUnusedStrPath(String unusedStrPath);
+
+        public abstract Builder setLanguageFilter(Set<String> countryFilterSet);
 
         public abstract Builder setFilterFile(Boolean filterFile);
 

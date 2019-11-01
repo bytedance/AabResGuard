@@ -59,6 +59,10 @@ aabResGuard {
         "*/arm64-v8a/*",
         "META-INF/*"
     ]
+    
+    enableFilterStrings = false // switch of filter strings
+    unusedStringPath = file("unused.txt").toPath() // strings will be filtered in this file
+    languageFilter = ["ba", "ca"] // filter string by language
 }
 ```
 

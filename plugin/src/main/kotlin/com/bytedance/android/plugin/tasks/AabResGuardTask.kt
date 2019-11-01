@@ -56,6 +56,7 @@ open class AabResGuardTask : DefaultTask() {
                 .setFileFilterRules(aabResGuard.filterList)
                 .setRemoveStr(aabResGuard.enableFilterStrings)
                 .setUnusedStrPath(aabResGuard.unusedStringPath)
+                .setLanguageFilter(aabResGuard.languageFilter)
 
         if (signingConfig.storeFile.exists()) {
             command.setStoreFile(signingConfig.storeFile.toPath())

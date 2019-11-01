@@ -76,7 +76,11 @@ Configuration file `config.xml`
 <?xml version="1.0" encoding="UTF-8"?>
 <resproguard>
     <filter-str isactive="false">
+        <!--remove strings in file-->
         <path value="unused.txt" />
+        <!--remove strings by language-->
+        <language value="da" />
+        <language value="ca" />
     </filter-str>
 </resproguard>
 ```

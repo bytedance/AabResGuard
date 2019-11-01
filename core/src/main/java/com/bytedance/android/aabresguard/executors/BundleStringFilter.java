@@ -33,13 +33,16 @@ public class BundleStringFilter {
     private final ZipFile bundleZipFile;
     private final AppBundle rawAppBundle;
     private final String unusedStrPath;
+    private Set<String> languageFilter;
     private Set<String> unUsedNameSet = new HashSet<>(5000);
 
-    public BundleStringFilter(Path bundlePath, AppBundle rawAppBundle, String unusedStrPath) throws IOException {
+    public BundleStringFilter(Path bundlePath, AppBundle rawAppBundle, String unusedStrPath, Set<String> languageFilter)
+            throws IOException {
         checkFileExistsAndReadable(bundlePath);
         this.bundleZipFile = new ZipFile(bundlePath.toFile());
         this.rawAppBundle = rawAppBundle;
         this.unusedStrPath = unusedStrPath;
+        this.languageFilter = languageFilter;
     }
 
     public AppBundle filter() throws IOException {
@@ -52,17 +55,18 @@ public class BundleStringFilter {
             //shrink结果
             unUsedNameSet.addAll(Files.readAllLines(Paths.get(unusedStrPath)));
             logger.info("无用字符串 : " + unUsedNameSet.size());
-            if (!unUsedNameSet.isEmpty()) {
-                for (Map.Entry<BundleModuleName, BundleModule> entry : rawAppBundle.getModules().entrySet()) {
-                    BundleModule bundleModule = entry.getValue();
-                    BundleModuleName bundleModuleName = entry.getKey();
-                    // obfuscate bundle module
-                    BundleModule obfuscatedModule = obfuscateBundleModule(bundleModule);
-                    obfuscatedModules.put(bundleModuleName, obfuscatedModule);
-                }
-            } else {
-                return rawAppBundle;
+        }
+
+        if (!unUsedNameSet.isEmpty() || !languageFilter.isEmpty()) {
+            for (Map.Entry<BundleModuleName, BundleModule> entry : rawAppBundle.getModules().entrySet()) {
+                BundleModule bundleModule = entry.getValue();
+                BundleModuleName bundleModuleName = entry.getKey();
+                // obfuscate bundle module
+                BundleModule obfuscatedModule = obfuscateBundleModule(bundleModule);
+                obfuscatedModules.put(bundleModuleName, obfuscatedModule);
             }
+        } else {
+            return rawAppBundle;
         }
 
         AppBundle appBundle = rawAppBundle.toBuilder()
@@ -123,7 +127,23 @@ public class BundleStringFilter {
                     if (resEntry == null) {
                         continue;
                     }
-                    //删除shrink扫描出的无用字符串
+                    Resources.Entry finalResEntry = resEntry;
+
+                    //删除语言
+                    List<Resources.ConfigValue> languageValue = resEntry.getConfigValueList().stream()
+                            .filter(Objects::nonNull)
+                            .filter(configValue -> {
+                                String locale = configValue.getConfig().getLocale();
+                                if (locale != null && !locale.isEmpty() && languageFilter.contains(locale)) {
+                                    System.out.println(
+                                            "[remove language] : " + locale + " stringName : " + finalResEntry.getName());
+                                    return false;
+                                }
+                                return true;
+                            }).collect(Collectors.toList());
+                    resEntry = resEntry.toBuilder().clearConfigValue().addAllConfigValue(languageValue).build();
+
+                    // 删除shrink扫描出的无用字符串
                     if (resPackage.getPackageId().getId() == 127 && resType.getName().equals("string")
                             && unUsedNameSet.size() > 0 && unUsedNameSet.contains(resEntry.getName())) {
                         List<Resources.ConfigValue> proguardConfigValue = resEntry.getConfigValueList().stream()

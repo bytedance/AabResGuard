@@ -74,7 +74,11 @@ aabresguard filter-file --bundle=app.aab --output=filtered.aab --config=config.x
 <?xml version="1.0" encoding="UTF-8"?>
 <resproguard>
     <filter-str isactive="false">
+        <!--remove strings in file-->
         <path value="unused.txt" />
+        <!--remove strings by language-->
+        <language value="ns-ZA" />
+        <language value="cb" />
     </filter-str>
 </resproguard>
 ```

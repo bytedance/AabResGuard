@@ -3,8 +3,12 @@
     <issue id="whitelist" isactive="true">
         <path value="com.bytedance.android.ugc.aweme.R.raw.*" />
     </issue>
-    <filter-str isactive="false">
+    <filter-str isactive="true">
+        <!--remove strings in file-->
         <path value="unused.txt" />
+        <!--remove strings by language-->
+        <language value="da" />
+        <language value="ca" />
     </filter-str>
     <filter isactive="false">
         <rule value="*/arm64-v8a/*" />

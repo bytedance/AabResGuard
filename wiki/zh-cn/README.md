@@ -58,6 +58,9 @@ aabResGuard {
         "*/arm64-v8a/*",
         "META-INF/*"
     ]
+    enableFilterStrings = false // 过滤文案
+    unusedStringPath = file("unused.txt").toPath() // 过滤文案列表路径 默认在mapping同目录查找
+    languageFilter = ["ns-ZA", "cb"] // 过滤语言
 }
 ```
 

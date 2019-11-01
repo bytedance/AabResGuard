@@ -127,7 +127,8 @@ public abstract class StringFilterCommand {
                     .build();
         }
         // filter bundle strings
-        BundleStringFilter filter = new BundleStringFilter(getBundlePath(), appBundle, config.getPath());
+        BundleStringFilter filter =
+                new BundleStringFilter(getBundlePath(), appBundle, config.getPath(), config.getLanguageFilter());
         AppBundle filteredAppBundle = filter.filter();
         // package bundle
         AppBundlePackager packager = new AppBundlePackager(filteredAppBundle, getOutputPath());
