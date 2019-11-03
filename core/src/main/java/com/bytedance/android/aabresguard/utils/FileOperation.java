@@ -185,4 +185,28 @@ public class FileOperation {
         String[] values = fileName.replace(".", "/").split("/");
         return fileName.substring(values[0].length());
     }
+
+    public static String getParentFromZipFilePath(String zipPath) {
+        if (!zipPath.contains("/")) {
+            throw new IllegalArgumentException("invalid zipPath: " + zipPath);
+        }
+        String[] values = zipPath.split("/");
+        return zipPath.substring(0, zipPath.indexOf(values[values.length - 1]) - 1);
+    }
+
+    public static String getNameFromZipFilePath(String zipPath) {
+        if (!zipPath.contains("/")) {
+            throw new IllegalArgumentException("invalid zipPath: " + zipPath);
+        }
+        String[] values = zipPath.split("/");
+        return values[values.length - 1];
+    }
+
+    public static String getFilePrefixByFileName(String fileName) {
+        if (!fileName.contains(".")) {
+            throw new IllegalArgumentException("invalid file name: " + fileName);
+        }
+        String[] values = fileName.replace(".", "/").split("/");
+        return values[0];
+    }
 }

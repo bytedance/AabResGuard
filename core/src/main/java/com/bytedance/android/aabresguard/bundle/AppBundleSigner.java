@@ -32,6 +32,9 @@ public class AppBundleSigner {
     }
 
     public void execute() throws IOException, InterruptedException {
+        if (bundleSignature == null) {
+            return;
+        }
         TimeClock timeClock = new TimeClock();
         JarSigner.Signature signature = new JarSigner.Signature(
                 bundleSignature.storeFile,

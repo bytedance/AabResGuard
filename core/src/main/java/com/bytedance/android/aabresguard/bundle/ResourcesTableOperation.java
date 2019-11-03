@@ -2,7 +2,9 @@ package com.bytedance.android.aabresguard.bundle;
 
 import com.android.aapt.Resources;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by YangJing on 2019/10/10 .
@@ -33,5 +35,16 @@ public class ResourcesTableOperation {
         Resources.Entry.Builder builder = entry.toBuilder();
         builder.setName(name);
         return builder.build();
+    }
+
+    public static void checkConfiguration(Resources.Entry entry) {
+        if (entry.getConfigValueCount() == 0) return;
+        Set<Resources.ConfigValue> configValues = new HashSet<>();
+        for (Resources.ConfigValue configValue : entry.getConfigValueList()) {
+            if (configValues.contains(configValue)) {
+                throw new IllegalArgumentException("duplicate configuration for entry: " + entry.getName());
+            }
+            configValues.add(configValue);
+        }
     }
 }

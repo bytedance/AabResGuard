@@ -48,10 +48,16 @@ public class ResourcesMapping {
     }
 
     public void putResourceMapping(String rawResource, String obfuscateResource) {
+        if (resourceMapping.values().contains(obfuscateResource)) {
+            throw new IllegalArgumentException(
+                    String.format("Multiple entries: %s -> %s",
+                            rawResource, obfuscateResource)
+            );
+        }
         resourceMapping.put(rawResource, obfuscateResource);
     }
 
-    public void putEntryPathMapping(String rawPath, String obfuscatedPath) {
+    public void putEntryFileMapping(String rawPath, String obfuscatedPath) {
         entryFilesMapping.put(rawPath, obfuscatedPath);
     }
 
