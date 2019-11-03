@@ -3,7 +3,7 @@ versions.gradletools = "3.2.1"
 versions.kotlin = "1.3.0"
 versions.digital = "3.4.0"
 versions.java = "8"
-versions.aabresguard = "0.1.0-beta-2"
+versions.aabresguard = "0.1.0-beta-5"
 // android
 versions.compileSdkVersion = 28
 versions.minSdkVersion = 15

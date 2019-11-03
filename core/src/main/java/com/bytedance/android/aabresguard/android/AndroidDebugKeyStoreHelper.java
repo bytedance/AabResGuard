@@ -12,8 +12,12 @@ public class AndroidDebugKeyStoreHelper {
     public static final String DEFAULT_ALIAS = "AndroidDebugKey";
 
     public static JarSigner.Signature debugSigningConfig() {
+        String debugKeystoreLocation = defaultDebugKeystoreLocation();
+        if (debugKeystoreLocation == null || !new File(debugKeystoreLocation).exists()) {
+            return null;
+        }
         return new JarSigner.Signature(
-                new File(defaultDebugKeystoreLocation()).toPath(),
+                new File(debugKeystoreLocation).toPath(),
                 DEFAULT_PASSWORD,
                 DEFAULT_ALIAS,
                 DEFAULT_PASSWORD
@@ -33,7 +37,7 @@ public class AndroidDebugKeyStoreHelper {
             folder = AndroidLocation.getFolder();
         } catch (AndroidLocation.AndroidLocationException e) {
             e.printStackTrace();
-            throw new RuntimeException(e);
+            return null;
         }
         return folder + "debug.keystore";
     }
