@@ -14,7 +14,7 @@ open class AabResGuardExtension {
     var enableFilterFiles: Boolean = false
     var filterList: Set<String>? = HashSet()
     var enableFilterStrings: Boolean = false
-    var unusedStringPath: String? = null
+    var unusedStringPath: String? = ""
     var languageFilter: Set<String>? = HashSet()
 
     override fun toString(): String {
