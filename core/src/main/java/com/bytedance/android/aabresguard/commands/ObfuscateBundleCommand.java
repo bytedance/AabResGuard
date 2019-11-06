@@ -190,7 +190,7 @@ public abstract class ObfuscateBundleCommand {
                 if (file.exists()) {
                     unusedFile = file;
                 } else {
-                    logger.info("unusedFile is not exists!");
+                    System.out.println("unusedFile is not exists!");
                 }
             }
             Set<String> languageFilter = new HashSet<>();

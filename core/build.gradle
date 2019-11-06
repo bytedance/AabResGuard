@@ -80,4 +80,5 @@ shadowJar {
     exclude 'META-INF/*.RSA'
 
     relocate 'com.android', 'shadow.bytedance.com.android'
+    relocate 'com.google', 'shadow.bytedance.com.google'
 }

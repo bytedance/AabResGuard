@@ -71,7 +71,7 @@ public class DuplicatedResourcesMerger {
                 rawAppBundle.getBundleMetadata()
         );
 
-        logger.info(String.format(
+        System.out.println(String.format(
                 "merge duplicated resources done, coast %s\n" +
                         "-----------------------------------------\n" +
                         "Reduce file count: %s\n" +

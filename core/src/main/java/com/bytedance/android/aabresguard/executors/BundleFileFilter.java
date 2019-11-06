@@ -79,7 +79,7 @@ public class BundleFileFilter {
                 .setBundleMetadata(filterMetaData())
                 .setModules(ImmutableMap.copyOf(bundleModules))
                 .build();
-        logger.info(String.format(
+        System.out.println(String.format(
                 "filter bundle files done, coast %s" +
                         "-----------------------------------------\n" +
                         "Reduce file count: %s\n" +

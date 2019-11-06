@@ -54,7 +54,7 @@ public class BundleStringFilter {
         if (unusedStrFile.exists()) {
             //shrink结果
             unUsedNameSet.addAll(Files.readAllLines(Paths.get(unusedStrPath)));
-            logger.info("无用字符串 : " + unUsedNameSet.size());
+            System.out.println("无用字符串 : " + unUsedNameSet.size());
         }
 
         if (!unUsedNameSet.isEmpty() || !languageFilter.isEmpty()) {
@@ -73,7 +73,7 @@ public class BundleStringFilter {
                 .setModules(ImmutableMap.copyOf(obfuscatedModules))
                 .build();
 
-        logger.info(String.format(
+        System.out.println(String.format(
                 "obfuscate resources done, coast %s",
                 timeClock.getCoast()
         ));
@@ -162,7 +162,7 @@ public class BundleStringFilter {
                                     ).build();
                                     return changedConfigValue;
                                 }).collect(Collectors.toList());
-                        logger.info("[delete name] " + resEntry.getName());
+                        System.out.println("[delete name] " + resEntry.getName());
                         resEntry = resEntry.toBuilder().clearConfigValue().addAllConfigValue(proguardConfigValue).build();
                     }
                     packageBuilder.addResource(resType, resEntry);

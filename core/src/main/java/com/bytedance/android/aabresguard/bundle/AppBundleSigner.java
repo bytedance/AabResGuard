@@ -13,8 +13,6 @@ import java.util.logging.Logger;
  */
 public class AppBundleSigner {
 
-    private static final Logger logger = Logger.getLogger(AppBundleSigner.class.getName());
-
     private Path bundleFile;
     private JarSigner.Signature bundleSignature = JarSigner.Signature.DEBUG_SIGNATURE;
 
@@ -43,6 +41,6 @@ public class AppBundleSigner {
                 bundleSignature.keyPassword
         );
         new JarSigner().sign(bundleFile.toFile(), signature);
-        logger.info(String.format("[sign] sign done, coast: %s", timeClock.getCoast()));
+        System.out.println(String.format("[sign] sign done, coast: %s", timeClock.getCoast()));
     }
 }

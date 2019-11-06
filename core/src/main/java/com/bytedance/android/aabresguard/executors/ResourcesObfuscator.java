@@ -106,7 +106,7 @@ public class ResourcesObfuscator {
                 .setModules(ImmutableMap.copyOf(obfuscatedModules))
                 .build();
 
-        logger.info(String.format(
+        System.out.println(String.format(
                 "obfuscate resources done, coast %s",
                 timeClock.getCoast()
         ));
