@@ -13,5 +13,9 @@ dependencies {
     api project(":core")
 }
 
+configurations {
+    all*.exclude group: "com.android.tools.build", module: "bundletool"
+}
+
 sourceCompatibility = versions.java
 targetCompatibility = versions.java
