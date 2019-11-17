@@ -9,7 +9,7 @@ import java.util.Set;
 public class StringFilterConfig {
     private boolean isActive;
     private String path = "";
-    private Set<String> languageFilter = new HashSet<>();
+    private Set<String> languageWhiteList = new HashSet<>();
 
 
     public boolean isActive() {
@@ -32,11 +32,11 @@ public class StringFilterConfig {
         return "StringFilterConfig{" +
                 "isActive=" + isActive +
                 ", path='" + path + '\'' +
-                ", languageFilter=" + languageFilter +
+                ", languageWhiteList=" + languageWhiteList +
                 '}';
     }
 
-    public Set<String> getLanguageFilter() {
-        return languageFilter;
+    public Set<String> getLanguageWhiteList() {
+        return languageWhiteList;
     }
 }

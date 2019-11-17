@@ -62,7 +62,7 @@ aabResGuard {
     
     enableFilterStrings = false // switch of filter strings
     unusedStringPath = file("unused.txt").toPath() // strings will be filtered in this file
-    languageFilter = ["ba", "ca"] // filter string by language
+    languageWhiteList = ["en", "zh"] // keep en,en-xx,zh,zh-xx etc. remove others.
 }
 ```
 

@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.zip.ZipFile;
 
@@ -29,20 +28,21 @@ import static com.android.tools.build.bundletool.model.utils.files.FilePrecondit
  * Created by jiangzilai on 2019-10-20.
  */
 public class BundleStringFilter {
-    private static final Logger logger = Logger.getLogger(BundleStringFilter.class.getName());
     private final ZipFile bundleZipFile;
     private final AppBundle rawAppBundle;
     private final String unusedStrPath;
-    private Set<String> languageFilter;
+    private Set<String> languageWhiteList;
     private Set<String> unUsedNameSet = new HashSet<>(5000);
 
-    public BundleStringFilter(Path bundlePath, AppBundle rawAppBundle, String unusedStrPath, Set<String> languageFilter)
+    private static final String replaceValue = "[value removed]";
+
+    public BundleStringFilter(Path bundlePath, AppBundle rawAppBundle, String unusedStrPath, Set<String> languageWhiteList)
             throws IOException {
         checkFileExistsAndReadable(bundlePath);
         this.bundleZipFile = new ZipFile(bundlePath.toFile());
         this.rawAppBundle = rawAppBundle;
         this.unusedStrPath = unusedStrPath;
-        this.languageFilter = languageFilter;
+        this.languageWhiteList = languageWhiteList;
     }
 
     public AppBundle filter() throws IOException {
@@ -57,7 +57,7 @@ public class BundleStringFilter {
             System.out.println("无用字符串 : " + unUsedNameSet.size());
         }
 
-        if (!unUsedNameSet.isEmpty() || !languageFilter.isEmpty()) {
+        if (!unUsedNameSet.isEmpty() || !languageWhiteList.isEmpty()) {
             for (Map.Entry<BundleModuleName, BundleModule> entry : rawAppBundle.getModules().entrySet()) {
                 BundleModule bundleModule = entry.getValue();
                 BundleModuleName bundleModuleName = entry.getKey();
@@ -129,19 +129,21 @@ public class BundleStringFilter {
                     }
                     Resources.Entry finalResEntry = resEntry;
 
-                    //删除语言
-                    List<Resources.ConfigValue> languageValue = resEntry.getConfigValueList().stream()
-                            .filter(Objects::nonNull)
-                            .filter(configValue -> {
-                                String locale = configValue.getConfig().getLocale();
-                                if (locale != null && !locale.isEmpty() && languageFilter.contains(locale)) {
+                    if (languageWhiteList != null && !languageWhiteList.isEmpty()){
+                        //删除语言
+                        List<Resources.ConfigValue> languageValue = resEntry.getConfigValueList().stream()
+                                .filter(Objects::nonNull)
+                                .filter(configValue -> {
+                                    String locale = configValue.getConfig().getLocale();
+                                    if (filterLanguage(locale)) {
+                                        return true;
+                                    }
                                     System.out.println(
                                             "[remove language] : " + locale + " stringName : " + finalResEntry.getName());
                                     return false;
-                                }
-                                return true;
-                            }).collect(Collectors.toList());
-                    resEntry = resEntry.toBuilder().clearConfigValue().addAllConfigValue(languageValue).build();
+                                }).collect(Collectors.toList());
+                        resEntry = resEntry.toBuilder().clearConfigValue().addAllConfigValue(languageValue).build();
+                    }
 
                     // 删除shrink扫描出的无用字符串
                     if (resPackage.getPackageId().getId() == 127 && resType.getName().equals("string")
@@ -156,7 +158,7 @@ public class BundleStringFilter {
                                     Resources.ConfigValue changedConfigValue = rcb.setValue(
                                             rvb.setItem(
                                                     rib.setStr(
-                                                            rfb.setValue("[value removed]").build()
+                                                            rfb.setValue(replaceValue).build()
                                                     ).build()
                                             ).build()
                                     ).build();
@@ -173,4 +175,19 @@ public class BundleStringFilter {
         return tableBuilder.build();
     }
 
+    private boolean filterLanguage(String lan) {
+        if (lan == null || lan.isEmpty()) {
+            return false;
+        }
+        if (lan.contains("-")) {
+            int index = lan.indexOf("-");
+            if (index != -1) {
+                String language = lan.substring(0, index);
+                return languageWhiteList.contains(language);
+            }
+        } else {
+            return languageWhiteList.contains(lan);
+        }
+        return false;
+    }
 }
