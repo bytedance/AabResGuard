@@ -153,7 +153,7 @@ public abstract class ObfuscateBundleCommand {
         if (config.getStringFilterConfig() != null) {
             builder.setRemoveStr(config.getStringFilterConfig().isActive());
             builder.setUnusedStrPath(config.getStringFilterConfig().getPath());
-            builder.setLanguageFilter(config.getStringFilterConfig().getLanguageFilter());
+            builder.setLanguageWhiteList(config.getStringFilterConfig().getLanguageWhiteList());
         }
 
         builder.setOutputPath(OUTPUT_FILE_FLAG.getRequiredValue(flags));
@@ -193,12 +193,12 @@ public abstract class ObfuscateBundleCommand {
                     System.out.println("unusedFile is not exists!");
                 }
             }
-            Set<String> languageFilter = new HashSet<>();
-            if (getLanguageFilter().isPresent()) {
-                languageFilter = getLanguageFilter().get();
+            Set<String> languageWhiteList = new HashSet<>();
+            if (getLanguageWhiteList().isPresent()) {
+                languageWhiteList = getLanguageWhiteList().get();
             }
             BundleStringFilter filter =
-                    new BundleStringFilter(getBundlePath(), appBundle, unusedFile.getPath(), languageFilter);
+                    new BundleStringFilter(getBundlePath(), appBundle, unusedFile.getPath(), languageWhiteList);
             appBundle = filter.filter();
         }
 
@@ -271,7 +271,7 @@ public abstract class ObfuscateBundleCommand {
 
     public abstract Optional<String> getUnusedStrPath();
 
-    public abstract Optional<Set<String>> getLanguageFilter();
+    public abstract Optional<Set<String>> getLanguageWhiteList();
 
 
     @AutoValue.Builder
@@ -286,7 +286,7 @@ public abstract class ObfuscateBundleCommand {
 
         public abstract Builder setUnusedStrPath(String unusedStrPath);
 
-        public abstract Builder setLanguageFilter(Set<String> countryFilterSet);
+        public abstract Builder setLanguageWhiteList(Set<String> countryFilterSet);
 
         public abstract Builder setFilterFile(Boolean filterFile);
 

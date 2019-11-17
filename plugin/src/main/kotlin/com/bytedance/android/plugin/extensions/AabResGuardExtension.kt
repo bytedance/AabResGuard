@@ -15,7 +15,7 @@ open class AabResGuardExtension {
     var filterList: Set<String>? = HashSet()
     var enableFilterStrings: Boolean = false
     var unusedStringPath: String? = ""
-    var languageFilter: Set<String>? = HashSet()
+    var languageWhiteList: Set<String>? = HashSet()
 
     override fun toString(): String {
         return "AabResGuardExtension\n" +
@@ -27,6 +27,6 @@ open class AabResGuardExtension {
                 "\tfilterList=${if (filterList == null) null else filterList}" +
                 "\tenableFilterStrings=$enableFilterStrings\n" +
                 "\tunusedStringPath=$unusedStringPath\n" +
-                "\tlanguageFilter=${if (languageFilter == null) null else languageFilter}"
+                "\tlanguageWhiteList=${if (languageWhiteList == null) null else languageWhiteList}"
     }
 }

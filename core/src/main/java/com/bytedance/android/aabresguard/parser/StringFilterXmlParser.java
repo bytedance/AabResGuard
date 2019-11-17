@@ -43,7 +43,7 @@ public class StringFilterXmlParser {
             for (Iterator rules = element.elementIterator("language"); rules.hasNext(); ) {
                 Element ruleElement = (Element) rules.next();
                 String path = ruleElement.attributeValue("value");
-                config.getLanguageFilter().add(path);
+                config.getLanguageWhiteList().add(path);
             }
         }
         return config;

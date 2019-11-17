@@ -60,7 +60,7 @@ aabResGuard {
     ]
     enableFilterStrings = false // 过滤文案
     unusedStringPath = file("unused.txt").toPath() // 过滤文案列表路径 默认在mapping同目录查找
-    languageFilter = ["en", "zh"] // 保留en,en-xx,zh,zh-xx等语言，其余均删除
+    languageWhiteList = ["en", "zh"] // 保留en,en-xx,zh,zh-xx等语言，其余均删除
 }
 ```
 

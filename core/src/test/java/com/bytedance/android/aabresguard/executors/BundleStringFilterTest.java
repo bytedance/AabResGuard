@@ -21,7 +21,7 @@ public class BundleStringFilterTest extends BaseTest {
         AppBundleAnalyzer analyzer = new AppBundleAnalyzer(bundlePath);
         AppBundle appBundle = analyzer.analyze();
         BundleStringFilter filter = new BundleStringFilter(loadResourceFile("demo/demo.aab").toPath(), appBundle,
-                loadResourceFile("demo/unused.txt").toPath().toString(),new HashSet<>());
+                loadResourceFile("demo/unused.txt").toPath().toString(), new HashSet<>());
         AppBundle filteredAppBundle = filter.filter();
         assert filteredAppBundle != null;
     }
