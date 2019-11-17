@@ -76,9 +76,9 @@ aabresguard filter-file --bundle=app.aab --output=filtered.aab --config=config.x
     <filter-str isactive="false">
         <!--remove strings in file-->
         <path value="unused.txt" />
-        <!--remove strings by language-->
-        <language value="ns-ZA" />
-        <language value="cb" />
+        <!--keep strings by language such as en, en-xx, and remove others-->
+        <language value="en" />
+        <language value="zh" />
     </filter-str>
 </resproguard>
 ```
