@@ -16,6 +16,6 @@ aabResGuard {
             "*/arm64-v8a/*"
     ]
     enableFilterStrings = true
-    unusedStringPath = "../unused.txt"
-    languageFilter = ["ba", "ca"]
+    unusedStringPath = "core/src/test/resources/com/bytedance/android/aabresguard/demo/unused.txt"
+    languageWhiteList = ["en", "zh"]
 }
