@@ -1,9 +1,9 @@
 def versions = [:]
 versions.gradletools = "3.2.1"
 versions.kotlin = "1.3.0"
-versions.digital = "3.4.0"
 versions.java = "8"
-versions.aabresguard = "0.1.0-beta-7"
+//versions.aabresguard = "0.1.0-beta-7"
+versions.aabresguard = "0.0.1-beta2"
 // android
 versions.compileSdkVersion = 28
 versions.minSdkVersion = 15
@@ -14,6 +14,11 @@ versions.bundletool = "0.10.0"
 
 versions["aabresguard-core"] = versions.aabresguard
 versions["aabresguard-plugin"] = versions.aabresguard
+
+// plugin
+versions["bintray-plugin"] = "1.8.4"
+versions.shadow = "4.0.4"
+versions.digital = "3.4.0"
 
 ext.versions = versions
 
@@ -32,6 +37,8 @@ deps.kotlin = kotlin
 // plugin
 def plugin = [:]
 plugin.digital = "digital.wup:android-maven-publish:${versions.digital}"
+plugin.shadow = "com.github.jengelman.gradle.plugins:shadow:${versions.shadow}"
+plugin['bintray-plugin'] = "com.jfrog.bintray.gradle:gradle-bintray-plugin:${versions["bintray-plugin"]}"
 deps.plugin = plugin
 // library
 deps.appcompatV7 = "com.android.support:appcompat-v7:${versions.support}"

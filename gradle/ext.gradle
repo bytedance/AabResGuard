@@ -1,5 +1,27 @@
 ext {
     GROUP_ID = "com.bytedance.android"
+    bintrayInfo = [
+            repo     : [
+                    name       : "AabResGuard",
+                    groupId    : GROUP_ID,
+                    artifactId : "aabresguard",
+                    description: "A tool used to obfuscate aab resources",
+                    packaging  : "jar",
+                    siteUrl    : "https://github.com/bytedance/AabResGuard",
+                    gitUrl     : "https://github.com/bytedance/AabResGuard.git",
+                    userOrg    :  System.getProperty("bintrayInfo.userOrg", "****"),
+            ],
+            developer: [
+                    id    : "JingYeoh",
+                    name  : "JingYeoh",
+                    email : "yangjing.yeoh@gmail.com",
+                    user  : System.getProperty("bintrayInfo.user", "****"),
+                    apikey: System.getProperty("bintrayInfo.apiKey", "*************")
+            ],
+            javadoc  : [
+                    name: "AabResGuard"
+            ]
+    ]
 }
 
 // 读取 local.properties 文件内容

@@ -4,6 +4,7 @@
   <p align="center" style="font-size: 0.5em">针对 aab 文件的资源混淆工具</p>
 </h1>
 
+[![Download](https://api.bintray.com/packages/bytedance/maven/AabResGuard/images/download.svg)](https://bintray.com/bytedance/maven/AabResGuard/)
 [![License](https://img.shields.io/badge/license-Apache2.0-brightgreen)](../../LICENSE)
 [![Bundletool](https://img.shields.io/badge/Dependency-Bundletool/0.10.0-blue)](https://github.com/google/bundletool)
 

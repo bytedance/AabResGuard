@@ -24,9 +24,30 @@ println "username: $publishUserName"
 println "password: $publishPassword"
 
 apply plugin: 'maven-publish'
+
+def pomConfig = {
+    licenses {
+        license {
+            name "The Apache Software License, Version 2.0"
+            url "http://www.apache.org/licenses/LICENSE-2.0.txt"
+            distribution "repo"
+        }
+    }
+    developers {
+        developer {
+            id bintrayInfo.developer.id
+            name bintrayInfo.developer.name
+            email bintrayInfo.developer.email
+        }
+    }
+    scm {
+        url bintrayInfo.repo.siteUrl
+    }
+}
+
 publishing {
     publications {
-        shadow(MavenPublication) { publication ->
+        MyPublication(MavenPublication) { publication ->
             project.shadow.component(publication)
             groupId GROUP_ID
             artifactId ARTIFACT_ID
@@ -34,15 +55,28 @@ publishing {
 
             artifact sourcesJar
             artifact javadocJar
+
+            pom.withXml {
+                def root = asNode()
+                root.appendNode('description', bintrayInfo.repo.description)
+                root.appendNode('name', bintrayInfo.repo.name)
+                root.appendNode('url', bintrayInfo.repo.siteUrl)
+                root.children().last() + pomConfig
+            }
         }
     }
-    repositories {
-        maven {
-            url = publishUrl
-            credentials {
-                username = publishUserName
-                password = publishPassword
+
+    if (!System.getProperty("uploadToBintray", "false").equalsIgnoreCase("true")) {
+        repositories {
+            maven {
+                url = publishUrl
+                credentials {
+                    username = publishUserName
+                    password = publishPassword
+                }
             }
         }
     }
 }
+
+apply from: "$rootDir/gradle/publish-bintray.gradle"

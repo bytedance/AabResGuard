@@ -1,4 +1,4 @@
-if (!"true".equalsIgnoreCase(findProperty("enableAabResGuardPlugin"))) {
+if (!"true".equalsIgnoreCase(System.getProperty("enableAabResGuardPlugin", "false"))) {
     return
 }
 

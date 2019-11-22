@@ -24,23 +24,26 @@ println "username: $publishUserName"
 println "password: $publishPassword"
 
 publishing {
-    repositories {
-        maven {
-            url = publishUrl
-            credentials {
-                username = publishUserName
-                password = publishPassword
+    if (!System.getProperty("uploadToBintray", "false").equalsIgnoreCase("true")) {
+        repositories {
+            maven {
+                url = publishUrl
+                credentials {
+                    username = publishUserName
+                    password = publishPassword
+                }
             }
-        }
-
-        maven {
-            url = "${rootProject.projectDir}/repo"
+            if (System.getProperty("useLocalMaven", "false").equalsIgnoreCase("true")) {
+                maven {
+                    url = "${rootProject.projectDir}/repo"
+                }
+            }
         }
     }
 
     if (project.plugins.hasPlugin("java-library") || project.plugins.hasPlugin("java")) {
         publications {
-            shadow(MavenPublication) {
+            MyPublication(MavenPublication) {
                 from components.java
                 artifact sourcesJar
                 artifact javadocJar
@@ -54,3 +57,5 @@ publishing {
         throw new GradleScriptException("java-library plugin required")
     }
 }
+
+apply from: "$rootDir/gradle/publish-bintray.gradle"
