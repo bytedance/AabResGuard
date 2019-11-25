@@ -100,3 +100,7 @@ Read the details to learn how to participate in the improvement **AabResGuard**.
 * [Jun Li]()
 * [Zilai Jiang](https://github.com/Zzzia)
 * [Zhiqian Yang](https://github.com/yangzhiqian)
+
+## Thanks
+* [AndResGuard](https://github.com/shwenzhang/AndResGuard/)
+* [BundleTool](https://github.com/google/bundletool)
