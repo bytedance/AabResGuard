@@ -12,7 +12,7 @@
 
 > Powered by bytedance douyin android team.
 
-# Features
+## Features
 - **Merge duplicated resources:** Consolidate duplicate resource files to reduce package size.
 - **Filter bundle files:** Support for filtering files in the `bundle` package. Currently only supports filtering in the `MATE-INFO/` and `lib/` paths.
 - **White list:** The resources in the whitelist are not to be obfuscated.
@@ -20,16 +20,16 @@
 - **Remove string:** Input the unused file splits by lines to support remove strings.
 - **???:** Looking ahead, there will be more feature support, welcome to submit PR & issue.
 
-# [Data of size savings](wiki/en/DATA.md)
+## [Data of size savings](wiki/en/DATA.md)
 **AabResGuard** is a resource obfuscation tool powered by the douyin Android team. It has been launched at the end of July 2018 in several overseas products, such as **Tiktok, Musically, Vigo**, etc. 
 There is no feedback on related resource issues. 
 For more data details, please go to **[Data of size savings](wiki/en/DATA.md)**.
 
-# Quick start
+## Quick start
 - **Command tool:** Support command line.
 - **Gradle plugin:** Support for `gradle plugin`, using the original packaging command to execute obfuscation.
 
-## #Gradle plugin
+### #Gradle plugin
 Configured in `build.gradle(root project)`
 ```gradle
 buildscript {
@@ -78,22 +78,22 @@ def aabResGuardPlugin = project.tasks.getByName("aabresguard${VARIANT_NAME}")
 Path bundlePath = aabResGuardPlugin.getObfuscatedBundlePath()
 ```
 
-## [#Command line](wiki/en/COMMAND.md)
+### [#Command line](wiki/en/COMMAND.md)
 **AabResGuard** provides a `jar` file that can be executed directly from the command line. More details, please go to **[Command Line](wiki/en/COMMAND.md)**.
 
-## [#Output](wiki/en/OUTPUT.md)
+### [#Output](wiki/en/OUTPUT.md)
 After the packaging is completed, the obfuscated file and the log files will be output. More details, please go to **[Output File](wiki/en/OUTPUT.md)**.
 - **resources-mapping.txt:** Resource obfuscation mapping, which can be used as the next obfuscation input to achieve incremental obfuscate.
 - **aab:** Optimized aab file.
 - **-duplicated.txt:** duplicated file logging.
 
-# [Change log](wiki/en/CHANGELOG.md)
+## [Change log](wiki/en/CHANGELOG.md)
 Version change log. More details, please go to **[Change Log](wiki/en/CHANGELOG.md)** .
 
-# [Contribute](wiki/en/CONTRIBUTOR.md)
+## [Contribute](wiki/en/CONTRIBUTOR.md)
 Read the details to learn how to participate in the improvement **AabResGuard**.
 
-## #Contributor
+### #Contributor
 * [JingYeoh](https://github.com/JingYeoh)
 * [Jun Li]()
 * [Zilai Jiang](https://github.com/Zzzia)

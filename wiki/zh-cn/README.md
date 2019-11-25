@@ -12,7 +12,7 @@
 
 > 本工具由字节跳动抖音 Android 团队提供。
 
-# 特性
+## 特性
 - **资源去重：** 对重复资源文件进行合并，缩减包体积。
 - **文件过滤：** 支持对 `bundle` 包中的文件进行过滤，目前只支持 `MATE-INFO/`、`lib/` 路径下的过滤。
 - **白名单：** 白名单中的资源，名称不予混淆。
@@ -20,15 +20,15 @@
 - **文案删除：** 输入按行分割的字符串文件，移除文案及翻译。
 - **？？？：** 展望未来，会有更多的特性支持，欢迎提交 PR & issue。
 
-# [数据收益](DATA.md)
+## [数据收益](DATA.md)
 **AabResGuard** 是抖音Android团队完成的资源混淆工具，目前已经在 **Tiktok、Musically、Vigo** 等多个产品上线多月，目前无相关资源问题的反馈。
 具体的数据详细信息请移步 **[数据收益](DATA.md)** 。
 
-# 快速开始
+## 快速开始
 - **命令行工具：** 支持命令行一键输入输出。
 - **Gradle plugin：** 支持 `gradle plugin`，使用原始打包命令执行混淆。
 
-## #Gradle plugin
+### #Gradle plugin
 在 `build.gradle(root project)` 中进行配置
 ```gradle
 buildscript {
@@ -76,22 +76,22 @@ def aabResGuardPlugin = project.tasks.getByName("aabresguard${VARIANT_NAME}")
 Path bundlePath = aabResGuardPlugin.getObfuscatedBundlePath()
 ```
 
-## [#命令行支持](COMMAND.md)
+### [#命令行支持](COMMAND.md)
 **AabResGuard** 提供了 `jar` 包，可以使用命令行直接执行，具体的使用请移步 **[命令行支持](COMMAND.md)** 。
 
-## [#输出文件](OUTPUT.md)
+### [#输出文件](OUTPUT.md)
 在打包完成后会输出混淆后的文件和相应的日志文件，详细信息请移步 **[输出文件](OUTPUT.md)** 。
 - **resources-mapping.txt：** 资源混淆 mapping，可作为下次混淆输入以达到增量混淆的目的。
 - **aab：** 优化后的 aab 文件。
 - **-duplicated.txt：** 被去重的文件日志记录。
 
-# [版本日志](CHANGELOG.md)
+## [版本日志](CHANGELOG.md)
 版本变化日志记录，详细信息请移步 **[版本日志](CHANGELOG.md)** 。
 
-# [代码贡献](CONTRIBUTOR.md)
+## [代码贡献](CONTRIBUTOR.md)
 阅读详细内容，了解如何参与改进 **AabResGuard**。
 
-## #贡献者
+### #贡献者
 * [JingYeoh](https://github.com/JingYeoh)
 * [Jun Li]()
 * [Zilai Jiang](https://github.com/Zzzia)
