@@ -4,7 +4,7 @@
 
 > **AabResGuard** provides a jar file that can run resource obfuscation by command line.
 
-## #Merge duplicated resources
+## Merge duplicated resources
 The duplicate files will be merged according to the file `md5` value, only one file will be retained, and then the values in the original resource path index table will be redirected to reduce the volume of the package.
 ```cmd
 aabresguard merge-duplicated-res --bundle=app.aab --output=merged.aab 
@@ -15,7 +15,7 @@ aabresguard merge-duplicated-res --bundle=app.aab --output=merged.aab
 ```
 The signature information is optional. If you do not specify the signature information, it will be signed using the `Android` default signature file on the PC.
 
-## #File filtering
+## File filtering
 Support for specifying specific files for filtering. Currently only filtering under the `META-INF/` and `lib/` folders is supported.
 ```cmd
 aabresguard filter-file --bundle=app.aab --output=filtered.aab --config=config.xml
@@ -37,7 +37,7 @@ Configuration file `config.xml`, filtering rules support `regular expressions`
 ```
 **Applicable scenarios: ** Due to the needs of the business, some channels need to make a full package, but the full package will include all `so` files, `files filter` can be used to filter the `abi` of a certain latitude and will not affect `bundletool` process.
 
-## #Resources obfuscation
+## Resources obfuscation
 Resource aliasing of the input `aab` file, and outputting the obfuscated `aab` file, supporting `Merge duplicated resources` and `file filtering`.
 ```cmd
 aabresguard obfuscate-bundle --bundle=app.aab --output=obfuscated.aab --config=config.xml --mapping=mapping.txt
@@ -62,10 +62,10 @@ Configuration file `config.xml`, whitelist support `regular expressions`
 </resproguard>
 ```
 
-## #String filtering
+## String filtering
 Specify a line-by-line split string list file to filter out value and translations if name is matched in the string resource type
 ```cmd
-aabresguard filter-file --bundle=app.aab --output=filtered.aab --config=config.xml
+aabresguard filter-string --bundle=app.aab --output=filtered.aab --config=config.xml
 --storeFile=debug.store
 --storePassword=android
 --keyAlias=android
