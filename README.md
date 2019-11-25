@@ -4,7 +4,7 @@
   <p align="center" style="font-size: 0.5em">A tool used to obfuscate aab resources</p>
 </h1>
 
-[![Download](https://api.bintray.com/packages/bytedance/maven/AabResGuard/images/download.svg)](https://bintray.com/bytedance/maven/AabResGuard/)
+[ ![Download](https://api.bintray.com/packages/yeoh/maven/aabresguard-plugin/images/download.svg) ](https://bintray.com/yeoh/maven/aabresguard-plugin/_latestVersion)
 [![License](https://img.shields.io/badge/license-Apache2.0-brightgreen)](LICENSE)
 [![Bundletool](https://img.shields.io/badge/Dependency-Bundletool/0.10.0-blue)](https://github.com/google/bundletool)
 
