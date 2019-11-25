@@ -33,7 +33,7 @@ dependencies {
 //    compile deps.gradle.tools
 
     implementation "com.android.support:support-annotations:24.2.0"
-    implementation 'commons-io:commons-io:2.6'
+    shadow 'commons-io:commons-io:2.6'
     shadow 'commons-codec:commons-codec:1.5'
     shadow "com.google.guava:guava:27.0.1-jre"
 
