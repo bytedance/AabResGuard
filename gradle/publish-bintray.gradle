@@ -1,0 +1,23 @@
+apply plugin: 'com.jfrog.bintray'
+if (System.getProperty("uploadToBintray", "false").equalsIgnoreCase("true")) {
+    bintray {
+        user = bintrayInfo.developer.user
+        key = bintrayInfo.developer.apikey
+        pkg {
+            repo = 'maven'
+            name = ARTIFACT_ID
+            websiteUrl = bintrayInfo.repo.siteUrl
+            vcsUrl = bintrayInfo.repo.gitUrl
+            licenses = ["Apache-2.0"]
+            publish = true
+            userOrg = bintrayInfo.repo.userOrg
+
+            version {
+                name = versions[ARTIFACT_ID]
+                released = new Date()
+                vcsTag = versions[ARTIFACT_ID]
+            }
+        }
+        publications = ['MyPublication']
+    }
+}

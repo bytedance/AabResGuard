@@ -5,7 +5,7 @@ buildscript {
     repositories {
         google()
         jcenter()
-        if ("true".equalsIgnoreCase(findProperty('useLocalMaven'))) {
+        if ("true".equalsIgnoreCase(System.getProperty('useLocalMaven', "false"))) {
             println "use local repo"
             mavenLocal()
         } else {
@@ -18,13 +18,13 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'digital.wup:android-maven-publish:3.4.0'
+        classpath deps.plugin.digital
+        classpath deps.plugin.shadow
+        classpath deps.plugin['bintray-plugin']
         classpath deps.gradle.tools
         classpath deps.kotlin.plugin
-        classpath deps.plugin.digital
-        classpath "com.github.jengelman.gradle.plugins:shadow:4.0.4"
 
-        if ("true".equalsIgnoreCase(findProperty("enableAabResGuardPlugin"))) {
+        if ("true".equalsIgnoreCase(System.getProperty("enableAabResGuardPlugin", "false"))) {
             classpath "com.bytedance.android:aabresguard-plugin:${versions.aabresguard}"
         }
     }
@@ -34,7 +34,7 @@ allprojects {
     repositories {
         google()
         jcenter()
-        if ("true".equalsIgnoreCase(findProperty('useLocalMaven'))) {
+        if ("true".equalsIgnoreCase(System.getProperty('useLocalMaven', "false"))) {
             mavenLocal()
         } else {
             maven { url findProperty("RELEASE_REPOSITORY_URL") }
