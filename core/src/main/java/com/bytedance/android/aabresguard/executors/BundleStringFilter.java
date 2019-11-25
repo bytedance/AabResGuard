@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -74,7 +75,7 @@ public class BundleStringFilter {
                 .build();
 
         System.out.println(String.format(
-                "obfuscate resources done, coast %s",
+                "filtering strings done, coast %s\n",
                 timeClock.getCoast()
         ));
 
@@ -115,6 +116,8 @@ public class BundleStringFilter {
             if (typeList == null) {
                 continue;
             }
+            Set<String> languageFilterSet = new HashSet<>(100);
+            List<String> nameFilterList = new ArrayList<>(3000);
             for (Resources.Type resType : typeList) {
                 if (resType == null) {
                     continue;
@@ -127,19 +130,18 @@ public class BundleStringFilter {
                     if (resEntry == null) {
                         continue;
                     }
-                    Resources.Entry finalResEntry = resEntry;
 
-                    if (languageWhiteList != null && !languageWhiteList.isEmpty()){
+                    if (resPackage.getPackageId().getId() == 127 && resType.getName().equals("string") &&
+                            languageWhiteList != null && !languageWhiteList.isEmpty()) {
                         //删除语言
                         List<Resources.ConfigValue> languageValue = resEntry.getConfigValueList().stream()
                                 .filter(Objects::nonNull)
                                 .filter(configValue -> {
                                     String locale = configValue.getConfig().getLocale();
-                                    if (filterLanguage(locale)) {
+                                    if (keepLanguage(locale)) {
                                         return true;
                                     }
-                                    System.out.println(
-                                            "[remove language] : " + locale + " stringName : " + finalResEntry.getName());
+                                    languageFilterSet.add(locale);
                                     return false;
                                 }).collect(Collectors.toList());
                         resEntry = resEntry.toBuilder().clearConfigValue().addAllConfigValue(languageValue).build();
@@ -164,20 +166,32 @@ public class BundleStringFilter {
                                     ).build();
                                     return changedConfigValue;
                                 }).collect(Collectors.toList());
-                        System.out.println("[delete name] " + resEntry.getName());
+                        nameFilterList.add(resEntry.getName());
                         resEntry = resEntry.toBuilder().clearConfigValue().addAllConfigValue(proguardConfigValue).build();
                     }
                     packageBuilder.addResource(resType, resEntry);
                 }
             }
+            System.out.println("filtering " + resPackage.getPackageName() + " id:" + resPackage.getPackageId().getId());
+            StringBuilder l = new StringBuilder();
+            for (String lan : languageFilterSet) {
+                l.append("[remove language] : ").append(lan).append("\n");
+            }
+            System.out.println(l.toString());
+            l = new StringBuilder();
+            for (String name : nameFilterList) {
+                l.append("[delete name] ").append(name).append("\n");
+            }
+            System.out.println(l.toString());
+            System.out.println("-----------");
             packageBuilder.build();
         }
         return tableBuilder.build();
     }
 
-    private boolean filterLanguage(String lan) {
-        if (lan == null || lan.isEmpty()) {
-            return false;
+    private boolean keepLanguage(String lan) {
+        if (lan == null || lan.equals(" ") || lan.isEmpty()) {
+            return true;
         }
         if (lan.contains("-")) {
             int index = lan.indexOf("-");
