@@ -2,7 +2,6 @@ package com.bytedance.android.plugin.tasks
 
 import com.android.build.gradle.internal.dsl.CoreSigningConfig
 import com.android.build.gradle.internal.scope.VariantScope
-import com.android.build.gradle.internal.tasks.BundleTask
 import com.bytedance.android.aabresguard.commands.ObfuscateBundleCommand
 import com.bytedance.android.plugin.extensions.AabResGuardExtension
 import org.gradle.api.DefaultTask
@@ -30,9 +29,9 @@ open class AabResGuardTask : DefaultTask() {
 
     fun setVariantScope(variantScope: VariantScope) {
         this.variantScope = variantScope
-        val bundlePackageTask: BundleTask = project.tasks.getByName("package${variantScope.variantData.name.capitalize()}Bundle") as BundleTask
-        bundlePath = File(bundlePackageTask.bundleLocation, bundlePackageTask.fileName).toPath()
-        obfuscatedBundlePath = File(bundlePackageTask.bundleLocation, aabResGuard.obfuscatedBundleFileName).toPath()
+        val bundlePackageTask = project.tasks.getByName("package${variantScope.variantData.name.capitalize()}Bundle")
+        bundlePath = File(bundlePackageTask.property("bundleLocation") as File, bundlePackageTask.property("fileName") as String).toPath()
+        obfuscatedBundlePath = File(bundlePackageTask.property("bundleLocation") as File, aabResGuard.obfuscatedBundleFileName).toPath()
     }
 
     fun getObfuscatedBundlePath(): Path {

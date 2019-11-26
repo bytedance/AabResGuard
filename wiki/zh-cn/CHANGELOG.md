@@ -2,6 +2,10 @@
 
 # 版本日志
 
+## 0.1.1（2019/11/26）
+- 适配 Gradle 高版本.
+- Fix issue [#4](https://github.com/bytedance/AabResGuard/issues/4)
+
 ## 0.1.0（2019/10/16）
 - 添加资源混淆功能
 - 添加资源去重功能
