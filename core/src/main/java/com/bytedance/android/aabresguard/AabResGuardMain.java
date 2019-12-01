@@ -56,6 +56,9 @@ public class AabResGuardMain {
                 case FileFilterCommand.COMMAND_NAME:
                     FileFilterCommand.fromFlags(flags).execute();
                     break;
+                case StringFilterCommand.COMMAND_NAME:
+                    StringFilterCommand.fromFlags(flags).execute();
+                    break;
                 case HELP_CMD:
                     if (flags.getSubCommand().isPresent()) {
                         help(flags.getSubCommand().get(), runtime);
@@ -111,6 +114,9 @@ public class AabResGuardMain {
                 break;
             case FileFilterCommand.COMMAND_NAME:
                 commandHelp = FileFilterCommand.help();
+                break;
+                case StringFilterCommand.COMMAND_NAME:
+                commandHelp = StringFilterCommand.help();
                 break;
             default:
                 System.err.printf("Error: Unrecognized command '%s'.%n%n%n", commandName);
