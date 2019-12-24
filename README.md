@@ -1,6 +1,6 @@
 # AabResGuard
 <h1 align="center">
-  <img src="wiki/images/logo.png" height="220" width="460"/>
+  <img src="wiki/images/logo.gif" height="220" width="460"/>
   <p align="center" style="font-size: 0.3em">A tool used to obfuscate aab resources</p>
 </h1>
 
