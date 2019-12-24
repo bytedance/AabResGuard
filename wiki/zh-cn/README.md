@@ -1,7 +1,7 @@
 # AabResGuard
 <h1 align="center">
-  <img src="../images/logo.png" height="220" width="376"/>
-  <p align="center" style="font-size: 0.5em">针对 aab 文件的资源混淆工具</p>
+  <img src="../images/logo.2.png" height="220" width="460"/>
+  <p align="center" style="font-size: 0.3em">针对 aab 文件的资源混淆工具</p>
 </h1>
 
 [ ![Download](https://api.bintray.com/packages/yeoh/maven/aabresguard-plugin/images/download.svg) ](https://bintray.com/yeoh/maven/aabresguard-plugin/_latestVersion)
@@ -98,6 +98,7 @@ Path bundlePath = aabResGuardPlugin.getObfuscatedBundlePath()
 * [Jun Li]()
 * [Zilai Jiang](https://github.com/Zzzia)
 * [Zhiqian Yang](https://github.com/yangzhiqian)
+* [Xiaoshuang Bai (Designer)](https://www.behance.net/shawnpai)
 
 ## 感谢
 * [AndResGuard](https://github.com/shwenzhang/AndResGuard/)
