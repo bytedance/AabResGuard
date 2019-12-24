@@ -5,7 +5,7 @@ ext {
                     name       : "AabResGuard",
                     groupId    : GROUP_ID,
                     artifactId : "aabresguard",
-                    description: "A tool used to obfuscate aab resources",
+                    description: "The tool of obfuscated aab resources",
                     packaging  : "jar",
                     siteUrl    : "https://github.com/bytedance/AabResGuard",
                     gitUrl     : "https://github.com/bytedance/AabResGuard.git",

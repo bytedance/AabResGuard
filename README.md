@@ -1,7 +1,7 @@
 # AabResGuard
 <h1 align="center">
   <img src="wiki/images/logo.png" height="220" width="460"/>
-  <p align="center" style="font-size: 0.3em">A tool used to obfuscate aab resources</p>
+  <p align="center" style="font-size: 0.3em">The tool of obfuscated aab resources</p>
 </h1>
 
 [ ![Download](https://api.bintray.com/packages/yeoh/maven/aabresguard-plugin/images/download.svg) ](https://bintray.com/yeoh/maven/aabresguard-plugin/_latestVersion)
@@ -13,7 +13,7 @@
 > Powered by bytedance douyin android team.
 
 ## Features
-> A tool used to obfuscate aab resources.
+> The tool of obfuscated aab resources.
 
 - **Merge duplicated resources:** Consolidate duplicate resource files to reduce package size.
 - **Filter bundle files:** Support for filtering files in the `bundle` package. Currently only supports filtering in the `MATE-INFO/` and `lib/` paths.
