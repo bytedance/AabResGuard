@@ -1,7 +1,7 @@
 # AabResGuard
 <h1 align="center">
-  <img src="wiki/images/logo.png" height="220" width="376"/>
-  <p align="center" style="font-size: 0.5em">A tool used to obfuscate aab resources</p>
+  <img src="wiki/images/logo.png" height="220" width="460"/>
+  <p align="center" style="font-size: 0.3em">A tool used to obfuscate aab resources</p>
 </h1>
 
 [ ![Download](https://api.bintray.com/packages/yeoh/maven/aabresguard-plugin/images/download.svg) ](https://bintray.com/yeoh/maven/aabresguard-plugin/_latestVersion)
@@ -100,6 +100,7 @@ Read the details to learn how to participate in the improvement **AabResGuard**.
 * [Jun Li]()
 * [Zilai Jiang](https://github.com/Zzzia)
 * [Zhiqian Yang](https://github.com/yangzhiqian)
+* [Xiaoshuang Bai (Designer)](https://www.behance.net/shawnpai)
 
 ## Thanks
 * [AndResGuard](https://github.com/shwenzhang/AndResGuard/)
