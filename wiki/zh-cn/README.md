@@ -1,6 +1,6 @@
 # AabResGuard
 <h1 align="center">
-  <img src="../images/logo.png" height="220" width="460"/>
+  <img src="../images/logo.2.png" height="220" width="460"/>
   <p align="center" style="font-size: 0.3em">针对 aab 文件的资源混淆工具</p>
 </h1>
 
