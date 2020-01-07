@@ -2,8 +2,12 @@
 
 # Change log
 
+## 0.1.2（2020/1/7）
+- Compatible with `AGP-4.0.0-alpha07`
+-  Fix issue [#13](https://github.com/bytedance/AabResGuard/issues/13)
+
 ## 0.1.1（2019/11/26）
-- Compatible with Gradle high version.
+- Compatible with `AGP-3.4.1.`
 - Fix issue [#4](https://github.com/bytedance/AabResGuard/issues/4)
 
 ## 0.1.0（2019/10/16）
