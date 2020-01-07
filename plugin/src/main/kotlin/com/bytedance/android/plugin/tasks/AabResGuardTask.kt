@@ -1,9 +1,11 @@
 package com.bytedance.android.plugin.tasks
 
-import com.android.build.gradle.internal.dsl.CoreSigningConfig
 import com.android.build.gradle.internal.scope.VariantScope
 import com.bytedance.android.aabresguard.commands.ObfuscateBundleCommand
 import com.bytedance.android.plugin.extensions.AabResGuardExtension
+import com.bytedance.android.plugin.internal.getBundleFilePath
+import com.bytedance.android.plugin.internal.getSigningConfig
+import com.bytedance.android.plugin.model.SigningConfig
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 import java.io.File
@@ -16,7 +18,7 @@ import java.nio.file.Path
 open class AabResGuardTask : DefaultTask() {
 
     private lateinit var variantScope: VariantScope
-    lateinit var signingConfig: CoreSigningConfig
+    lateinit var signingConfig: SigningConfig
     var aabResGuard: AabResGuardExtension = project.extensions.getByName("aabResGuard") as AabResGuardExtension
     private lateinit var bundlePath: Path
     private lateinit var obfuscatedBundlePath: Path
@@ -29,9 +31,9 @@ open class AabResGuardTask : DefaultTask() {
 
     fun setVariantScope(variantScope: VariantScope) {
         this.variantScope = variantScope
-        val bundlePackageTask = project.tasks.getByName("package${variantScope.variantData.name.capitalize()}Bundle")
-        bundlePath = File(bundlePackageTask.property("bundleLocation") as File, bundlePackageTask.property("fileName") as String).toPath()
-        obfuscatedBundlePath = File(bundlePackageTask.property("bundleLocation") as File, aabResGuard.obfuscatedBundleFileName).toPath()
+        // init bundleFile, obfuscatedBundlePath must init before task action.
+        bundlePath = getBundleFilePath(project, variantScope)
+        obfuscatedBundlePath = File(bundlePath.toFile().parentFile, aabResGuard.obfuscatedBundleFileName).toPath()
     }
 
     fun getObfuscatedBundlePath(): Path {
@@ -41,8 +43,10 @@ open class AabResGuardTask : DefaultTask() {
     @TaskAction
     private fun execute() {
         println(aabResGuard.toString())
-        signingConfig = variantScope.variantData.variantConfiguration.signingConfig
+        // init signing config
+        signingConfig = getSigningConfig(project, variantScope)
         printSignConfiguration()
+
         prepareUnusedFile()
 
         val command = ObfuscateBundleCommand.builder()
@@ -57,8 +61,8 @@ open class AabResGuardTask : DefaultTask() {
                 .setUnusedStrPath(aabResGuard.unusedStringPath)
                 .setLanguageWhiteList(aabResGuard.languageWhiteList)
 
-        if (signingConfig.storeFile.exists()) {
-            command.setStoreFile(signingConfig.storeFile.toPath())
+        if (signingConfig.storeFile != null && signingConfig.storeFile!!.exists()) {
+            command.setStoreFile(signingConfig.storeFile!!.toPath())
                     .setKeyAlias(signingConfig.keyAlias)
                     .setKeyPassword(signingConfig.keyPassword)
                     .setStorePassword(signingConfig.storePassword)
@@ -94,7 +98,8 @@ open class AabResGuardTask : DefaultTask() {
         println("-------------- sign configuration --------------")
     }
 
-    private fun encrypt(value: String): String {
+    private fun encrypt(value: String?): String {
+        if (value == null) return "/"
         if (value.length > 2) {
             return "${value.substring(0, value.length / 2)}****"
         }

@@ -1,8 +1,8 @@
 package com.bytedance.android.plugin
 
-import com.android.build.gradle.AppPlugin
 import com.android.build.gradle.internal.scope.VariantScope
 import com.bytedance.android.plugin.extensions.AabResGuardExtension
+import com.bytedance.android.plugin.internal.getVariantManager
 import com.bytedance.android.plugin.tasks.AabResGuardTask
 import org.gradle.api.GradleException
 import org.gradle.api.Plugin
@@ -19,12 +19,8 @@ class AabResGuardPlugin : Plugin<Project> {
         checkApplicationPlugin(project)
         project.extensions.create("aabResGuard", AabResGuardExtension::class.java)
         project.afterEvaluate {
-            project.plugins.withId("com.android.application") { appPlugin ->
-                if (appPlugin is AppPlugin) {
-                    appPlugin.variantManager.variantScopes.forEach { scope ->
-                        createAabResGuardTask(project, scope)
-                    }
-                }
+            getVariantManager(project).variantScopes.forEach { scope ->
+                createAabResGuardTask(project, scope)
             }
         }
     }
@@ -48,6 +44,12 @@ class AabResGuardPlugin : Plugin<Project> {
         val bundlePackageTask: Task = project.tasks.getByName("package${variantName}Bundle")
         bundleTask.dependsOn(aabResGuardTask)
         aabResGuardTask.dependsOn(bundlePackageTask)
+        // AGP-4.0.0-alpha07: use FinalizeBundleTask to sign bundle file
+        // FinalizeBundleTask is executed after PackageBundleTask
+        val finalizeBundleTaskName = "sign${variantName}Bundle"
+        if (project.tasks.findByName(finalizeBundleTaskName) != null) {
+            aabResGuardTask.dependsOn(project.tasks.getByName(finalizeBundleTaskName))
+        }
     }
 
     private fun checkApplicationPlugin(project: Project) {

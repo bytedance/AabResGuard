@@ -10,7 +10,12 @@ dependencies {
     compileOnly deps.gradle.tools
 
     implementation deps.kotlin.stdlib
-    api project(":core")
+    implementation deps.kotlin.plugin
+    compileOnly deps.aabresguard.core
+    api(deps.aabresguard.core) {
+        exclude group: "com.google.guava", module: "guava"
+        exclude group: "com.android.tools.build", module: "gradle"
+    }
 }
 
 configurations {

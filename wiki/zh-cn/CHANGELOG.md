@@ -2,8 +2,12 @@
 
 # 版本日志
 
+## 0.1.2（2020/1/7）
+- 适配 `AGP-4.0.0-alpha07`
+-  Fix issue [#13](https://github.com/bytedance/AabResGuard/issues/13)
+
 ## 0.1.1（2019/11/26）
-- 适配 Gradle 高版本.
+- 适配 `AGP-3.4.1`
 - Fix issue [#4](https://github.com/bytedance/AabResGuard/issues/4)
 
 ## 0.1.0（2019/10/16）
