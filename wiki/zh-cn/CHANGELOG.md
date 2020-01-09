@@ -2,6 +2,9 @@
 
 # 版本日志
 
+## 0.1.3（2020/1/8）
+- 适配 `AGP-3.5.2`
+
 ## 0.1.2（2020/1/7）
 - 适配 `AGP-4.0.0-alpha07`
 -  Fix issue [#13](https://github.com/bytedance/AabResGuard/issues/13)

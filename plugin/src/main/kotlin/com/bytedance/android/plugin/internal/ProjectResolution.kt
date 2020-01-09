@@ -13,7 +13,7 @@ import org.gradle.internal.component.external.model.DefaultModuleComponentIdenti
  */
 internal fun getVariantManager(project: Project): VariantManager {
     val appPlugin: Plugin<Any>? = when {
-        // AGP-4.0.0-alpha07: move all methods to com.android.internal.application
+        // AGP4.0.0-alpha07: move all methods to com.android.internal.application
         project.plugins.hasPlugin("com.android.internal.application") -> {
             project.plugins.getPlugin("com.android.internal.application")
         }

@@ -12,11 +12,26 @@ import java.io.File
  */
 internal fun getSigningConfig(project: Project, variantScope: VariantScope): SigningConfig {
     val agpVersion = getAGPVersion(project)
-    return if (agpVersion.startsWith("3.")) {
-        getSigningConfigForAGP3(project, variantScope)
-    } else {
-        getSigningConfigForAGP4(project, variantScope)
+    // get signing config
+    return when {
+        // AGP3.2+: use VariantScope.getVariantConfiguration.getSigningConfig
+        agpVersion.startsWith("3.") -> {
+            getSigningConfigForAGP3(project, variantScope)
+        }
+        // AGP4.0+: VariantScope class removed getVariantConfiguration method.
+        // VariantManager add getBuildTypes method
+        // Use BuildType.getSigningConfig method to get signingConfig
+        else -> {
+            getSigningConfigForAGP4(project, variantScope)
+        }
     }
+}
+
+private fun getSigningConfigForAGP3(project: Project, variantScope: VariantScope): SigningConfig {
+    val variantData = variantScope.variantData
+    val variantConfiguration = variantData::class.java.getMethod("getVariantConfiguration").invoke(variantData)
+    val signingConfig = variantConfiguration::class.java.getMethod("getSigningConfig").invoke(variantConfiguration)
+    return invokeSigningConfig(signingConfig)
 }
 
 private fun getSigningConfigForAGP4(project: Project, variantScope: VariantScope): SigningConfig {
@@ -27,13 +42,6 @@ private fun getSigningConfigForAGP4(project: Project, variantScope: VariantScope
             ?: throw GradleException("get buildType failed for $flavor")
     val buildType = buildTypeData::class.java.getMethod("getBuildType").invoke(buildTypeData)
     val signingConfig = buildType::class.java.getMethod("getSigningConfig").invoke(buildType)
-    return invokeSigningConfig(signingConfig)
-}
-
-private fun getSigningConfigForAGP3(project: Project, variantScope: VariantScope): SigningConfig {
-    val variantData = variantScope.variantData
-    val variantConfiguration = variantData::class.java.getMethod("getVariantConfiguration").invoke(variantData)
-    val signingConfig = variantConfiguration::class.java.getMethod("getSigningConfig").invoke(variantConfiguration)
     return invokeSigningConfig(signingConfig)
 }
 

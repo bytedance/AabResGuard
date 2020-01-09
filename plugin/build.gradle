@@ -7,7 +7,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation gradleApi()
     implementation localGroovy()
-    compileOnly deps.gradle.tools
+    compileOnly deps.gradle.agp
 
     implementation deps.kotlin.stdlib
     implementation deps.kotlin.plugin

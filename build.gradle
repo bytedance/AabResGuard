@@ -21,7 +21,7 @@ buildscript {
         classpath deps.plugin.digital
         classpath deps.plugin.shadow
         classpath deps.plugin['bintray-plugin']
-        classpath deps.gradle.tools
+        classpath deps.gradle.agp
         classpath deps.kotlin.plugin
 
         if ("true".equalsIgnoreCase(System.getProperty("enableAabResGuardPlugin", "false"))) {

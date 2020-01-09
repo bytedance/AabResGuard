@@ -52,7 +52,6 @@ open class AabResGuardTask : DefaultTask() {
         val command = ObfuscateBundleCommand.builder()
                 .setBundlePath(bundlePath)
                 .setOutputPath(obfuscatedBundlePath)
-                .setMappingPath(aabResGuard.mappingFile)
                 .setMergeDuplicatedResources(aabResGuard.mergeDuplicatedRes)
                 .setWhiteList(aabResGuard.whiteList)
                 .setFilterFile(aabResGuard.enableFilterFiles)
@@ -60,6 +59,9 @@ open class AabResGuardTask : DefaultTask() {
                 .setRemoveStr(aabResGuard.enableFilterStrings)
                 .setUnusedStrPath(aabResGuard.unusedStringPath)
                 .setLanguageWhiteList(aabResGuard.languageWhiteList)
+        if (aabResGuard.mappingFile != null) {
+            command.setMappingPath(aabResGuard.mappingFile)
+        }
 
         if (signingConfig.storeFile != null && signingConfig.storeFile!!.exists()) {
             command.setStoreFile(signingConfig.storeFile!!.toPath())
