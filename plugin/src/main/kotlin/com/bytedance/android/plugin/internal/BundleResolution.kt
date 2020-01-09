@@ -12,23 +12,41 @@ import java.nio.file.Path
 internal fun getBundleFilePath(project: Project, variantScope: VariantScope): Path {
     val agpVersion = getAGPVersion(project)
     val flavor = variantScope.variantData.name
-    return if (agpVersion.startsWith("3.")) {
-        getBundleFileForAGP3(project, flavor).toPath()
-    } else {
-        getBundleFileForAGP4(project, flavor).toPath()
+    return when {
+        // AGP3.2.0 - 3.2.1: packageBundle task class is com.android.build.gradle.internal.tasks.BundleTask
+        // AGP3.3.0 - 3.3.2: packageBundle task class is com.android.build.gradle.internal.tasks.PackageBundleTask
+        agpVersion.startsWith("3.2") || agpVersion.startsWith("3.3") -> {
+            getBundleFileForAGP32To33(project, flavor).toPath()
+        }
+        // AGP3.4.0+: use FinalizeBundleTask sign bundle file
+        // packageBundle task bundleLocation is intermediates dir
+        // The finalize bundle file path: FinalizeBundleTask.finalBundleLocation
+        agpVersion.startsWith("3.4") || agpVersion.startsWith("3.5") -> {
+            getBundleFileForAGP34To35(project, flavor).toPath()
+        }
+        // AGP4.0+: removed finalBundleLocation field, and finalBundleFile is public field
+        else -> {
+            getBundleFileForAGP40After(project, flavor).toPath()
+        }
     }
 }
 
-fun getBundleFileForAGP3(project: Project, flavor: String): File {
-    // AGP-3.2.1: package{}Bundle task is com.android.build.gradle.internal.tasks.BundleTask
-    // AGP-3.4.1: package{}Bundle task is com.android.build.gradle.internal.tasks.PackageBundleTask
+fun getBundleFileForAGP32To33(project: Project, flavor: String): File {
     val bundleTaskName = "package${flavor.capitalize()}Bundle"
     val bundleTask = project.tasks.getByName(bundleTaskName)
     return File(bundleTask.property("bundleLocation") as File, bundleTask.property("fileName") as String)
 }
 
-fun getBundleFileForAGP4(project: Project, flavor: String): File {
-    // AGP-4.0.0-alpha07: use FinalizeBundleTask to sign bundle file
+fun getBundleFileForAGP34To35(project: Project, flavor: String): File {
+    // use FinalizeBundleTask to sign bundle file
+    val finalizeBundleTask = project.tasks.getByName("sign${flavor.capitalize()}Bundle")
+    // FinalizeBundleTask.finalBundleFile is the final bundle path
+    val location = finalizeBundleTask.property("finalBundleLocation") as File
+    return File(location, finalizeBundleTask.property("finalBundleFileName") as String)
+}
+
+fun getBundleFileForAGP40After(project: Project, flavor: String): File {
+    // use FinalizeBundleTask to sign bundle file
     val finalizeBundleTask = project.tasks.getByName("sign${flavor.capitalize()}Bundle")
     // FinalizeBundleTask.finalBundleFile is the final bundle path
     val bundleFile = finalizeBundleTask.property("finalBundleFile")

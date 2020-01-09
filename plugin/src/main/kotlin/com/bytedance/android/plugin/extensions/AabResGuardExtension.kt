@@ -7,7 +7,7 @@ import java.nio.file.Path
  * Email: yangjing.yeoh@bytedance.com
  */
 open class AabResGuardExtension {
-    lateinit var mappingFile: Path
+    var mappingFile: Path? = null
     var whiteList: Set<String>? = HashSet()
     lateinit var obfuscatedBundleFileName: String
     var mergeDuplicatedRes: Boolean = false
