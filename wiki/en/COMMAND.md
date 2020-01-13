@@ -35,7 +35,7 @@ Configuration file `config.xml`, filtering rules support `regular expressions`
     </filter>
 </resproguard>
 ```
-**Applicable scenarios: ** Due to the needs of the business, some channels need to make a full package, but the full package will include all `so` files, `files filter` can be used to filter the `abi` of a certain latitude and will not affect `bundletool` process.
+**Applicable scenarios:** Due to the needs of the business, some channels need to make a full package, but the full package will include all `so` files, `files filter` can be used to filter the `abi` of a certain latitude and will not affect `bundletool` process.
 
 ## Resources obfuscation
 Resource aliasing of the input `aab` file, and outputting the obfuscated `aab` file, supporting `Merge duplicated resources` and `file filtering`.
