@@ -157,10 +157,11 @@ public class BundleFileFilter {
                 .map(ImmutableMap::entrySet)
                 .flatMap(Collection::stream)
                 .filter(entry -> {
-                    if (getMatchedFilterRule(entry.getKey()) != null) {
-                        System.out.println(String.format("[filter] metadata file is filtered, path: %s", entry.getKey()));
+                    ZipPath entryZipPath = ZipPath.create(AppBundle.METADATA_DIRECTORY + "/" + entry.getKey());
+                    if (getMatchedFilterRule(entryZipPath) != null) {
+                        System.out.println(String.format("[filter] metadata file is filtered, path: %s", entryZipPath));
                         filterTotalCount += 1;
-                        filterTotalSize += AppBundleUtils.getZipEntrySize(bundleZipFile, entry.getKey());
+                        filterTotalSize += AppBundleUtils.getZipEntrySize(bundleZipFile, entryZipPath);
                         return false;
                     }
                     return true;
