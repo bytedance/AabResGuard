@@ -78,8 +78,8 @@ def aabResGuardPlugin = project.tasks.getByName("aabresguard${VARIANT_NAME}")
 Path bundlePath = aabResGuardPlugin.getObfuscatedBundlePath()
 ```
 
-### [白名单](wiki/en/WHITELIST.md)
-不需要混淆的资源. 如果[白名单](wiki/en/WHITELIST.md)中没有包含你的配置，欢迎提交 PR.
+### [白名单](../en/WHITELIST.md)
+不需要混淆的资源. 如果[白名单](../en/WHITELIST.md)中没有包含你的配置，欢迎提交 PR.
 
 ### [命令行支持](COMMAND.md)
 **AabResGuard** 提供了 `jar` 包，可以使用命令行直接执行，具体的使用请移步 **[命令行支持](COMMAND.md)** 。
