@@ -11,7 +11,7 @@ versions.minSdkVersion = 15
 versions.targetSdkVersion = 28
 versions.support = "28.0.0"
 
-versions.bundletool = "0.10.0"
+versions.bundletool = "0.12.0"
 
 versions["aabresguard-core"] = versions.aabresguard
 versions["aabresguard-plugin"] = versions.aabresguard
