@@ -4,6 +4,7 @@ if (!"true".equalsIgnoreCase(System.getProperty("enableAabResGuardPlugin", "fals
 
 apply plugin: "com.bytedance.android.aabResGuard"
 aabResGuard {
+    enableObfuscate = false
 //    mappingFile = file("../mapping.txt").toPath()
     whiteList = [
             "*.R.raw.*",

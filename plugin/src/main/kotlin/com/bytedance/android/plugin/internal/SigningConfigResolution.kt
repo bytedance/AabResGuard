@@ -1,9 +1,12 @@
 package com.bytedance.android.plugin.internal
 
+import com.android.build.gradle.internal.VariantManager
 import com.android.build.gradle.internal.scope.VariantScope
+import com.android.build.gradle.internal.variant.VariantInputModel
 import com.bytedance.android.plugin.model.SigningConfig
 import org.gradle.api.GradleException
 import org.gradle.api.Project
+import org.gradle.internal.impldep.org.eclipse.jgit.errors.NotSupportedException
 import java.io.File
 
 /**
@@ -22,7 +25,7 @@ internal fun getSigningConfig(project: Project, variantScope: VariantScope): Sig
         // VariantManager add getBuildTypes method
         // Use BuildType.getSigningConfig method to get signingConfig
         else -> {
-            getSigningConfigForAGP4(project, variantScope)
+            getSigningConfigForAGP4(agpVersion, project, variantScope)
         }
     }
 }
@@ -34,9 +37,15 @@ private fun getSigningConfigForAGP3(project: Project, variantScope: VariantScope
     return invokeSigningConfig(signingConfig)
 }
 
-private fun getSigningConfigForAGP4(project: Project, variantScope: VariantScope): SigningConfig {
+private fun getSigningConfigForAGP4(agpVersion: String, project: Project, variantScope: VariantScope): SigningConfig {
     val variantManager = getVariantManager(project)
-    val buildTypes = variantManager::class.java.getMethod("getBuildTypes").invoke(variantManager) as Map<*, *>
+    var buildTypes = getBuildTypesForAGPBefore4008(variantManager)
+    if (buildTypes == null) {
+        buildTypes = getBuildTypesForAGP4009(variantManager)
+    }
+    if (buildTypes == null) {
+        throw NotSupportedException("AGP $agpVersion is not supported, please Please ask for an issue or pull request.")
+    }
     val flavor = variantScope.variantData.name
     val buildTypeData = buildTypes[variantScope.variantData.name]
             ?: throw GradleException("get buildType failed for $flavor")
@@ -44,6 +53,34 @@ private fun getSigningConfigForAGP4(project: Project, variantScope: VariantScope
     val signingConfig = buildType::class.java.getMethod("getSigningConfig").invoke(buildType)
     return invokeSigningConfig(signingConfig)
 }
+
+/**
+ * Return SigningConfig.
+ * Range: 4.* to 4.0.0-alpha08
+ */
+private fun getBuildTypesForAGPBefore4008(variantManager: VariantManager): Map<*, *>? {
+    return try {
+        variantManager::class.java.getMethod("getBuildTypes").invoke(variantManager) as Map<*, *>
+    } catch (e: Exception) {
+        return null
+    }
+}
+
+/**
+ * Return SigningConfig.
+ * Range: 4.0.0-alpha09 and after all.
+ */
+private fun getBuildTypesForAGP4009(variantManager: VariantManager): Map<*, *>? {
+    return try {
+        val variantInputModelField = variantManager::class.java.getDeclaredField("variantInputModel")
+        variantInputModelField.isAccessible = true
+        val variantInputModel = variantInputModelField.get(variantManager) as VariantInputModel
+        variantInputModel.buildTypes
+    } catch (e: Exception) {
+        null
+    }
+}
+
 
 private fun invokeSigningConfig(any: Any): SigningConfig {
     val storeFile: File = any::class.java.getMethod("getStoreFile").invoke(any) as File

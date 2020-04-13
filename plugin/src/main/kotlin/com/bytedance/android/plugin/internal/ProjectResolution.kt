@@ -45,22 +45,3 @@ private fun getVariantManagerFromAppPlugin(appPlugin: Any?): VariantManager? {
         null
     }
 }
-
-internal fun getAGPVersion(project: Project): String {
-    var agpVersion: String? = null
-    for (artifact in project.rootProject.buildscript.configurations.getByName(ScriptHandler.CLASSPATH_CONFIGURATION)
-            .resolvedConfiguration.resolvedArtifacts) {
-        val identifier = artifact.id.componentIdentifier
-        if (identifier is DefaultModuleComponentIdentifier) {
-            if (identifier.group == "com.android.tools.build") {
-                if (identifier.module == "gradle") {
-                    agpVersion = identifier.version
-                }
-            }
-        }
-    }
-    if (agpVersion == null) {
-        throw GradleException("get AGP version failed")
-    }
-    return agpVersion
-}
