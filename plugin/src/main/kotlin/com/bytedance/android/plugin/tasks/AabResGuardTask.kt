@@ -50,6 +50,7 @@ open class AabResGuardTask : DefaultTask() {
         prepareUnusedFile()
 
         val command = ObfuscateBundleCommand.builder()
+                .setEnableObfuscate(aabResGuard.enableObfuscate)
                 .setBundlePath(bundlePath)
                 .setOutputPath(obfuscatedBundlePath)
                 .setMergeDuplicatedResources(aabResGuard.mergeDuplicatedRes)

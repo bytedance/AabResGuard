@@ -7,6 +7,7 @@ import java.nio.file.Path
  * Email: yangjing.yeoh@bytedance.com
  */
 open class AabResGuardExtension {
+    var enableObfuscate: Boolean = true
     var mappingFile: Path? = null
     var whiteList: Set<String>? = HashSet()
     lateinit var obfuscatedBundleFileName: String
@@ -19,6 +20,7 @@ open class AabResGuardExtension {
 
     override fun toString(): String {
         return "AabResGuardExtension\n" +
+                "\tenableObfuscate=$enableObfuscate" +
                 "\tmappingFile=$mappingFile" +
                 "\twhiteList=${if (whiteList == null) null else whiteList}\n" +
                 "\tobfuscatedBundleFileName=$obfuscatedBundleFileName\n" +
@@ -27,6 +29,6 @@ open class AabResGuardExtension {
                 "\tfilterList=${if (filterList == null) null else filterList}" +
                 "\tenableFilterStrings=$enableFilterStrings\n" +
                 "\tunusedStringPath=$unusedStringPath\n" +
-                "\tlanguageWhiteList=${if (languageWhiteList == null) null else languageWhiteList}"
+                "\tlanguageWhiteoolean`List=${if (languageWhiteList == null) null else languageWhiteList}"
     }
 }

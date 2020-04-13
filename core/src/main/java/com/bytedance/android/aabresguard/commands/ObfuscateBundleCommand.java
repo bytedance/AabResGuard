@@ -139,6 +139,7 @@ public abstract class ObfuscateBundleCommand {
 
     public static ObfuscateBundleCommand fromFlags(ParsedFlags flags) throws DocumentException {
         Builder builder = builder();
+        builder.setEnableObfuscate(true);
         builder.setBundlePath(BUNDLE_LOCATION_FLAG.getRequiredValue(flags));
         // config
         Path path = CONFIG_FLAG.getRequiredValue(flags);
@@ -208,12 +209,14 @@ public abstract class ObfuscateBundleCommand {
             appBundle = merger.merge();
         }
         // obfuscate bundle
-        Path mappingPath = null;
-        if (getMappingPath().isPresent()) {
-            mappingPath = getMappingPath().get();
+        if (getEnableObfuscate()) {
+            Path mappingPath = null;
+            if (getMappingPath().isPresent()) {
+                mappingPath = getMappingPath().get();
+            }
+            ResourcesObfuscator obfuscator = new ResourcesObfuscator(getBundlePath(), appBundle, getWhiteList(), getOutputPath().getParent(), mappingPath);
+            appBundle = obfuscator.obfuscate();
         }
-        ResourcesObfuscator obfuscator = new ResourcesObfuscator(getBundlePath(), appBundle, getWhiteList(), getOutputPath().getParent(), mappingPath);
-        appBundle = obfuscator.obfuscate();
         // package bundle
         AppBundlePackager packager = new AppBundlePackager(appBundle, getOutputPath());
         packager.execute();
@@ -242,6 +245,8 @@ public abstract class ObfuscateBundleCommand {
         ));
         return getOutputPath();
     }
+
+    public abstract Boolean getEnableObfuscate();
 
     public abstract Path getBundlePath();
 
@@ -276,6 +281,8 @@ public abstract class ObfuscateBundleCommand {
 
     @AutoValue.Builder
     public abstract static class Builder {
+        public abstract Builder setEnableObfuscate(Boolean enable);
+
         public abstract Builder setBundlePath(Path bundlePath);
 
         public abstract Builder setOutputPath(Path outputPath);

@@ -2,6 +2,10 @@
 
 # Change log
 
+## 0.1.5（2020/4/5）
+- Compatible with `AGP-4.0.0-alpha09`
+- Add `enableObfuscate` for plugin extension.
+
 ## 0.1.3（2020/1/8）
 - Compatible with `AGP-3.5.2`
 
