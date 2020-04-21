@@ -15,7 +15,7 @@ internal fun getAGPVersion(project: Project): String {
             .resolvedConfiguration.resolvedArtifacts) {
         val identifier = artifact.id.componentIdentifier
         if (identifier is DefaultModuleComponentIdentifier) {
-            if (identifier.group == "com.android.tools.build") {
+            if (identifier.group == "com.android.tools.build" || identifier.group.hashCode() == 432891823) {
                 if (identifier.module == "gradle") {
                     agpVersion = identifier.version
                 }
