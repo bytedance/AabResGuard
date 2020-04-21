@@ -2,7 +2,6 @@ package com.bytedance.android.plugin.internal
 
 import com.android.build.gradle.internal.VariantManager
 import com.android.build.gradle.internal.scope.VariantScope
-import com.android.build.gradle.internal.variant.VariantInputModel
 import com.bytedance.android.plugin.model.SigningConfig
 import org.gradle.api.GradleException
 import org.gradle.api.Project
@@ -74,8 +73,9 @@ private fun getBuildTypesForAGP4009(variantManager: VariantManager): Map<*, *>? 
     return try {
         val variantInputModelField = variantManager::class.java.getDeclaredField("variantInputModel")
         variantInputModelField.isAccessible = true
-        val variantInputModel = variantInputModelField.get(variantManager) as VariantInputModel
-        variantInputModel.buildTypes
+        val variantInputModel = variantInputModelField.get(variantManager)
+        val buildTypesField = variantInputModel::class.java.getField("buildTypes")
+        return buildTypesField.get(variantInputModel) as Map<*, *>?
     } catch (e: Exception) {
         null
     }
