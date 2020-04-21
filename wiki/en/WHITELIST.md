@@ -12,4 +12,5 @@ Welcome PR your configs which is not included in whitelist.
 *.R.string.google_crash_reporting_api_key
 *.R.string.google_storage_bucket
 *.R.string.project_id
+*.R.string.com.crashlytics.android.build_id
 ```
