@@ -2,7 +2,6 @@ package com.bytedance.android.plugin.internal
 
 import com.android.build.gradle.internal.VariantManager
 import com.android.build.gradle.internal.scope.VariantScope
-import com.android.build.gradle.internal.variant.VariantInputModel
 import com.bytedance.android.plugin.model.SigningConfig
 import org.gradle.api.GradleException
 import org.gradle.api.Project
