@@ -5,7 +5,6 @@ import com.android.build.gradle.internal.scope.VariantScope
 import com.bytedance.android.plugin.model.SigningConfig
 import org.gradle.api.GradleException
 import org.gradle.api.Project
-import org.gradle.internal.impldep.org.eclipse.jgit.errors.NotSupportedException
 import java.io.File
 
 /**
@@ -43,7 +42,7 @@ private fun getSigningConfigForAGP4(agpVersion: String, project: Project, varian
         buildTypes = getBuildTypesForAGP4009(variantManager)
     }
     if (buildTypes == null) {
-        throw NotSupportedException("AGP $agpVersion is not supported, please Please ask for an issue or pull request.")
+        throw IllegalStateException("AGP $agpVersion is not supported, please Please ask for an issue or pull request.")
     }
     val flavor = variantScope.variantData.name
     val buildTypeData = buildTypes[variantScope.variantData.name]
