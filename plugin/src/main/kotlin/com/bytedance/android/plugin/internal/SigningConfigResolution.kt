@@ -45,10 +45,10 @@ private fun getSigningConfigForAGP4(agpVersion: String, project: Project, varian
         throw IllegalStateException("AGP $agpVersion is not supported, please Please ask for an issue or pull request.")
     }
     val flavor = variantScope.variantData.name
-    val buildTypeData = buildTypes[variantScope.variantData.name]
-            ?: throw GradleException("get buildType failed for $flavor")
+    val buildTypeData = buildTypes[flavor] ?: throw GradleException("get buildType failed for $flavor")
     val buildType = buildTypeData::class.java.getMethod("getBuildType").invoke(buildTypeData)
     val signingConfig = buildType::class.java.getMethod("getSigningConfig").invoke(buildType)
+            ?: throw GradleException("Cannot find signing config for $flavor")
     return invokeSigningConfig(signingConfig)
 }
 
