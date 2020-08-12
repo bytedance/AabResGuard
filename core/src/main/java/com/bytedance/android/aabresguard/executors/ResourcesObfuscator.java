@@ -226,13 +226,20 @@ public class ResourcesObfuscator {
                     String bundleRawPath = bundleModule.getName().getName() + "/" + entry.getPath().toString();
                     String bundleObfuscatedPath = resourcesMapping.getEntryFilesMapping().get(bundleRawPath);
                     if (bundleObfuscatedPath == null) {
-                        String fileSuffix = FileOperation.getFileSuffix(entry.getPath());
-                        String obfuscatedName = guardStringBuilder.getReplaceString(mapping);
-                        mapping.add(obfuscatedName);
-                        bundleObfuscatedPath = obfuscateDir + "/" + obfuscatedName + fileSuffix;
-                        resourcesMapping.putEntryFileMapping(bundleRawPath, bundleObfuscatedPath);
+                        if (!shouldBeObfuscated(bundleRawPath)) {
+                            System.out.println(String.format(
+                                    "[whiteList] find whiteList resource file, resource: %s",
+                                    bundleRawPath
+                            ));
+                            return;
+                        } else {
+                            String fileSuffix = FileOperation.getFileSuffix(entry.getPath());
+                            String obfuscatedName = guardStringBuilder.getReplaceString(mapping);
+                            mapping.add(obfuscatedName);
+                            bundleObfuscatedPath = obfuscateDir + "/" + obfuscatedName + fileSuffix;
+                            resourcesMapping.putEntryFileMapping(bundleRawPath, bundleObfuscatedPath);
+                        }
                     }
-
                     if (obfuscateEntries.values().contains(bundleObfuscatedPath)) {
                         throw new IllegalArgumentException(
                                 String.format("Multiple entries with same key: %s -> %s",
