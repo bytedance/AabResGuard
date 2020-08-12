@@ -169,12 +169,7 @@ public class FileOperation {
     }
 
     public static String getFileSimpleName(ZipPath zipPath) {
-        String fileName = zipPath.getName(zipPath.getNameCount() - 1).toString();
-        if (!fileName.contains(".")) {
-            return fileName;
-        }
-        String[] values = fileName.split(".");
-        return values[0];
+        return zipPath.getFileName().toString();
     }
 
     public static String getFileSuffix(ZipPath zipPath) {

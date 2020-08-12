@@ -4,14 +4,20 @@ if (!"true".equalsIgnoreCase(System.getProperty("enableAabResGuardPlugin", "fals
 
 apply plugin: "com.bytedance.android.aabResGuard"
 aabResGuard {
-    enableObfuscate = false
-//    mappingFile = file("../mapping.txt").toPath()
+    enableObfuscate = true
+    mappingFile = file("../mapping.txt").toPath()
     whiteList = [
+            // keep resources
             "*.R.raw.*",
-            "*.R.drawable.icon"
+            "*.R.drawable.icon",
+            "*.R.drawable.ic_*",
+            "*.R.anim.abc*",
+            "*.R.xml.actions",
+            // keep resource file
+            "*/res/xml/actions.xml",
     ]
-    obfuscatedBundleFileName = "duplicated-app.aab"
-    mergeDuplicatedRes = true
+    obfuscatedBundleFileName = "obfuscated-app.aab"
+    mergeDuplicatedRes = false
     enableFilterFiles = true
     filterList = [
             "*/arm64-v8a/*"
