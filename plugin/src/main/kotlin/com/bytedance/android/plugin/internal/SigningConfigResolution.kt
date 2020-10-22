@@ -74,7 +74,8 @@ private fun getBuildTypesForAGP4009(variantManager: VariantManager): Map<*, *>? 
         val variantInputModelField = variantManager::class.java.getDeclaredField("variantInputModel")
         variantInputModelField.isAccessible = true
         val variantInputModel = variantInputModelField.get(variantManager)
-        val buildTypesField = variantInputModel::class.java.getField("buildTypes")
+        val buildTypesField = variantInputModel::class.java.getDeclaredField("buildTypes")
+        buildTypesField.isAccessible = true
         return buildTypesField.get(variantInputModel) as Map<*, *>?
     } catch (e: Exception) {
         null
