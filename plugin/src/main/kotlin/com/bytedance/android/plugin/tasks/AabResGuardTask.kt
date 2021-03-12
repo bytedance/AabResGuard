@@ -1,5 +1,6 @@
 package com.bytedance.android.plugin.tasks
 
+import com.android.build.gradle.api.ApplicationVariant
 import com.android.build.gradle.internal.scope.VariantScope
 import com.bytedance.android.aabresguard.commands.ObfuscateBundleCommand
 import com.bytedance.android.plugin.extensions.AabResGuardExtension
@@ -17,7 +18,7 @@ import java.nio.file.Path
  */
 open class AabResGuardTask : DefaultTask() {
 
-    private lateinit var variantScope: VariantScope
+    private lateinit var variant: ApplicationVariant
     lateinit var signingConfig: SigningConfig
     var aabResGuard: AabResGuardExtension = project.extensions.getByName("aabResGuard") as AabResGuardExtension
     private lateinit var bundlePath: Path
@@ -29,10 +30,10 @@ open class AabResGuardTask : DefaultTask() {
         outputs.upToDateWhen { false }
     }
 
-    fun setVariantScope(variantScope: VariantScope) {
-        this.variantScope = variantScope
+    fun setVariantScope(variant:ApplicationVariant) {
+        this.variant=variant;
         // init bundleFile, obfuscatedBundlePath must init before task action.
-        bundlePath = getBundleFilePath(project, variantScope)
+        bundlePath = getBundleFilePath(project, variant)
         obfuscatedBundlePath = File(bundlePath.toFile().parentFile, aabResGuard.obfuscatedBundleFileName).toPath()
     }
 
@@ -44,7 +45,7 @@ open class AabResGuardTask : DefaultTask() {
     private fun execute() {
         println(aabResGuard.toString())
         // init signing config
-        signingConfig = getSigningConfig(project, variantScope)
+        signingConfig = getSigningConfig(project, variant)
         printSignConfiguration()
 
         prepareUnusedFile()
@@ -74,7 +75,7 @@ open class AabResGuardTask : DefaultTask() {
     }
 
     private fun prepareUnusedFile() {
-        val simpleName = variantScope.variantData.name.replace("Release", "")
+        val simpleName = variant.name.replace("Release", "")
         val name = simpleName[0].toLowerCase() + simpleName.substring(1)
         val resourcePath = "${project.buildDir}/outputs/mapping/$name/release/unused.txt"
         val usedFile = File(resourcePath)

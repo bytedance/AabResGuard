@@ -1,5 +1,6 @@
 package com.bytedance.android.plugin.internal
 
+import com.android.build.gradle.api.ApplicationVariant
 import com.android.build.gradle.internal.scope.VariantScope
 import org.gradle.api.Project
 import java.io.File
@@ -9,9 +10,9 @@ import java.nio.file.Path
  * Created by YangJing on 2020/01/07 .
  * Email: yangjing.yeoh@bytedance.com
  */
-internal fun getBundleFilePath(project: Project, variantScope: VariantScope): Path {
+internal fun getBundleFilePath(project: Project, variant:ApplicationVariant): Path {
     val agpVersion = getAGPVersion(project)
-    val flavor = variantScope.variantData.name
+    val flavor = variant.name
     return when {
         // AGP3.2.0 - 3.2.1: packageBundle task class is com.android.build.gradle.internal.tasks.BundleTask
         // AGP3.3.0 - 3.3.2: packageBundle task class is com.android.build.gradle.internal.tasks.PackageBundleTask
