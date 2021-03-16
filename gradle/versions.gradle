@@ -1,5 +1,5 @@
 def versions = [:]
-versions.agp = "3.5.0"
+versions.agp = "4.1.0"
 versions.kotlin = "1.3.61"
 versions.java = "8"
 versions.aabresguard = "0.1.7"

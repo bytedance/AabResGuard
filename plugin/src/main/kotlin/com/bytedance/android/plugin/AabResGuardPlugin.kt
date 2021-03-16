@@ -1,8 +1,8 @@
 package com.bytedance.android.plugin
 
-import com.android.build.gradle.internal.scope.VariantScope
+import com.android.build.gradle.AppExtension
+import com.android.build.gradle.api.ApplicationVariant
 import com.bytedance.android.plugin.extensions.AabResGuardExtension
-import com.bytedance.android.plugin.internal.getVariantManager
 import com.bytedance.android.plugin.tasks.AabResGuardTask
 import org.gradle.api.GradleException
 import org.gradle.api.Plugin
@@ -18,15 +18,17 @@ class AabResGuardPlugin : Plugin<Project> {
     override fun apply(project: Project) {
         checkApplicationPlugin(project)
         project.extensions.create("aabResGuard", AabResGuardExtension::class.java)
+
+        val android = project.extensions.getByName("android") as AppExtension
         project.afterEvaluate {
-            getVariantManager(project).variantScopes.forEach { scope ->
-                createAabResGuardTask(project, scope)
+            android.applicationVariants.all { variant ->
+                createAabResGuardTask(project, variant)
             }
         }
     }
 
-    private fun createAabResGuardTask(project: Project, scope: VariantScope) {
-        val variantName = scope.variantData.name.capitalize()
+    private fun createAabResGuardTask(project: Project, variant: ApplicationVariant) {
+        val variantName = variant.name.capitalize()
         val bundleTaskName = "bundle$variantName"
         if (project.tasks.findByName(bundleTaskName) == null) {
             return
@@ -38,7 +40,7 @@ class AabResGuardPlugin : Plugin<Project> {
         } else {
             project.tasks.getByName(aabResGuardTaskName) as AabResGuardTask
         }
-        aabResGuardTask.setVariantScope(scope)
+        aabResGuardTask.setVariantScope(variant)
 
         val bundleTask: Task = project.tasks.getByName(bundleTaskName)
         val bundlePackageTask: Task = project.tasks.getByName("package${variantName}Bundle")
