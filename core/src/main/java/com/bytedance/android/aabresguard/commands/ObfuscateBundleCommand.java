@@ -318,7 +318,10 @@ public abstract class ObfuscateBundleCommand {
         public ObfuscateBundleCommand build() {
             ObfuscateBundleCommand command = autoBuild();
             checkFileExistsAndReadable(command.getBundlePath());
-            checkFileDoesNotExist(command.getOutputPath());
+            //If file exists, just delete it instead of throwing exception
+            if(command.getOutputPath().toFile().exists()){
+                command.getOutputPath().toFile().delete();
+            }
 
             if (!command.getBundlePath().toFile().getName().endsWith(".aab")) {
                 throw CommandExecutionException.builder()
