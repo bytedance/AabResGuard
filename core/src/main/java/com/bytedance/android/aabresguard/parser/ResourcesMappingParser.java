@@ -16,8 +16,8 @@ import static com.android.tools.build.bundletool.model.utils.files.FilePrecondit
  * Email: yangjing.yeoh@bytedance.com
  */
 public class ResourcesMappingParser {
-    private static final Pattern MAP_DIR_PATTERN = Pattern.compile("\\s+(.*)->(.*)");
-    private static final Pattern MAP_RES_PATTERN = Pattern.compile("\\s+(.*):(.*)->(.*)");
+    private static final Pattern MAP_DIR_PATTERN = Pattern.compile("^\\s+(.*)->(.*)");
+    private static final Pattern MAP_RES_PATTERN = Pattern.compile("^\\s+(.*):(.*)->(.*)");
     private final Path mappingPath;
 
     public ResourcesMappingParser(Path mappingPath) {
