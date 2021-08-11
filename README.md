@@ -38,11 +38,12 @@ Configured in `build.gradle(root project)`
 buildscript {
   repositories {
     mavenCentral()
+    mavenLocal()
     jcenter()
     google()
    }
   dependencies {
-    classpath "com.bytedance.android:aabresguard-plugin:0.1.0"
+    classpath "com.bytedance.android:aabresguard-plugin:0.1.10"
   }
 }
 ```
@@ -51,7 +52,7 @@ Configured in `build.gradle(application)`
 ```gradle
 apply plugin: "com.bytedance.android.aabResGuard"
 aabResGuard {
-    mappingFile = file("mapping.txt").toPath() // Mapping file used for incremental obfuscation
+    //mappingFile = file("mapping.txt").toPath() // Mapping file used for incremental obfuscation
     whiteList = [ // White list rules
         "*.R.raw.*",
         "*.R.drawable.icon"
