@@ -71,7 +71,7 @@ public class OpenJDKJarSigner {
             throw new RuntimeException(
                     String.format("%s failed with exit code %d: \n %s",
                             jarSignerExecutable, exitCode,
-                            errors.trim().isEmpty() ? errors : output
+                            errors.trim().isEmpty() ? output : errors
                     )
             );
         }
