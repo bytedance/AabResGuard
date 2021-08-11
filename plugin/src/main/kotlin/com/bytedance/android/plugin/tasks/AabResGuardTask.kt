@@ -8,20 +8,30 @@ import com.bytedance.android.plugin.internal.getBundleFilePath
 import com.bytedance.android.plugin.internal.getSigningConfig
 import com.bytedance.android.plugin.model.SigningConfig
 import org.gradle.api.DefaultTask
-import org.gradle.api.tasks.TaskAction
+import org.gradle.api.tasks.*
 import java.io.File
 import java.nio.file.Path
 
 /**
  * Created by YangJing on 2019/10/15 .
  * Email: yangjing.yeoh@bytedance.com
+ * Modified 2021/08/11
  */
 open class AabResGuardTask : DefaultTask() {
 
+    @get:Internal
     private lateinit var variant: ApplicationVariant
+
+    @get:Internal
     lateinit var signingConfig: SigningConfig
+
+    @get:Internal
     var aabResGuard: AabResGuardExtension = project.extensions.getByName("aabResGuard") as AabResGuardExtension
+
+    @get:Internal
     private lateinit var bundlePath: Path
+
+    @get:Internal
     private lateinit var obfuscatedBundlePath: Path
 
     init {
@@ -36,11 +46,13 @@ open class AabResGuardTask : DefaultTask() {
         bundlePath = getBundleFilePath(project, variant)
         obfuscatedBundlePath = File(bundlePath.toFile().parentFile, aabResGuard.obfuscatedBundleFileName).toPath()
     }
-
+/*
+    @InputFile
+    @Optional
     fun getObfuscatedBundlePath(): Path {
         return obfuscatedBundlePath
     }
-
+*/
     @TaskAction
     private fun execute() {
         println(aabResGuard.toString())

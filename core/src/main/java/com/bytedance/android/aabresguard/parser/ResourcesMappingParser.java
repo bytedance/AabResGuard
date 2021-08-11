@@ -36,6 +36,7 @@ public class ResourcesMappingParser {
                 line = br.readLine();
                 continue;
             }
+            System.out.println("Res: "+line);
             if (!line.contains(":")) {
                 Matcher mat = MAP_DIR_PATTERN.matcher(line);
                 if (mat.find()) {
