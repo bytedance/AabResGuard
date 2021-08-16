@@ -39,9 +39,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.ZipFile;
 
-import groovy.util.logging.Log;
-
-import static com.android.tools.build.bundletool.model.utils.files.FilePreconditions.checkFileDoesNotExist;
 import static com.bytedance.android.aabresguard.bundle.AppBundleUtils.getEntryNameByResourceName;
 import static com.bytedance.android.aabresguard.bundle.AppBundleUtils.getTypeNameByResourceName;
 import static com.bytedance.android.aabresguard.bundle.ResourcesTableOperation.checkConfiguration;
@@ -115,8 +112,8 @@ public class ResourcesObfuscator {
                 .build();
 
         System.out.println(String.format(
-                "obfuscate resources done, coast %s",
-                timeClock.getCoast()
+                "obfuscate resources done, cost %s",
+                timeClock.getCost()
         ));
 
         // write mapping rules to file.

@@ -12,7 +12,7 @@ public class TimeClock {
         startTime = System.currentTimeMillis();
     }
 
-    public String getCoast() {
+    public String getCost() {
         return (System.currentTimeMillis() - startTime) + "";
     }
 }

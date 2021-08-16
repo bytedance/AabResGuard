@@ -28,7 +28,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import static com.android.tools.build.bundletool.model.utils.files.FilePreconditions.checkFileDoesNotExist;
 import static com.android.tools.build.bundletool.model.utils.files.FilePreconditions.checkFileExistsAndReadable;
 import static com.bytedance.android.aabresguard.utils.FileOperation.getNetFileSizeDescription;
 import static com.bytedance.android.aabresguard.utils.exception.CommandExceptionPreconditions.checkFlagPresent;
@@ -234,11 +233,11 @@ public abstract class ObfuscateBundleCommand {
         long rawSize = FileOperation.getFileSizes(getBundlePath().toFile());
         long filteredSize = FileOperation.getFileSizes(getOutputPath().toFile());
         System.out.println(String.format(
-                "obfuscate resources done, coast %s\n" +
+                "obfuscate resources done, cost %s\n" +
                         "-----------------------------------------\n" +
                         "Reduce bundle file size: %s, %s -> %s\n" +
                         "-----------------------------------------",
-                timeClock.getCoast(),
+                timeClock.getCost(),
                 getNetFileSizeDescription(rawSize - filteredSize),
                 getNetFileSizeDescription(rawSize),
                 getNetFileSizeDescription(filteredSize)

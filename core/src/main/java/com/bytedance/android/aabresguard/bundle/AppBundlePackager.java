@@ -31,6 +31,6 @@ public class AppBundlePackager {
         AppBundleSerializer appBundleSerializer = new AppBundleSerializer();
         appBundleSerializer.writeToDisk(appBundle, output);
 
-        System.out.println(String.format("package bundle done, coast: %s", timeClock.getCoast()));
+        System.out.println(String.format("package bundle done, cost: %s", timeClock.getCost()));
     }
 }

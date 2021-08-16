@@ -169,11 +169,11 @@ public abstract class FileFilterCommand {
         long rawSize = FileOperation.getFileSizes(getBundlePath().toFile());
         long filteredSize = FileOperation.getFileSizes(getOutputPath().toFile());
         System.out.println(String.format(
-                "filter bundle files done, coast %s\n" +
+                "filter bundle files done, cost %s\n" +
                         "-----------------------------------------\n" +
                         "Reduce bundle file size: %s, %s -> %s\n" +
                         "-----------------------------------------",
-                timeClock.getCoast(),
+                timeClock.getCost(),
                 getNetFileSizeDescription(rawSize - filteredSize),
                 getNetFileSizeDescription(rawSize),
                 getNetFileSizeDescription(filteredSize)
