@@ -10,14 +10,20 @@ import com.bytedance.android.plugin.model.SigningConfig
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.*
 import java.io.File
+import java.lang.System.out
 import java.nio.file.Path
+import org.gradle.internal.logging.text.StyledTextOutput
+import org.gradle.internal.logging.text.StyledTextOutputFactory
+import org.gradle.internal.logging.text.StyledTextOutput.Style
+import javax.inject.Inject
+import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType
 
 /**
  * Created by YangJing on 2019/10/15 .
  * Email: yangjing.yeoh@bytedance.com
  * Modified 2021/08/11
  */
-open class AabResGuardTask : DefaultTask() {
+open class AabResGuardTask @Inject constructor(outputFactory: StyledTextOutputFactory) : DefaultTask() {
 
     @get:Internal
     private lateinit var variant: ApplicationVariant
@@ -53,12 +59,15 @@ open class AabResGuardTask : DefaultTask() {
         return obfuscatedBundlePath
     }
 */
+    private val out = outputFactory.create("AabResGuardTask")
+
     @TaskAction
     private fun execute() {
-        println(aabResGuard.toString())
+        out.style(Style.Info).println(aabResGuard.toString())
         // init signing config
         signingConfig = getSigningConfig(project, variant)
         printSignConfiguration()
+        printOutputFileLocation()
 
         prepareUnusedFile()
 
@@ -96,22 +105,28 @@ open class AabResGuardTask : DefaultTask() {
             if (aabResGuard.enableFilterStrings) {
                 if (aabResGuard.unusedStringPath == null || aabResGuard.unusedStringPath!!.isBlank()) {
                     aabResGuard.unusedStringPath = usedFile.absolutePath
-                    println("replace unused.txt!")
+                    out.style(Style.Error).println("replace unused.txt!")
                 }
             }
         } else {
-            println("not exists unused.txt : ${usedFile.absolutePath}\n" +
+            out.style(Style.Error).println("not exists unused.txt : ${usedFile.absolutePath}\n" +
                     "use default path : ${aabResGuard.unusedStringPath}")
         }
     }
 
     private fun printSignConfiguration() {
-        println("-------------- sign configuration --------------")
-        println("\tstoreFile : ${signingConfig.storeFile}")
-        println("\tkeyPassword : ${encrypt(signingConfig.keyPassword)}")
-        println("\talias : ${encrypt(signingConfig.keyAlias)}")
-        println("\tstorePassword : ${encrypt(signingConfig.storePassword)}")
-        println("-------------- sign configuration --------------")
+        println("-------------- Sign configuration --------------")
+        println("\tStoreFile:\t\t${signingConfig.storeFile}")
+        println("\tKeyPassword:\t${encrypt(signingConfig.keyPassword)}")
+        println("\tAlias:\t\t\t${encrypt(signingConfig.keyAlias)}")
+        println("\tStorePassword:\t${encrypt(signingConfig.storePassword)}")
+    }
+
+    private fun printOutputFileLocation() {
+        println("-------------- Output configuration --------------")
+        println("\tFolder:\t\t${obfuscatedBundlePath.parent}")
+        println("\tFile:\t\t${obfuscatedBundlePath.fileName}")
+        println("--------------------------------------------------")
     }
 
     private fun encrypt(value: String?): String {
