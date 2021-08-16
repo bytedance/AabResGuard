@@ -17,6 +17,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -89,7 +91,11 @@ public class DuplicatedResourcesMerger {
      */
     private BundleModule mergeBundleModule(BundleModule bundleModule) throws IOException {
         File logFile = new File(outputLogLocationDir.toFile(), bundleModule.getName().getName() + SUFFIX_FILE_DUPLICATED_LOGGER);
-        checkFileDoesNotExist(logFile.toPath());
+        //checkFileDoesNotExist(logFile.toPath());
+        if (Files.exists(logFile.toPath(), new LinkOption[0])) {
+            logger.warning("Log file: "+logFile.toPath()+" already existing! Deleting...");
+            Files.delete(logFile.toPath());
+        }
 
         Resources.ResourceTable table = bundleModule.getResourceTable().orElse(Resources.ResourceTable.getDefaultInstance());
         if (table.getPackageList().isEmpty() || bundleModule.getEntries().isEmpty()) {

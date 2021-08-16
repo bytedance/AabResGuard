@@ -22,6 +22,8 @@ import com.google.common.collect.ImmutableMap;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,6 +38,8 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.ZipFile;
+
+import groovy.util.logging.Log;
 
 import static com.android.tools.build.bundletool.model.utils.files.FilePreconditions.checkFileDoesNotExist;
 import static com.bytedance.android.aabresguard.bundle.AppBundleUtils.getEntryNameByResourceName;
@@ -71,7 +75,11 @@ public class ResourcesObfuscator {
         this.bundleZipFile = new ZipFile(bundlePath.toFile());
 
         outputMappingPath = new File(outputLogLocationDir.toFile(), FILE_MAPPING_NAME).toPath();
-        checkFileDoesNotExist(outputMappingPath);
+        //checkFileDoesNotExist(outputMappingPath);
+        if (Files.exists(outputMappingPath, new LinkOption[0])) {
+            logger.warning("Mapping file: "+outputMappingPath+" already existing! Deleting...");
+            Files.delete(outputMappingPath);
+        }
 
         this.rawAppBundle = rawAppBundle;
         this.whiteListRules = whiteListRules;
