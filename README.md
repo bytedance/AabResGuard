@@ -1,4 +1,4 @@
-# AabResGuard - MartinLoren Edition
+# AabResGuard - Artic Fox Edition
 <h1 align="center">
   <img src="wiki/images/logo.png" height="220" width="460"/>
   <p align="center" style="font-size: 0.3em">The tool of obfuscated aab resources</p>
@@ -6,14 +6,13 @@
 
 [Download V.0.1.10](https://github.com/martinloren/mvn-repo/raw/main/AabResGuard_0.1.10.zip)
 
-[![License](https://img.shields.io/badge/license-Apache2.0-brightgreen)](LICENSE)
-[![Bundletool](https://img.shields.io/badge/Dependency-Bundletool/0.10.0-blue)](https://github.com/google/bundletool)
+[![License](https://img.shields.io/badge/license-Apache2.0-brightgreen)](LICENSE) [![Bundletool](https://img.shields.io/badge/Dependency-Bundletool/0.10.0-blue)](https://github.com/google/bundletool)
 
 **[English](README.md)** | [简体中文](wiki/zh-cn/README.md)
 
 > Powered by bytedance douyin android team.
 
-## Features$$
+## Features
 > The tool of obfuscated aab resources.
 
 - **Merge duplicated resources:** Consolidate duplicate resource files to reduce package size.
@@ -120,6 +119,7 @@ Read the details to learn how to participate in the improvement **AabResGuard**.
 * [Zilai Jiang](https://github.com/Zzzia)
 * [Zhiqian Yang](https://github.com/yangzhiqian)
 * [Xiaoshuang Bai (Designer)](https://www.behance.net/shawnpai)
+* [Martinloren](https://github.com/martinloren)
 
 ## Thanks
 * [AndResGuard](https://github.com/shwenzhang/AndResGuard/)
