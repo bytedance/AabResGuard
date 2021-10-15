@@ -12,7 +12,7 @@ The current data of size savings for multiple products is below:
 
 **AabResGuard-0.1.0**
 
-|App|coast time|aab size|apk raw size|apk download size|
+|App|cost time|aab size|apk raw size|apk download size|
 |---|-------|--------|-------------|----------------|
 |Tiktok/840|75s|-2.9MB|-1.9MB|-0.7MB|
 |Vigo/v751|60s|-1.0Mb|-1.4MB|-0.6MB|

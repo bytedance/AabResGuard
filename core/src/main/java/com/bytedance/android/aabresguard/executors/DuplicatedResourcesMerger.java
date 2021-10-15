@@ -74,12 +74,12 @@ public class DuplicatedResourcesMerger {
         );
 
         System.out.println(String.format(
-                "merge duplicated resources done, coast %s\n" +
+                "merge duplicated resources done, cost %s\n" +
                         "-----------------------------------------\n" +
                         "Reduce file count: %s\n" +
                         "Reduce file size: %s\n" +
                         "-----------------------------------------",
-                timeClock.getCoast(),
+                timeClock.getCost(),
                 mergeDuplicatedTotalCount,
                 getNetFileSizeDescription(mergeDuplicatedTotalSize)
         ));

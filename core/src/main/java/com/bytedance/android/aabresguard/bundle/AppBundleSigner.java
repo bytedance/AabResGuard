@@ -5,7 +5,6 @@ import com.bytedance.android.aabresguard.utils.TimeClock;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.logging.Logger;
 
 /**
  * Created by YangJing on 2019/10/11 .
@@ -41,6 +40,6 @@ public class AppBundleSigner {
                 bundleSignature.keyPassword
         );
         new JarSigner().sign(bundleFile.toFile(), signature);
-        System.out.println(String.format("[sign] sign done, coast: %s", timeClock.getCoast()));
+        System.out.println(String.format("[sign] sign done, cost: %s", timeClock.getCost()));
     }
 }

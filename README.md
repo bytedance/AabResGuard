@@ -13,7 +13,7 @@
 
 > Powered by bytedance douyin android team.
 
-## Features
+## Features$$
 > The tool of obfuscated aab resources.
 
 - **Merge duplicated resources:** Consolidate duplicate resource files to reduce package size.
@@ -55,7 +55,21 @@ aabResGuard {
     //mappingFile = file("mapping.txt").toPath() // Mapping file used for incremental obfuscation
     whiteList = [ // White list rules
         "*.R.raw.*",
-        "*.R.drawable.icon"
+        "*.R.drawable.icon",
+        // Google-services & Firebase
+        "*.R.string.google_app_id",
+        "*.R.string.gcm_defaultSenderId",
+        "*.R.string.default_web_client_id",
+        "*.R.string.ga_trackingId",
+        "*.R.string.firebase_database_url",
+        "*.R.string.google_api_key",
+        "*.R.string.google_crash_reporting_api_key",
+        "*.R.string.default_web_client_id",
+        "*.R.string.gcm_defaultSenderId",
+        "*.R.string.google_app_id",
+        "*.R.string.google_crash_reporting_api_key",
+        "*.R.string.google_storage_bucket",
+        "*.R.string.project_id"
     ]
     obfuscatedBundleFileName = "duplicated-app.aab" // Obfuscated file name, must end with '.aab'
     mergeDuplicatedRes = true // Whether to allow the merge of duplicate resources

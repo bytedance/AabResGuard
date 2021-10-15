@@ -39,9 +39,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.ZipFile;
 
-import groovy.util.logging.Log;
-
-import static com.android.tools.build.bundletool.model.utils.files.FilePreconditions.checkFileDoesNotExist;
 import static com.bytedance.android.aabresguard.bundle.AppBundleUtils.getEntryNameByResourceName;
 import static com.bytedance.android.aabresguard.bundle.AppBundleUtils.getTypeNameByResourceName;
 import static com.bytedance.android.aabresguard.bundle.ResourcesTableOperation.checkConfiguration;
@@ -115,8 +112,8 @@ public class ResourcesObfuscator {
                 .build();
 
         System.out.println(String.format(
-                "obfuscate resources done, coast %s",
-                timeClock.getCoast()
+                "obfuscate resources done, cost %s",
+                timeClock.getCost()
         ));
 
         // write mapping rules to file.
@@ -182,23 +179,25 @@ public class ResourcesObfuscator {
             if (resourcesMapping.getResourceMapping().containsKey(resourceName)) {
                 if (!shouldBeObfuscated(resourceName)) {
                     System.out.println(String.format(
-                            "[whiteList] find whiteList resource, remove from mapping, resource: %s, id: %s",
+                            "[whiteList] Found whiteList resource, removing from mapping: %s, id: %s",
                             resourceName,
                             resourceId
                     ));
                     resourcesMapping.getResourceMapping().remove(resourceName);
                 } else {
+                    //System.out.println("Obfuscating resource: " + resourceName);
                     String obfuscateResourceName = resourcesMapping.getResourceMapping().get(resourceName);
                     obfuscationList.add(AppBundleUtils.getEntryNameByResourceName(obfuscateResourceName));
                 }
             } else {
                 if (!shouldBeObfuscated(resourceName)) {
                     System.out.println(String.format(
-                            "[whiteList] find whiteList resource, resource: %s, id: %s",
+                            "[whiteList] Found whiteList resource: %s, id: %s",
                             resourceName,
                             resourceId
                     ));
                 } else {
+                    //System.out.println("Obfuscating resource: " + resourceName);
                     String name = guardStringBuilder.getReplaceString(obfuscationList);
                     obfuscationList.add(name);
                     String obfuscatedResourceName = AppBundleUtils.getResourceFullName(entry.getPackage().getPackageName(), entry.getType().getName(), name);
@@ -234,6 +233,7 @@ public class ResourcesObfuscator {
                     String bundleRawPath = bundleModule.getName().getName() + "/" + entry.getPath().toString();
                     String bundleObfuscatedPath = resourcesMapping.getEntryFilesMapping().get(bundleRawPath);
                     if (bundleObfuscatedPath == null) {
+                        //System.out.println(": "+bundleRawPath);
                         if (!shouldBeObfuscated(bundleRawPath)) {
                             System.out.println(String.format(
                                     "[whiteList] find whiteList resource file, resource: %s",
@@ -245,6 +245,7 @@ public class ResourcesObfuscator {
                             String obfuscatedName = guardStringBuilder.getReplaceString(mapping);
                             mapping.add(obfuscatedName);
                             bundleObfuscatedPath = obfuscateDir + "/" + obfuscatedName + fileSuffix;
+                            //System.out.println(" -> "+bundleObfuscatedPath);
                             resourcesMapping.putEntryFileMapping(bundleRawPath, bundleObfuscatedPath);
                         }
                     }

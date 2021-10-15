@@ -75,8 +75,8 @@ public class BundleStringFilter {
                 .build();
 
         System.out.println(String.format(
-                "filtering strings done, coast %s\n",
-                timeClock.getCoast()
+                "filtering strings done, cost %s\n",
+                timeClock.getCost()
         ));
 
         return appBundle;
