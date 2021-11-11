@@ -1,0 +1,66 @@
+# https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-syntax-for-github-actions
+name: Build
+
+on:
+  push:
+    branches:
+    - '**'
+    tags-ignore:
+    - '**'
+  pull_request:
+  workflow_dispatch:
+    # https://github.blog/changelog/2020-07-06-github-actions-manual-triggers-with-workflow_dispatch/
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Git Checkout
+      uses: actions/checkout@v2 #https://github.com/actions/checkout
+
+    - name: Set up JDK 11
+      uses: actions/setup-java@v2 # https://github.com/actions/setup-java
+      with:
+        distribution: 'zulu'
+        java-version: 11
+
+    - name: "Cache: Local Maven Repository"
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.m2/repository
+          !~/.m2/com/bytedance
+        key: ${{ runner.os }}-mvnrepo-${{ hashFiles('**/build.gradle') }}
+        restore-keys: |
+          ${{ runner.os }}-mvnrepo-
+
+    - name: Build with Gradle
+      run: |
+        set -eux
+
+        bash ./gradlew publishToMavenLocal
+
+    - name: Deploy Maven Repo
+      run: |
+        set -eux
+
+        if git checkout --orphan mvn-repo; then
+          git rm -rf .
+          git clean -fxd
+        fi
+ 
+        # https://github.community/t/github-actions-bot-email-address/17204
+        git config user.name "github-actions[bot]"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+        mkdir -p com/bytedance/android
+        cp -rf ~/.m2/repository/com/bytedance/android/* com/bytedance/android
+
+        git add --all
+        git commit -am "deploy to maven repo"
+        git push origin mvn-repo --force

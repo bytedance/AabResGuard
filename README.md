@@ -23,8 +23,8 @@
 - **???:** Looking ahead, there will be more feature support, welcome to submit PR & issue.
 
 ## [Data of size savings](wiki/en/DATA.md)
-**AabResGuard** is a resource obfuscation tool powered by the douyin Android team. It has been launched at the end of July 2018 in several overseas products, such as **Tiktok, Vigo**, etc. 
-There is no feedback on related resource issues. 
+**AabResGuard** is a resource obfuscation tool powered by the douyin Android team. It has been launched at the end of July 2018 in several overseas products, such as **Tiktok, Vigo**, etc.
+There is no feedback on related resource issues.
 For more data details, please go to **[Data of size savings](wiki/en/DATA.md)**.
 
 ## Quick start
@@ -40,6 +40,7 @@ buildscript {
     mavenLocal()
     jcenter()
     google()
+    maven { url 'https://raw.githubusercontent.com/martinloren/AabResGuard/mvn-repo' }
    }
   dependencies {
     classpath "com.bytedance.android:aabresguard-plugin:0.1.10"
@@ -77,7 +78,7 @@ aabResGuard {
         "*/arm64-v8a/*",
         "META-INF/*"
     ]
-    
+
     enableFilterStrings = false // switch of filter strings
     unusedStringPath = file("unused.txt").toPath() // strings will be filtered in this file
     languageWhiteList = ["en", "zh"] // keep en,en-xx,zh,zh-xx etc. remove others.
