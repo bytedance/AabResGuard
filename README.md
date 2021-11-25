@@ -38,7 +38,6 @@ buildscript {
   repositories {
     mavenCentral()
     mavenLocal()
-    jcenter()
     google()
     maven { url 'https://raw.githubusercontent.com/martinloren/AabResGuard/mvn-repo' }
    }
