@@ -80,12 +80,12 @@ public class BundleFileFilter {
                 .setModules(ImmutableMap.copyOf(bundleModules))
                 .build();
         System.out.println(String.format(
-                "filter bundle files done, coast %s" +
+                "filter bundle files done, cost %s\n" +
                         "-----------------------------------------\n" +
                         "Reduce file count: %s\n" +
                         "Reduce file size: %s\n" +
-                        "-----------------------------------------",
-                timeClock.getCoast(),
+                        "-----------------------------------------\n",
+                timeClock.getCost(),
                 filterTotalCount,
                 getNetFileSizeDescription(filterTotalSize)
         ));

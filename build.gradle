@@ -4,12 +4,11 @@ buildscript {
     apply from: rootProject.file("gradle/config.gradle")
     repositories {
         google()
-        jcenter()
         if ("true".equalsIgnoreCase(System.getProperty('useLocalMaven', "false"))) {
-            println "use local repo"
+            println "Using local repo."
             mavenLocal()
         } else {
-            println "use remove repo"
+            println "Using remote repo."
             maven { url findProperty("RELEASE_REPOSITORY_URL") }
             maven { url findProperty("SNAPSHOT_REPOSITORY_URL") }
         }
@@ -33,7 +32,6 @@ buildscript {
 allprojects {
     repositories {
         google()
-        jcenter()
         if ("true".equalsIgnoreCase(System.getProperty('useLocalMaven', "false"))) {
             mavenLocal()
         } else {

@@ -19,7 +19,7 @@ open class AabResGuardExtension {
     var languageWhiteList: Set<String>? = HashSet()
 
     override fun toString(): String {
-        return "AabResGuardExtension\n" +
+        return "-------------- AabResGuardExtension --------------\n" +
                 "\tenableObfuscate=$enableObfuscate" +
                 "\tmappingFile=$mappingFile" +
                 "\twhiteList=${if (whiteList == null) null else whiteList}\n" +

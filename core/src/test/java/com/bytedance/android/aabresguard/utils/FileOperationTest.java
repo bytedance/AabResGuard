@@ -23,7 +23,7 @@ public class FileOperationTest extends BaseTest {
         Path unzipDirPath = getTempDirPath();
         Path targetDir = new File(getTempDirPath().toFile(), "/aab").toPath();
         FileOperation.uncompress(aabFile.toPath(), targetDir);
-        System.out.println("testUnZip method coast:");
+        System.out.println("testUnZip method cost:");
         FileOperation.uncompress(aabFile.toPath(), unzipDirPath);
     }
 
